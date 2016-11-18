@@ -1,0 +1,10 @@
+Currently all images are made using widths and heights equal to powers of 2 (2, 4, 8, 16, ...)
+
+For simplicity of creation and (possibly) handling within the code, the background image is created 
+using a fixed resolution of 4096 x 2048 px, and was drawn with the help of a fixed grid with square cells 
+(to show it, simply open it in GIMP, or open the generated images in any editor that can display a grid 
+over the image and set the length and width of the smallest unit in the grid).
+
+Currently the smallest grid square for the background (and the size of all other images) is 128 x 128 px. 
+There is a version of the background made with 64 x 64 px grid squares, but the images have no 64 x 64 px 
+variant (You have to open the image file and scale it down to that size, if you really want to try it).
