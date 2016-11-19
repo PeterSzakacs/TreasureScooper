@@ -21,10 +21,10 @@ public class Enemy implements Actor {
     public Enemy(Direction leftToRightDirection, int y, TreasureScooper world){
         this.direction = leftToRightDirection;
         if (leftToRightDirection == Direction.RIGHT)
-            this.x = -TreasureScooper.STD_OFFSET;
+            this.x = -world.getOffsetX();
         else
-            this.x = TreasureScooper.WIDTH;
-        this.movementDelta = TreasureScooper.STD_OFFSET/4;
+            this.x = world.getWidth();
+        this.movementDelta = world.getOffsetX()/4;
         this.y = y;
         this.world = world;
         this.player = world.getPlayer();
@@ -55,7 +55,7 @@ public class Enemy implements Actor {
             if (this.player.getHeadY() < this.y) {
                 for (PipeSegment seg : this.player.getSegmentStack()) {
                     if (seg.getY() == this.y) {
-                        if (Math.abs(seg.getX() - this.x) < TreasureScooper.STD_OFFSET)
+                        if (Math.abs(seg.getX() - this.x) < world.getOffsetX())
                             this.moving = false;
                     } else if (seg.getY() < this.y)
                         break;

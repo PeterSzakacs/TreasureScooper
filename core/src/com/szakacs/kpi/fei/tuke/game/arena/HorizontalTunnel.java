@@ -9,8 +9,8 @@ import java.util.*;
  */
 public class HorizontalTunnel {
     private int y;
-    private int turn_counter;
-    private int turn_bound;
+    private int turnCounter;
+    private int turnBound;
     private int nuggetCount;
     private GoldNugget[] nuggets;
     private List<Enemy> enemies;
@@ -23,13 +23,13 @@ public class HorizontalTunnel {
     HorizontalTunnel(int y, List<Integer> entrances, TreasureScooper world) {
         Random rand = new Random();
         do {
-            this.turn_bound = rand.nextInt(150);
-        } while (this.turn_bound < 120);
+            this.turnBound = rand.nextInt(150);
+        } while (this.turnBound < 120);
         this.y = y;
-        this.turn_counter = 0;
+        this.turnCounter = 0;
         this.entrances = entrances;
         this.enemies = new ArrayList<Enemy>(3);
-        int capacity = TreasureScooper.WIDTH/ TreasureScooper.STD_OFFSET;
+        int capacity = world.getWidth()/world.getOffsetX();
         this.nuggets = new GoldNugget[capacity];
         for (int i = 0; i < capacity; i++){
             this.nuggets[i] = new GoldNugget(50);
@@ -82,7 +82,7 @@ public class HorizontalTunnel {
      * @return value of the returned nugget or 0 if no nugget is found.
      */
     int collectNugget(int x){
-        int idx = x/ TreasureScooper.STD_OFFSET;
+        int idx = x/world.getOffsetX();
         GoldNugget nugget = this.nuggets[idx];
         if (nugget == null)
             return 0;
@@ -112,13 +112,13 @@ public class HorizontalTunnel {
         for (Iterator<Enemy> enemyIt = enemies.iterator(); enemyIt.hasNext(); ) {
             currentEnemy = enemyIt.next();
             currentEnemy.act();
-            if ((currentEnemy.getX() > TreasureScooper.WIDTH && currentEnemy.getDirection() == Direction.RIGHT)
-                    || (currentEnemy.getX() < -TreasureScooper.STD_OFFSET && currentEnemy.getDirection() == Direction.LEFT))
+            if ((currentEnemy.getX() > world.getWidth() && currentEnemy.getDirection() == Direction.RIGHT)
+                    || (currentEnemy.getX() < -world.getOffsetX() && currentEnemy.getDirection() == Direction.LEFT))
                 enemyIt.remove();
         }
-        turn_counter++;
-        if (turn_counter > turn_bound) {
-            turn_counter = 0;
+        turnCounter++;
+        if (turnCounter > turnBound) {
+            turnCounter = 0;
             if (this.enemies.size() < 2)
                 createNewEnemy();
         }

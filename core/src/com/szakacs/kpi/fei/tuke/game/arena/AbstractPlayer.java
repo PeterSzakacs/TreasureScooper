@@ -5,7 +5,9 @@ import com.szakacs.kpi.fei.tuke.game.enums.GameState;
 import com.szakacs.kpi.fei.tuke.game.enums.PipeSegmentType;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
+import java.util.function.Predicate;
 
 /**
  * Created by developer on 4.11.2016.
@@ -34,17 +36,19 @@ public abstract class AbstractPlayer {
     private HorizontalTunnel currentTunnel;
     private boolean operationApplied;
     private boolean calculated;
+    private List<PipeSegment> searchResults;
 
-    protected AbstractPlayer(TreasureScooper world){
+    protected AbstractPlayer(TreasureScooper world) {
         this.segmentStack = new ArrayList<PipeSegment>();
         this.dir = Direction.DOWN;
-        this.head = new PipeHead(15 * TreasureScooper.STD_OFFSET, 13 * TreasureScooper.STD_OFFSET, Direction.DOWN);
+        this.head = new PipeHead(15 * world.getOffsetX(), 13 * world.getOffsetY(), Direction.DOWN);
         this.world = world;
         this.score = 0;
         this.healthPoints = 100;
         this.currentTunnel = null;
         this.operationApplied = false;
         this.calculated = false;
+        this.searchResults = new ArrayList<PipeSegment>();
     }
 
     List<PipeSegment> getSegmentStack(){
@@ -114,16 +118,7 @@ public abstract class AbstractPlayer {
         if (this.calculated) {
             segmentStack.add(segment);
             this.calculated = false;
-            this.updateHeadAfterPush();
-            if (currentTunnel == null)
-                currentTunnel = this.world.getTunnelByYCoordinate(head.getY());
-            if (currentTunnel != null) {
-                this.score += currentTunnel.collectNugget(head.getX());
-                if (head.getY() != currentTunnel.getY())
-                    currentTunnel = null;
-
-            } if (world.getRemainingNuggetsCount() == 0)
-                world.setGameState(GameState.WON);
+            this.updateAfterPush();
         }
     }
 
@@ -138,7 +133,7 @@ public abstract class AbstractPlayer {
         if (isEmpty())
             return null;
         PipeSegment popped = segmentStack.remove(segmentStack.size() - 1);
-        this.updateHeadAfterPop(popped);
+        this.updateAfterPop(popped);
         return popped;
     }
 
@@ -251,28 +246,44 @@ public abstract class AbstractPlayer {
      * updates the head of the pipe (its orientation and coordinates)
      * after moving in a given direction (pushing a segment to the pipe).
      */
-    private void updateHeadAfterPush(){
+    private void updateAfterPush(){
         head.setDirection(dir);
         switch (dir){
             case LEFT:
-                head.setX(top().getX() - TreasureScooper.STD_OFFSET);
+                head.setX(top().getX() - world.getOffsetX());
                 head.setY(top().getY());
                 break;
             case RIGHT:
-                head.setX(top().getX() + TreasureScooper.STD_OFFSET);
+                head.setX(top().getX() + world.getOffsetX());
                 head.setY(top().getY());
                 break;
             case UP:
                 head.setX(top().getX());
-                head.setY(top().getY() + TreasureScooper.STD_OFFSET);
+                head.setY(top().getY() + world.getOffsetY());
                 break;
             case DOWN:
                 head.setX(top().getX());
-                head.setY(top().getY() - TreasureScooper.STD_OFFSET);
+                head.setY(top().getY() - world.getOffsetY());
                 break;
             default:
                 throw new IllegalArgumentException("Invalid or null direction value");
         }
+        if (currentTunnel == null)
+            currentTunnel = this.world.getTunnelByYCoordinate(head.getY());
+        if (currentTunnel != null) {
+            this.score += currentTunnel.collectNugget(head.getX());
+            Enemy toRemove = null;
+            for (Enemy enemy : currentTunnel.getEnemies()){
+                if (Math.abs(enemy.getX() - head.getX()) < world.getOffsetX())
+                    toRemove = enemy;
+            }
+            if (toRemove != null)
+                currentTunnel.destroyEnemy(toRemove);
+            if (head.getY() != currentTunnel.getY())
+                currentTunnel = null;
+        }
+        if (world.getRemainingNuggetsCount() == 0)
+            world.setGameState(GameState.WON);
     }
 
     /**
@@ -281,7 +292,7 @@ public abstract class AbstractPlayer {
      *
      * @param popped the popped pipe segment.
      */
-    private void updateHeadAfterPop(PipeSegment popped){
+    private void updateAfterPop(PipeSegment popped){
         switch (popped.getSegmentType()) {
             case VERTICAL:
             case HORIZONTAL:
@@ -334,7 +345,7 @@ public abstract class AbstractPlayer {
             case RIGHT:
                 if (currentTunnel == null)
                     return true;
-                if (head.getX() == TreasureScooper.WIDTH - TreasureScooper.STD_OFFSET)
+                if (head.getX() == world.getWidth() - world.getOffsetX())
                     return true;
                 else
                     return false;
@@ -364,57 +375,14 @@ public abstract class AbstractPlayer {
         return this.segmentStack.get(offsetFromBottom);
     }
 
+    public List<PipeSegment> getSegmentByCriteria(Predicate<PipeSegment> criteria){
+        searchResults.clear();
+        for (PipeSegment seg : segmentStack){
+            if (criteria.test(seg))
+                searchResults.add(seg);
+        }
+        return searchResults;
+    }
+
     protected abstract void act();
 }
-
-
-    /*public boolean isWall(int x, int y) {
-        int xDiff = 0, yDiff = 0;
-        if (!segmentStack.isEmpty()){
-            xDiff = Math.abs(top().getX() - x);
-            yDiff = Math.abs(top().getY() - y);
-        }else{
-            if (dir == Direction.LEFT || dir == Direction.RIGHT)
-                return true;
-            else
-                return false;
-        }
-        // Illegal position change by more than one cell in one turn
-        if (xDiff > TreasureScooper.STD_OFFSET || yDiff > TreasureScooper.STD_OFFSET)
-            return true;
-        if (currentTunnel == null) {
-            // if current tunnel is null, then the pipe head is in a vertical shaft
-            if (xDiff > 0)
-                return true;
-            else
-                return false;
-        } else {
-            *//*
-             * else it is in a horizontal tunnel, if moving up or down, check if an entrance is there,
-             * else check if it is out of game field bounds.
-             *//*
-            if (xDiff > 0) {
-                if (x < 0 || x >= TreasureScooper.WIDTH)
-                    return true;
-                else
-                    return false;
-            }
-            if (yDiff > 0) {
-                if (top().getY() > y){
-                    for (Integer entrance : currentTunnel.getNextTunnel().getEntrances()) {
-                        if (entrance == x)
-                            return false;
-                    }
-                    return true;
-                }else{
-                    for (Integer entrance : currentTunnel.getEntrances()) {
-                        if (entrance == x)
-                            return false;
-                    }
-                    return true;
-                }
-            }
-        }
-        // This return statement should theoretically be unreachable, but testing is needed
-        return true;
-    }*/

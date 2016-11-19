@@ -27,11 +27,14 @@ import java.util.List;
 import java.util.Map;
 
 public class TreasureScooper implements ApplicationListener {
-	private SpriteBatch batch;
-    public static final int WIDTH = 4096;
-    public static final int HEIGHT = 2048;
-    public static final int STD_OFFSET = 128;
+	private int width = 4096;
+    private int height = 2048;
+    private int offsetX  = 128;
+    private int offsetY = 128;
+    private int initX = 1920;
+    private int initY = 1664;
 
+    private SpriteBatch batch;
     private Sprite bgSprite;
     private BitmapFont score;
     private Sprite nuggetSprite;
@@ -114,7 +117,6 @@ public class TreasureScooper implements ApplicationListener {
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
         String displayMsg = Integer.toString(player.getScore());
-
         switch (state){
             case PLAYING:
                 update();
@@ -138,7 +140,7 @@ public class TreasureScooper implements ApplicationListener {
             for (int i = 0; i < nuggets.length; i++) {
                 nugget = nuggets[i];
                 if (nugget != null) {
-                    nuggetSprite.setPosition(i * STD_OFFSET, tunnel.getY());
+                    nuggetSprite.setPosition(i * this.offsetX, tunnel.getY());
                     nuggetSprite.draw(batch);
                 }
             }
@@ -194,9 +196,6 @@ public class TreasureScooper implements ApplicationListener {
             spr.getTexture().dispose();
 	}
 
-    List<HorizontalTunnel> getTunnels() {
-        return tunnels;
-    }
 
     public HorizontalTunnel getTunnel(int offsetFromTopmost){
         if (offsetFromTopmost < 0 || offsetFromTopmost > tunnels.size())
@@ -215,19 +214,55 @@ public class TreasureScooper implements ApplicationListener {
         return result;
     }
 
-    AbstractPlayer getPlayer(){
-        return this.player;
-    }
-
     void setGameState(GameState state){
         this.state = state;
     }
 
-    int getRemainingNuggetsCount(){
-        int result = 0;
-        for (HorizontalTunnel ht : tunnels)
-            result += ht.getNuggetCount();
-        return result;
+    public boolean intersects(Actor ActorA, Actor ActorB){
+        if (ActorA.getX()/offsetX == ActorB.getX()/offsetX)
+            if (ActorA.getY()/offsetY == ActorB.getY()/offsetY)
+                return true;
+        return false;
+    }
+
+    void onNuggetCollected(){
+        this.remainingNuggetsCount--;
+    }
+
+    /*
+     * begin getters & setters
+     */
+
+    public AbstractPlayer getPlayer(){
+        return this.player;
+    }
+
+    public int getWidth() {
+        return width;
+    }
+
+    public int getHeight() {
+        return height;
+    }
+
+    public int getOffsetX() {
+        return offsetX;
+    }
+
+    public int getOffsetY() {
+        return offsetY;
+    }
+
+    public int getInitX() {
+        return initX;
+    }
+
+    public int getInitY() {
+        return initY;
+    }
+
+    public int getRemainingNuggetsCount(){
+        return this.remainingNuggetsCount;
     }
 
     public List<List<Enemy>> getEnemies(){
@@ -238,10 +273,11 @@ public class TreasureScooper implements ApplicationListener {
         return this.enemies;
     }
 
-    public static boolean intersects(Actor ActorA, Actor ActorB){
-        if (ActorA.getX()/STD_OFFSET == ActorB.getX()/STD_OFFSET)
-            if (ActorA.getY()/STD_OFFSET == ActorB.getY()/STD_OFFSET)
-                return true;
-        return false;
+    List<HorizontalTunnel> getTunnels() {
+        return tunnels;
     }
+
+    /*
+     * end getters & setters
+     */
 }

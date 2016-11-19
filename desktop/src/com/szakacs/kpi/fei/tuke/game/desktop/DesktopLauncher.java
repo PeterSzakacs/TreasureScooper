@@ -7,9 +7,10 @@ import com.szakacs.kpi.fei.tuke.game.arena.TreasureScooper;
 public class DesktopLauncher {
 	public static void main (String[] arg) {
 		LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
-		config.width = TreasureScooper.WIDTH;
-		config.height = TreasureScooper.HEIGHT;
+		TreasureScooper world = new TreasureScooper();
+		config.width = world.getWidth();
+		config.height = world.getHeight();
 		config.title = "TreasureScooper";
-		new LwjglApplication(new TreasureScooper(), config);
+		new LwjglApplication(world, config);
 	}
 }

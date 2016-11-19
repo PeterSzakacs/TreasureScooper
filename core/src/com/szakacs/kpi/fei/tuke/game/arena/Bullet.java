@@ -22,7 +22,7 @@ public class Bullet implements Actor {
         this.x = x;
         this.y = y;
         this.dir = dir;
-        this.movementDelta = TreasureScooper.STD_OFFSET/2;
+        this.movementDelta = world.getOffsetX()/2;
         this.world = world;
         this.lockTarget();
     }
