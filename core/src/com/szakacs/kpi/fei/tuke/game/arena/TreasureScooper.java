@@ -77,6 +77,9 @@ public class TreasureScooper implements ApplicationListener {
             }
             this.enemies = new ArrayList<List<Enemy>>(6);
         }
+/*        for (int x = 0; x < 4096; x += 128) {
+            this.tunnels.get(0).collectNugget(x);
+        }*/
     }
 
 	@Override

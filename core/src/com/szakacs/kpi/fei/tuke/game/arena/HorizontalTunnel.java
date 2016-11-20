@@ -8,7 +8,9 @@ import java.util.*;
  * Created by developer on 5.11.2016.
  */
 public class HorizontalTunnel {
+    private int x;
     private int y;
+    private int width;
     private int turnCounter;
     private int turnBound;
     private int nuggetCount;
@@ -25,7 +27,9 @@ public class HorizontalTunnel {
         do {
             this.turnBound = rand.nextInt(150);
         } while (this.turnBound < 120);
+        this.x = 0;
         this.y = y;
+        this.width = world.getWidth()/world.getOffsetX();
         this.turnCounter = 0;
         this.entrances = entrances;
         this.enemies = new ArrayList<Enemy>(3);
@@ -54,6 +58,14 @@ public class HorizontalTunnel {
 
     public List<Integer> getEntrances() {
         return entrances;
+    }
+
+    public int getX() {
+        return x;
+    }
+
+    public int getWidth() {
+        return width;
     }
 
     void setNextTunnel(HorizontalTunnel tunnel){
