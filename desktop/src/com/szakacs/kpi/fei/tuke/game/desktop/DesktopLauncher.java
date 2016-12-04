@@ -2,15 +2,16 @@ package com.szakacs.kpi.fei.tuke.game.desktop;
 
 import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
+import com.szakacs.kpi.fei.tuke.game.arena.GameRenderer;
 import com.szakacs.kpi.fei.tuke.game.arena.TreasureScooper;
 
 public class DesktopLauncher {
 	public static void main (String[] arg) {
 		LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
-		TreasureScooper world = new TreasureScooper();
-		config.width = world.getWidth();
-		config.height = world.getHeight();
+		GameRenderer game = new GameRenderer();
+		config.width = game.getWorld().getWidth();
+		config.height = game.getWorld().getHeight();
 		config.title = "TreasureScooper";
-		new LwjglApplication(world, config);
+		new LwjglApplication(game, config);
 	}
 }

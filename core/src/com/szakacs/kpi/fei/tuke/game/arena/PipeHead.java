@@ -1,5 +1,6 @@
 package com.szakacs.kpi.fei.tuke.game.arena;
 
+import com.szakacs.kpi.fei.tuke.game.enums.ActorType;
 import com.szakacs.kpi.fei.tuke.game.enums.Direction;
 import com.szakacs.kpi.fei.tuke.game.intrfc.GoldCollector;
 
@@ -27,6 +28,12 @@ public class PipeHead implements GoldCollector {
         return y;
     }
 
+    @Override
+    public ActorType getType() {
+        return ActorType.PIPEHEAD;
+    }
+
+    @Override
     public Direction getDirection() {
         return direction;
     }

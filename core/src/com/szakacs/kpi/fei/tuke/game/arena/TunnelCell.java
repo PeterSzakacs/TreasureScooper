@@ -5,7 +5,7 @@ import com.szakacs.kpi.fei.tuke.game.enums.TunnelCellType;
 import com.szakacs.kpi.fei.tuke.game.intrfc.GoldCollector;
 import com.szakacs.kpi.fei.tuke.game.intrfc.eventHandlers.TunnelEventHandler;
 
-import java.util.HashMap;
+import java.util.EnumMap;
 import java.util.Map;
 
 /**
@@ -28,7 +28,7 @@ public class TunnelCell {
         else
             this.NuggetValue = 0;
         this.handler = handler;
-        this.fourDirections = new HashMap<Direction, TunnelCell>(4);
+        this.fourDirections = new EnumMap<>(Direction.class);
     }
 
     public int getX() {
@@ -60,18 +60,10 @@ public class TunnelCell {
     }
 
     public int collectNugget(GoldCollector collector){
-        /*System.out.println("x: " + head.getX() + " y: " + head.getY());
-        System.out.println("this.x" + this.x + " this.y: " + this.y);
-        System.out.println("hasNugget: " + this.hasNugget() + " cellType: " + this.tcType.name());
-        System.out.println("left: " + fourDirections.get(Direction.LEFT));
-        System.out.println("right: " + fourDirections.get(Direction.RIGHT));
-        System.out.println("down: " + fourDirections.get(Direction.DOWN));
-        System.out.println("up" + fourDirections.get(Direction.UP));
-        System.out.println();*/
         if (collector.getX() == this.x && collector.getY() == this.y) {
             int nuggetVal = this.NuggetValue;
             this.NuggetValue = 0;
-            if (this.handler != null)
+            if (this.handler != null && nuggetVal != 0)
                 this.handler.onNuggetCollected(collector);
             return nuggetVal;
         } else

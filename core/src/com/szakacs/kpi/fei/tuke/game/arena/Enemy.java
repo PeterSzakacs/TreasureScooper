@@ -1,38 +1,47 @@
 package com.szakacs.kpi.fei.tuke.game.arena;
 
+import com.szakacs.kpi.fei.tuke.game.enums.ActorType;
 import com.szakacs.kpi.fei.tuke.game.enums.Direction;
-import com.szakacs.kpi.fei.tuke.game.intrfc.Actor;
+import com.szakacs.kpi.fei.tuke.game.enums.PipeSegmentType;
+import com.szakacs.kpi.fei.tuke.game.intrfc.ManipulableActor;
+import com.szakacs.kpi.fei.tuke.game.intrfc.game.QueryableGameInterface;
+import com.szakacs.kpi.fei.tuke.game.intrfc.eventHandlers.TunnelEventHandler;
+
+import java.util.List;
 
 /**
  * Created by developer on 5.11.2016.
  */
-public class Enemy implements Actor {
+public class Enemy implements ManipulableActor {
 
     // The Y coordinates are already in the HorizontalTunnel object.
 
     private int x;
     private int y;
     private Direction direction;
-    private TreasureScooper world;
-    private AbstractPlayer player;
+    private QueryableGameInterface world;
+    private Pipe player;
     private int movementDelta;
     private boolean moving;
+    private int bound;
+    private TunnelEventHandler handler;
 
-    public Enemy(Direction leftToRightDirection, int y, TreasureScooper world){
+    public Enemy(Direction leftToRightDirection, HorizontalTunnel ht, TunnelEventHandler handler, QueryableGameInterface world){
         this.direction = leftToRightDirection;
-        if (leftToRightDirection == Direction.RIGHT)
-            this.x = -world.getOffsetX();
-        else
-            this.x = world.getWidth();
-        this.movementDelta = world.getOffsetX()/4;
-        this.y = y;
+        if (leftToRightDirection == Direction.RIGHT) {
+            this.x = ht.getX() - world.getOffsetX();
+            this.movementDelta = world.getOffsetX() / 4;
+            this.bound = ht.getWidth();
+        } else {
+            this.x = ht.getWidth();
+            this.movementDelta = -world.getOffsetX() / 4;
+            this.bound = ht.getX();
+        }
+        this.y = ht.getY();
         this.world = world;
-        this.player = world.getPlayer();
+        this.player = world.getPipe();
         this.moving = true;
-    }
-
-    public Direction getDirection(){
-        return this.direction;
+        this.handler = handler;
     }
 
     @Override
@@ -45,23 +54,41 @@ public class Enemy implements Actor {
         return this.y;
     }
 
-    void act(){
+    @Override
+    public ActorType getType() {
+        return ActorType.MOLE;
+    }
+
+    @Override
+    public Direction getDirection(){
+        return this.direction;
+    }
+
+    public void act(){
         if (moving) {
-            if (direction == Direction.RIGHT) {
-                this.x += this.movementDelta;
-            } else {
-                this.x -= this.movementDelta;
+            this.x += this.movementDelta;
+            if (outOfBounds()) {
+                this.handler.onEnemyDestroyed(this);
+                return;
             }
             if (this.player.getHeadY() < this.y) {
-                for (PipeSegment seg : this.player.getSegmentStack()) {
-                    if (seg.getY() == this.y) {
-                        if (Math.abs(seg.getX() - this.x) < world.getOffsetX())
-                            this.moving = false;
-                    } else if (seg.getY() < this.y)
-                        break;
+                List<PipeSegment> res = this.player.getSegmentByCriteria(
+                        (PipeSegment seg) -> seg.getSegmentType() != PipeSegmentType.HORIZONTAL
+                                && seg.getSegmentType() != PipeSegmentType.VERTICAL
+                                && Math.abs(seg.getX() - this.x) < world.getOffsetX()
+                                && seg.getY() == this.y
+                );
+                if (!res.isEmpty()) {
+                    this.moving = false;
+                    this.player.damagePipe();
                 }
             }
         } else
             this.player.damagePipe();
+    }
+
+    private boolean outOfBounds(){
+        return (this.direction == Direction.RIGHT && this.x > this.bound)
+                || this.direction == Direction.LEFT && this.x < this.bound;
     }
 }
