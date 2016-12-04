@@ -3,13 +3,13 @@ package com.szakacs.kpi.fei.tuke.game.player;
 import com.szakacs.kpi.fei.tuke.game.arena.AbstractPlayer;
 import com.szakacs.kpi.fei.tuke.game.arena.TreasureScooper;
 
+public class PlayerA implements Player {
 
-
-public class PipeB extends AbstractPlayer {
-
+    // Tato clenska premenna je povinna
+    private Pipe pipe;
     // Tu si mozes vytvorit vlastne clenske premenne pre pouzitie pocas hry
     // priklad je uvedeny tu:
-    private TreasureScooper world;    
+    private QueryableGameInterface world;
 
 
     // Jeden sposob ako riesit ulohy, kde treba rozne spravanie od hraca v zavislosti od toho, 
@@ -27,13 +27,12 @@ public class PipeB extends AbstractPlayer {
     }
     private State playerState;
     
-    public PipeB(TreasureScooper world) {
-        super(world);
+    public PlayerA(QueryableGameInterface world, Pipe pipe){
         this.world = world;
         this.playerState = State.BEGIN;
     }
 
-    // Tato metoda sa zavola v kazdej iteracii herneho cyklu, tu je  implementuje student
+    // Tato metoda sa zavola v kazdej iteracii herneho cyklu, tu je kod, ktory implementuje student
     @Override
     protected void act() {
         switch (this.playerState){

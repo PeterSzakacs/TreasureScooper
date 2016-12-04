@@ -7,13 +7,7 @@ import com.szakacs.kpi.fei.tuke.game.intrfc.game.ManipulableGameInterface;
 import com.szakacs.kpi.fei.tuke.game.misc.AdvancedConfigProcessor;
 import com.szakacs.kpi.fei.tuke.game.misc.DummyTunnel;
 import com.szakacs.kpi.fei.tuke.game.player.PlayerA;
-import org.xml.sax.SAXException;
 
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.parsers.SAXParser;
-import javax.xml.parsers.SAXParserFactory;
-import java.io.File;
-import java.io.IOException;
 import java.util.*;
 import java.util.function.Predicate;
 
