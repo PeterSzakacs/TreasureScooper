@@ -5,7 +5,7 @@ import com.szakacs.kpi.fei.tuke.game.enums.Direction;
 import com.szakacs.kpi.fei.tuke.game.enums.PipeSegmentType;
 import com.szakacs.kpi.fei.tuke.game.intrfc.ManipulableActor;
 import com.szakacs.kpi.fei.tuke.game.intrfc.game.QueryableGameInterface;
-import com.szakacs.kpi.fei.tuke.game.intrfc.eventHandlers.TunnelEventHandler;
+import com.szakacs.kpi.fei.tuke.game.intrfc.callbacks.TunnelEventHandler;
 
 import java.util.List;
 

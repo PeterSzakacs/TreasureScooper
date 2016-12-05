@@ -8,7 +8,5 @@ import com.szakacs.kpi.fei.tuke.game.intrfc.GoldCollector;
  */
 public interface BasicManipulable {
 
-    void onNuggetCollected(GoldCollector collector);
-
     void update();
 }

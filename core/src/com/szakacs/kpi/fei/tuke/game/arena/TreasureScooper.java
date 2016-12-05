@@ -2,7 +2,7 @@ package com.szakacs.kpi.fei.tuke.game.arena;
 
 import com.szakacs.kpi.fei.tuke.game.enums.*;
 import com.szakacs.kpi.fei.tuke.game.intrfc.*;
-import com.szakacs.kpi.fei.tuke.game.intrfc.eventHandlers.TunnelEventHandler;
+import com.szakacs.kpi.fei.tuke.game.intrfc.callbacks.TunnelEventHandler;
 import com.szakacs.kpi.fei.tuke.game.intrfc.game.ManipulableGameInterface;
 import com.szakacs.kpi.fei.tuke.game.misc.AdvancedConfigProcessor;
 import com.szakacs.kpi.fei.tuke.game.misc.DummyTunnel;
@@ -50,7 +50,7 @@ public class TreasureScooper implements ManipulableGameInterface {
         this.buildTunnelGraph(dummyTunnels.get(configProc.getRootTunnel()),
                 dummyTunnels.values(), configProc.getInterconnects());
         this.pipe = new Pipe(this);
-        this.player = new PlayerA(this, this.pipe);
+        this.player = new PlayerA(new GameProxy(this), this.pipe);
         this.searchResults = new ArrayList<>(3 * this.tunnels.size());
         this.actors = new ArrayList<>();
         this.state = GameState.PLAYING;
@@ -155,10 +155,6 @@ public class TreasureScooper implements ManipulableGameInterface {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-    }
-
-    public void onNuggetCollected(GoldCollector collector) {
-        this.remainingNuggetsCount--;
     }
 
     /*

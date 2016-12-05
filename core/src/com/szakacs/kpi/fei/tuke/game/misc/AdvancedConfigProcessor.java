@@ -2,7 +2,6 @@ package com.szakacs.kpi.fei.tuke.game.misc;
 
 import com.szakacs.kpi.fei.tuke.game.enums.ActorType;
 import com.szakacs.kpi.fei.tuke.game.enums.Direction;
-import com.szakacs.kpi.fei.tuke.game.intrfc.eventHandlers.GameInitializer;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
