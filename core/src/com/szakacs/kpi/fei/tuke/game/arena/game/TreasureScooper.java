@@ -1,5 +1,9 @@
-package com.szakacs.kpi.fei.tuke.game.arena;
+package com.szakacs.kpi.fei.tuke.game.arena.game;
 
+import com.szakacs.kpi.fei.tuke.game.arena.Enemy;
+import com.szakacs.kpi.fei.tuke.game.arena.pipe.Pipe;
+import com.szakacs.kpi.fei.tuke.game.arena.tunnels.HorizontalTunnel;
+import com.szakacs.kpi.fei.tuke.game.arena.tunnels.TunnelCell;
 import com.szakacs.kpi.fei.tuke.game.enums.*;
 import com.szakacs.kpi.fei.tuke.game.intrfc.*;
 import com.szakacs.kpi.fei.tuke.game.intrfc.callbacks.TunnelEventHandler;
@@ -38,13 +42,14 @@ public class TreasureScooper implements ManipulableGameInterface {
     }
     private TunnelEventHandler callback;
 
+
     public TreasureScooper(AdvancedConfigProcessor configProc) {
         this.width = configProc.getWidth();
         this.height = configProc.getHeight();
         this.offsetX = configProc.getOffsetX();
         this.offsetY = configProc.getOffsetY();
         this.rootCell = new TunnelCell(configProc.getInitX(),
-                configProc.getInitY(), TunnelCellType.INTERCONNECT, null);
+                configProc.getInitY(), TunnelCellType.INTERCONNECT, this, null);
         Map<String, DummyTunnel> dummyTunnels = configProc.getDummyTunnels();
         this.callback = new worldCallback();
         this.buildTunnelGraph(dummyTunnels.get(configProc.getRootTunnel()),
@@ -79,9 +84,9 @@ public class TreasureScooper implements ManipulableGameInterface {
         TunnelCell newCell, prevCell = this.rootCell;
         HorizontalTunnel root = this.tunnels.get(rootDummy.getId());
         for (int y = rootCell.getY() - offsetY; y > root.getY(); y -= offsetY){
-            newCell = new TunnelCell(rootCell.getX(), y, TunnelCellType.INTERCONNECT, null);
-            newCell.setAtDirection(Direction.UP, prevCell);
-            prevCell.setAtDirection(Direction.DOWN, newCell);
+            newCell = new TunnelCell(rootCell.getX(), y, TunnelCellType.INTERCONNECT, this, null);
+            newCell.setAtDirection(this, Direction.UP, prevCell);
+            prevCell.setAtDirection(this, Direction.DOWN, newCell);
             prevCell = newCell;
         }
         root.setEntrance(prevCell);
@@ -141,7 +146,7 @@ public class TreasureScooper implements ManipulableGameInterface {
             this.pipe.setOperationApplied(false);
         }
         for (HorizontalTunnel ht : tunnels.values())
-            ht.act();
+            ht.act(this);
         for (int i = 0; i < actors.size(); i++) {
             ManipulableActor actor = actors.get(i);
             actor.act();

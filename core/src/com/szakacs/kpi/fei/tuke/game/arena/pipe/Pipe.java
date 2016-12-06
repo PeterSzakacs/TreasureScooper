@@ -1,5 +1,10 @@
-package com.szakacs.kpi.fei.tuke.game.arena;
+package com.szakacs.kpi.fei.tuke.game.arena.pipe;
 
+import com.szakacs.kpi.fei.tuke.game.arena.Enemy;
+import com.szakacs.kpi.fei.tuke.game.arena.tunnels.HorizontalTunnel;
+import com.szakacs.kpi.fei.tuke.game.arena.tunnels.TunnelCell;
+import com.szakacs.kpi.fei.tuke.game.arena.weapon.Bullet;
+import com.szakacs.kpi.fei.tuke.game.arena.weapon.Weapon;
 import com.szakacs.kpi.fei.tuke.game.enums.Direction;
 import com.szakacs.kpi.fei.tuke.game.enums.PipeSegmentType;
 import com.szakacs.kpi.fei.tuke.game.intrfc.game.ManipulableGameInterface;
@@ -41,7 +46,7 @@ public class Pipe {
     private boolean calculated;
     private List<PipeSegment> searchResults;
 
-    protected Pipe(ManipulableGameInterface world) {
+    public Pipe(ManipulableGameInterface world) {
         this.segmentStack = new ArrayList<>();
         this.dir = Direction.DOWN;
         this.head = new PipeHead(15 * world.getOffsetX(), 13 * world.getOffsetY(), Direction.DOWN);
@@ -54,10 +59,10 @@ public class Pipe {
         this.searchResults = new ArrayList<>();
         this.currentPosition = world.getRootCell();
         this.weapon = new Weapon();
-        weapon.enqueue(new Bullet());
+        weapon.enqueue(new Bullet(this.world));
     }
 
-    void damagePipe(){
+    public void damagePipe(){
         this.healthPoints -= 10;
     }
 
@@ -70,7 +75,7 @@ public class Pipe {
         if (weapon.isFull())
             return false;
         this.score -= 10;
-        return this.weapon.enqueue(new Bullet());
+        return this.weapon.enqueue(new Bullet(this.world));
     }
 
     public void fire(){
@@ -80,8 +85,11 @@ public class Pipe {
         }
     }
 
-    Weapon getWeapon(){
-        return this.weapon;
+    public Weapon getWeapon(ManipulableGameInterface world){
+        if (world != null && world.equals(this.world))
+            return this.weapon;
+        else
+            return null;
     }
 
 
@@ -157,7 +165,7 @@ public class Pipe {
         return this.head;
     }
 
-    void setOperationApplied(boolean val){
+    public void setOperationApplied(boolean val){
         this.operationApplied = val;
     }
 

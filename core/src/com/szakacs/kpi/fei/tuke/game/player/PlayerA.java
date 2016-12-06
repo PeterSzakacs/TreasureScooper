@@ -1,6 +1,8 @@
 package com.szakacs.kpi.fei.tuke.game.player;
 
-import com.szakacs.kpi.fei.tuke.game.arena.*;
+import com.szakacs.kpi.fei.tuke.game.arena.pipe.Pipe;
+import com.szakacs.kpi.fei.tuke.game.arena.tunnels.HorizontalTunnel;
+import com.szakacs.kpi.fei.tuke.game.arena.tunnels.TunnelCell;
 import com.szakacs.kpi.fei.tuke.game.enums.Direction;
 import com.szakacs.kpi.fei.tuke.game.enums.TunnelCellType;
 import com.szakacs.kpi.fei.tuke.game.intrfc.game.QueryableGameInterface;

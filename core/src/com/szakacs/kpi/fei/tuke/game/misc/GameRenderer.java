@@ -1,4 +1,4 @@
-package com.szakacs.kpi.fei.tuke.game.arena;
+package com.szakacs.kpi.fei.tuke.game.misc;
 
 import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Gdx;
@@ -6,6 +6,13 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.*;
+import com.szakacs.kpi.fei.tuke.game.arena.game.TreasureScooper;
+import com.szakacs.kpi.fei.tuke.game.arena.pipe.Pipe;
+import com.szakacs.kpi.fei.tuke.game.arena.pipe.PipeSegment;
+import com.szakacs.kpi.fei.tuke.game.arena.tunnels.HorizontalTunnel;
+import com.szakacs.kpi.fei.tuke.game.arena.tunnels.TunnelCell;
+import com.szakacs.kpi.fei.tuke.game.arena.weapon.Bullet;
+import com.szakacs.kpi.fei.tuke.game.arena.weapon.Weapon;
 import com.szakacs.kpi.fei.tuke.game.enums.ActorType;
 import com.szakacs.kpi.fei.tuke.game.enums.Direction;
 import com.szakacs.kpi.fei.tuke.game.enums.PipeSegmentType;
@@ -168,7 +175,7 @@ public class GameRenderer implements ApplicationListener {
 
     private void renderQueue(){
         queue.draw(batch);
-        Weapon weapon = world.getPipe().getWeapon();
+        Weapon weapon = world.getPipe().getWeapon(this.world);
         List<Bullet> bullets = weapon.getBullets();
         if (!weapon.isEmpty()) {
             for (int i = 0; i < weapon.getCapacity(); i++) {
@@ -209,12 +216,12 @@ public class GameRenderer implements ApplicationListener {
     }
 
     private void renderPlayer(){
-        PipeHead head = world.getPipe().getHead();
-        for (PipeSegment seg : world.getPipe().getSegmentStack()){
+        Pipe pipe = world.getPipe();
+        for (PipeSegment seg : pipe.getSegmentStack()){
             pipeSegmentSprites.get(seg.getSegmentType()).setPosition(seg.getX(), seg.getY());
             pipeSegmentSprites.get(seg.getSegmentType()).draw(batch);
         }
-        Animation anim = this.pipeHeadSprites.get(head.getDirection());
-        batch.draw(anim.getKeyFrame(elapsedTime, true), head.getX(), head.getY());
+        Animation anim = this.pipeHeadSprites.get(pipe.getCurrentHeadOrientation());
+        batch.draw(anim.getKeyFrame(elapsedTime, true), pipe.getHeadX(), pipe.getHeadY());
     }
 }

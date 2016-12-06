@@ -1,8 +1,8 @@
 package com.szakacs.kpi.fei.tuke.game.intrfc.game;
 
-import com.szakacs.kpi.fei.tuke.game.arena.Pipe;
-import com.szakacs.kpi.fei.tuke.game.arena.HorizontalTunnel;
-import com.szakacs.kpi.fei.tuke.game.arena.TunnelCell;
+import com.szakacs.kpi.fei.tuke.game.arena.pipe.Pipe;
+import com.szakacs.kpi.fei.tuke.game.arena.tunnels.HorizontalTunnel;
+import com.szakacs.kpi.fei.tuke.game.arena.tunnels.TunnelCell;
 import com.szakacs.kpi.fei.tuke.game.enums.GameState;
 
 import java.util.Collection;

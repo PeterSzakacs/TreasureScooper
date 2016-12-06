@@ -1,5 +1,8 @@
-package com.szakacs.kpi.fei.tuke.game.arena;
+package com.szakacs.kpi.fei.tuke.game.arena.weapon;
 
+import com.szakacs.kpi.fei.tuke.game.arena.Enemy;
+import com.szakacs.kpi.fei.tuke.game.arena.tunnels.HorizontalTunnel;
+import com.szakacs.kpi.fei.tuke.game.arena.tunnels.TunnelCell;
 import com.szakacs.kpi.fei.tuke.game.enums.ActorType;
 import com.szakacs.kpi.fei.tuke.game.enums.Direction;
 import com.szakacs.kpi.fei.tuke.game.intrfc.Actor;
@@ -26,7 +29,8 @@ public class Bullet implements ManipulableActor {
     private HorizontalTunnel tunnel;
     private Enemy target;
 
-    public Bullet(){
+    public Bullet(ManipulableGameInterface world){
+        this.world = world;
         this.actorType = ActorType.BULLET;
     }
 
@@ -63,45 +67,46 @@ public class Bullet implements ManipulableActor {
         }
     }
 
-    void launch(TunnelCell position, Direction dir, ManipulableGameInterface world){
-        this.current = position.getCellAtDirection(dir);
-        if (this.current == null)
-            return;
-        Collection<HorizontalTunnel> tunnels = world.getTunnels();
-        for (HorizontalTunnel ht : tunnels){
-            if (ht.getCells().contains(this.current)){
-                this.tunnel = ht;
-                break;
+    public void launch(TunnelCell position, Direction dir, ManipulableGameInterface world){
+        if (world != null && world.equals(this.world)) {
+            this.current = position.getCellAtDirection(dir);
+            if (this.current == null)
+                return;
+            Collection<HorizontalTunnel> tunnels = world.getTunnels();
+            for (HorizontalTunnel ht : tunnels) {
+                if (ht.getCells().contains(this.current)) {
+                    this.tunnel = ht;
+                    break;
+                }
             }
+            this.x = position.getX();
+            this.y = position.getY();
+            this.dir = dir;
+            world.registerActor(this);
+            switch (dir) {
+                case LEFT:
+                    this.xDelta = -world.getOffsetX() * 2;
+                    this.yDelta = 0;
+                    break;
+                case RIGHT:
+                    this.xDelta = world.getOffsetX() * 2;
+                    this.yDelta = 0;
+                    break;
+                case DOWN:
+                    this.xDelta = 0;
+                    this.yDelta = -world.getOffsetY() * 2;
+                    break;
+                case UP:
+                    this.xDelta = 0;
+                    this.yDelta = world.getOffsetY() * 2;
+                    break;
+                default:
+                    world.unregisterActor(this);
+                    System.err.println("unknown direction value passed as argument: " + dir.name());
+            }
+            this.setBound(position, dir);
+            this.lockTarget();
         }
-        this.x = position.getX();
-        this.y = position.getY();
-        this.world = world;
-        this.dir = dir;
-        world.registerActor(this);
-        switch (dir){
-            case LEFT:
-                this.xDelta = -world.getOffsetX() * 2;
-                this.yDelta = 0;
-                break;
-            case RIGHT:
-                this.xDelta = world.getOffsetX() * 2;
-                this.yDelta = 0;
-                break;
-            case DOWN:
-                this.xDelta = 0;
-                this.yDelta = -world.getOffsetY() * 2;
-                break;
-            case UP:
-                this.xDelta = 0;
-                this.yDelta = world.getOffsetY() * 2;
-                break;
-            default:
-                world.unregisterActor(this);
-                System.err.println("unknown direction value passed as argument: " + dir.name());
-        }
-        this.setBound(position, dir);
-        this.lockTarget();
     }
 
     private void lockTarget(){

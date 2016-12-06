@@ -1,7 +1,6 @@
 package com.szakacs.kpi.fei.tuke.game.intrfc.callbacks;
 
 import com.szakacs.kpi.fei.tuke.game.arena.Enemy;
-import com.szakacs.kpi.fei.tuke.game.arena.PipeHead;
 import com.szakacs.kpi.fei.tuke.game.intrfc.GoldCollector;
 
 /**

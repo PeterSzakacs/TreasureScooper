@@ -1,4 +1,4 @@
-package com.szakacs.kpi.fei.tuke.game.arena;
+package com.szakacs.kpi.fei.tuke.game.arena.weapon;
 
 import java.util.Arrays;
 import java.util.Collections;

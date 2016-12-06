@@ -2,8 +2,7 @@ package com.szakacs.kpi.fei.tuke.game.desktop;
 
 import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
-import com.szakacs.kpi.fei.tuke.game.arena.GameRenderer;
-import com.szakacs.kpi.fei.tuke.game.arena.TreasureScooper;
+import com.szakacs.kpi.fei.tuke.game.misc.GameRenderer;
 
 public class DesktopLauncher {
 	public static void main (String[] arg) {

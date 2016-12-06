@@ -1,4 +1,4 @@
-package com.szakacs.kpi.fei.tuke.game.arena;
+package com.szakacs.kpi.fei.tuke.game.arena.pipe;
 
 import com.szakacs.kpi.fei.tuke.game.enums.PipeSegmentType;
 import com.szakacs.kpi.fei.tuke.game.intrfc.Actor;
