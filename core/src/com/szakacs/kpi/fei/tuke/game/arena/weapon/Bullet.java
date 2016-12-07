@@ -1,6 +1,6 @@
 package com.szakacs.kpi.fei.tuke.game.arena.weapon;
 
-import com.szakacs.kpi.fei.tuke.game.arena.Enemy;
+import com.szakacs.kpi.fei.tuke.game.arena.AbstractActor;
 import com.szakacs.kpi.fei.tuke.game.arena.tunnels.HorizontalTunnel;
 import com.szakacs.kpi.fei.tuke.game.arena.tunnels.TunnelCell;
 import com.szakacs.kpi.fei.tuke.game.enums.ActorType;
@@ -14,43 +14,15 @@ import java.util.List;
 /**
  * Created by developer on 6.11.2016.
  */
-public class Bullet implements Actor {
-    private Direction dir;
-    private ActorType actorType;
-    private int x;
-    private int y;
+public class Bullet extends AbstractActor {
     private int xDelta;
     private int yDelta;
     private int xBound;
     private int yBound;
-    private TunnelCell current;
-    private ManipulableGameInterface world;
-    private HorizontalTunnel tunnel;
-    private Enemy target;
 
     public Bullet(ManipulableGameInterface world){
-        this.world = world;
+        super(world);
         this.actorType = ActorType.BULLET;
-    }
-
-    @Override
-    public int getX() {
-        return x;
-    }
-
-    @Override
-    public int getY() {
-        return y;
-    }
-
-    @Override
-    public ActorType getType() {
-        return this.actorType;
-    }
-
-    @Override
-    public Direction getDirection() {
-        return this.dir;
     }
 
     public void act(ManipulableGameInterface world){
@@ -63,7 +35,7 @@ public class Bullet implements Actor {
                 List<Actor> intersecting = world.getActorsBySearchCriteria(
                         (Actor a) ->
                         a.getType() == ActorType.MOLE
-                                && world.intersects(a, this));
+                                && a.intersects(this));
                 if (!intersecting.isEmpty()) {
                     world.unregisterActor(intersecting.get(0));
                     world.unregisterActor(this);
@@ -74,13 +46,12 @@ public class Bullet implements Actor {
 
     public void launch(TunnelCell position, Direction dir, ManipulableGameInterface world){
         if (world != null && world.equals(this.world)) {
-            this.current = position.getCellAtDirection(dir);
-            if (this.current == null)
+            TunnelCell current = position.getCellAtDirection(dir);
+            if (current == null)
                 return;
             Collection<HorizontalTunnel> tunnels = world.getTunnels();
             for (HorizontalTunnel ht : tunnels) {
-                if (ht.getCells().contains(this.current)) {
-                    this.tunnel = ht;
+                if (ht.getCells().contains(current)) {
                     break;
                 }
             }
@@ -110,20 +81,6 @@ public class Bullet implements Actor {
                     System.err.println("unknown direction value passed as argument: " + dir.name());
             }
             this.setBound(position, dir);
-            this.lockTarget();
-        }
-    }
-
-    private void lockTarget(){
-        List<Actor> enemies = this.world.getActorsBySearchCriteria(
-                (Actor a) -> a.getType() == ActorType.MOLE
-        );
-        int diff = tunnel.getWidth();
-        for (Actor enemy : enemies){
-            if (Math.abs(enemy.getX() - this.x) < diff) {
-                target = (Enemy) enemy;
-                diff = Math.abs(target.getX() - this.x);
-            }
         }
     }
 

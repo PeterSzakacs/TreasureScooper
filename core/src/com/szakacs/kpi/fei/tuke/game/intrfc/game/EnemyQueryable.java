@@ -13,6 +13,4 @@ public interface EnemyQueryable {
     List<Actor> getActors();
 
     List<Actor> getActorsBySearchCriteria(Predicate<Actor> predicate);
-
-    boolean intersects(Actor actorA, Actor actorB);
 }

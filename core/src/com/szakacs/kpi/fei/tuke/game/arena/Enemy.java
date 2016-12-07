@@ -12,22 +12,18 @@ import com.szakacs.kpi.fei.tuke.game.intrfc.callbacks.TunnelEventHandler;
 /**
  * Created by developer on 5.11.2016.
  */
-public class Enemy implements Actor {
+public class Enemy extends AbstractActor {
 
     // The Y coordinates are already in the HorizontalTunnel object.
-
-    private int x;
-    private int y;
-    private Direction direction;
-    private QueryableGameInterface world;
     private Pipe player;
     private int movementDelta;
     private boolean moving;
     private int bound;
     private TunnelEventHandler handler;
 
-    public Enemy(Direction leftToRightDirection, HorizontalTunnel ht, TunnelEventHandler handler, QueryableGameInterface world){
-        this.direction = leftToRightDirection;
+    public Enemy(Direction leftToRightDirection, HorizontalTunnel ht, TunnelEventHandler handler, ManipulableGameInterface world){
+        super(world);
+        this.dir = leftToRightDirection;
         if (leftToRightDirection == Direction.RIGHT) {
             this.x = ht.getX() - world.getOffsetX();
             this.movementDelta = world.getOffsetX() / 4;
@@ -38,30 +34,11 @@ public class Enemy implements Actor {
             this.bound = ht.getX();
         }
         this.y = ht.getY();
+        this.actorType = ActorType.MOLE;
         this.world = world;
         this.player = world.getPipe();
         this.moving = true;
         this.handler = handler;
-    }
-
-    @Override
-    public int getX(){
-        return this.x;
-    }
-
-    @Override
-    public int getY(){
-        return this.y;
-    }
-
-    @Override
-    public ActorType getType() {
-        return ActorType.MOLE;
-    }
-
-    @Override
-    public Direction getDirection(){
-        return this.direction;
     }
 
     public void act(ManipulableGameInterface world){
@@ -82,7 +59,7 @@ public class Enemy implements Actor {
     }
 
     private boolean outOfBounds(){
-        return (this.direction == Direction.RIGHT && this.x > this.bound)
-                || this.direction == Direction.LEFT && this.x < this.bound;
+        return (this.dir == Direction.RIGHT && this.x > this.bound)
+                || this.dir == Direction.LEFT && this.x < this.bound;
     }
 }

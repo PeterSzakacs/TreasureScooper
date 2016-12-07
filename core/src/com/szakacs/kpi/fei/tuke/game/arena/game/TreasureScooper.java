@@ -174,14 +174,6 @@ public class TreasureScooper implements ManipulableGameInterface {
         return this.searchResults;
     }
 
-    public boolean intersects(Actor actorA, Actor actorB){
-        if (actorA != null && actorB != null) {
-            return actorA.getX() / offsetX == actorB.getX() / offsetX
-                    && actorA.getY() / offsetY == actorB.getY() / offsetY;
-        }
-        return false;
-    }
-
     public void registerActor(Actor actor) {
         if (actor != null)
             this.actors.add(actor);

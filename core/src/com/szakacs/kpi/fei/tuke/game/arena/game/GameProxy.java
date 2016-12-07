@@ -40,11 +40,6 @@ public class GameProxy implements QueryableGameInterface{
     }
 
     @Override
-    public boolean intersects(Actor actorA, Actor actorB) {
-        return gameWorld.intersects(actorA, actorB);
-    }
-
-    @Override
     public Pipe getPipe() {
         return gameWorld.getPipe();
     }

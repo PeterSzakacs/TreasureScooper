@@ -51,7 +51,7 @@ public class Pipe {
     public Pipe(ManipulableGameInterface world) {
         this.segmentStack = new ArrayList<>();
         this.dir = Direction.DOWN;
-        this.head = new PipeHead(15 * world.getOffsetX(), 13 * world.getOffsetY(), Direction.DOWN);
+        this.head = new PipeHead(15 * world.getOffsetX(), 13 * world.getOffsetY(), Direction.DOWN, world);
         this.world = world;
         this.score = 0;
         this.healthPoints = 100;

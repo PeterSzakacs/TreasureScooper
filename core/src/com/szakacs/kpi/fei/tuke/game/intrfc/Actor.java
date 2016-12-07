@@ -13,4 +13,5 @@ public interface Actor {
     ActorType getType();
     Direction getDirection();
     void act(ManipulableGameInterface world);
+    boolean intersects(Actor other);
 }
