@@ -6,7 +6,6 @@ import com.szakacs.kpi.fei.tuke.game.arena.tunnels.TunnelCell;
 import com.szakacs.kpi.fei.tuke.game.enums.ActorType;
 import com.szakacs.kpi.fei.tuke.game.enums.Direction;
 import com.szakacs.kpi.fei.tuke.game.intrfc.Actor;
-import com.szakacs.kpi.fei.tuke.game.intrfc.ManipulableActor;
 import com.szakacs.kpi.fei.tuke.game.intrfc.game.ManipulableGameInterface;
 
 import java.util.Collection;
@@ -15,7 +14,7 @@ import java.util.List;
 /**
  * Created by developer on 6.11.2016.
  */
-public class Bullet implements ManipulableActor {
+public class Bullet implements Actor {
     private Direction dir;
     private ActorType actorType;
     private int x;
@@ -54,15 +53,21 @@ public class Bullet implements ManipulableActor {
         return this.dir;
     }
 
-    public void act(){
-        this.x += xDelta;
-        this.y += yDelta;
-        if (boundReached()) {
-            world.unregisterActor(this);
-        }else{
-            if (world.intersects(this, target)) {
-                tunnel.destroyEnemy(target);
+    public void act(ManipulableGameInterface world){
+        if (world != null && world.equals(this.world)) {
+            this.x += xDelta;
+            this.y += yDelta;
+            if (boundReached()) {
                 world.unregisterActor(this);
+            } else {
+                List<Actor> intersecting = world.getActorsBySearchCriteria(
+                        (Actor a) ->
+                        a.getType() == ActorType.MOLE
+                                && world.intersects(a, this));
+                if (!intersecting.isEmpty()) {
+                    world.unregisterActor(intersecting.get(0));
+                    world.unregisterActor(this);
+                }
             }
         }
     }

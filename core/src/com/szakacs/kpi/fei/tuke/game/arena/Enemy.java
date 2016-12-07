@@ -1,21 +1,18 @@
 package com.szakacs.kpi.fei.tuke.game.arena;
 
 import com.szakacs.kpi.fei.tuke.game.arena.pipe.Pipe;
-import com.szakacs.kpi.fei.tuke.game.arena.pipe.PipeSegment;
 import com.szakacs.kpi.fei.tuke.game.arena.tunnels.HorizontalTunnel;
 import com.szakacs.kpi.fei.tuke.game.enums.ActorType;
 import com.szakacs.kpi.fei.tuke.game.enums.Direction;
-import com.szakacs.kpi.fei.tuke.game.enums.PipeSegmentType;
-import com.szakacs.kpi.fei.tuke.game.intrfc.ManipulableActor;
+import com.szakacs.kpi.fei.tuke.game.intrfc.Actor;
+import com.szakacs.kpi.fei.tuke.game.intrfc.game.ManipulableGameInterface;
 import com.szakacs.kpi.fei.tuke.game.intrfc.game.QueryableGameInterface;
 import com.szakacs.kpi.fei.tuke.game.intrfc.callbacks.TunnelEventHandler;
-
-import java.util.List;
 
 /**
  * Created by developer on 5.11.2016.
  */
-public class Enemy implements ManipulableActor {
+public class Enemy implements Actor {
 
     // The Y coordinates are already in the HorizontalTunnel object.
 
@@ -67,27 +64,21 @@ public class Enemy implements ManipulableActor {
         return this.direction;
     }
 
-    public void act(){
-        if (moving) {
-            this.x += this.movementDelta;
-            if (outOfBounds()) {
-                this.handler.onEnemyDestroyed(this);
-                return;
-            }
-            if (this.player.getHeadY() < this.y) {
-                List<PipeSegment> res = this.player.getSegmentByCriteria(
-                        (PipeSegment seg) -> seg.getSegmentType() != PipeSegmentType.HORIZONTAL
-                                && seg.getSegmentType() != PipeSegmentType.VERTICAL
-                                && Math.abs(seg.getX() - this.x) < world.getOffsetX()
-                                && seg.getY() == this.y
-                );
-                if (!res.isEmpty()) {
+    public void act(ManipulableGameInterface world){
+        if (world != null && world.equals(this.world)) {
+            if (moving) {
+                this.x += this.movementDelta;
+                if (outOfBounds()) {
+                    this.handler.onEnemyDestroyed(this);
+                    return;
+                }
+                if (this.player.intersects(this)) {
                     this.moving = false;
                     this.player.damagePipe();
                 }
-            }
-        } else
-            this.player.damagePipe();
+            } else
+                this.player.damagePipe();
+        }
     }
 
     private boolean outOfBounds(){

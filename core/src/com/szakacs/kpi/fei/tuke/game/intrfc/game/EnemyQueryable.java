@@ -1,6 +1,5 @@
 package com.szakacs.kpi.fei.tuke.game.intrfc.game;
 
-import com.szakacs.kpi.fei.tuke.game.arena.Enemy;
 import com.szakacs.kpi.fei.tuke.game.intrfc.Actor;
 
 import java.util.List;

@@ -3,6 +3,7 @@ package com.szakacs.kpi.fei.tuke.game.arena.pipe;
 import com.szakacs.kpi.fei.tuke.game.enums.ActorType;
 import com.szakacs.kpi.fei.tuke.game.enums.Direction;
 import com.szakacs.kpi.fei.tuke.game.intrfc.GoldCollector;
+import com.szakacs.kpi.fei.tuke.game.intrfc.game.ManipulableGameInterface;
 
 /**
  * Created by developer on 4.11.2016.
@@ -36,6 +37,11 @@ public class PipeHead implements GoldCollector {
     @Override
     public Direction getDirection() {
         return direction;
+    }
+
+    @Override
+    public void act(ManipulableGameInterface world) {
+
     }
 
     void setX(int x) {

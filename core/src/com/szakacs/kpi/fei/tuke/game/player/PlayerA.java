@@ -1,6 +1,7 @@
 package com.szakacs.kpi.fei.tuke.game.player;
 
 import com.szakacs.kpi.fei.tuke.game.arena.pipe.Pipe;
+import com.szakacs.kpi.fei.tuke.game.arena.pipe.PipeHead;
 import com.szakacs.kpi.fei.tuke.game.arena.tunnels.HorizontalTunnel;
 import com.szakacs.kpi.fei.tuke.game.arena.tunnels.TunnelCell;
 import com.szakacs.kpi.fei.tuke.game.enums.Direction;
@@ -15,6 +16,7 @@ import com.szakacs.kpi.fei.tuke.game.intrfc.Player;
  */
 public class PlayerA implements Player {
 
+    private final PipeHead head;
     // again, this is all code the student can implement
     private Pipe pipe;
 
@@ -34,7 +36,8 @@ public class PlayerA implements Player {
     public PlayerA(QueryableGameInterface world, Pipe pipe){
         this.state = State.BEGIN;
         this.pipe = pipe;
-        this.currentDir = pipe.getCurrentHeadOrientation();
+        this.head = pipe.getHead();
+        this.currentDir = this.head.getDirection();
         this.world = world;
         this.currentPosition = pipe.getCurrentPosition();
         this.currentTunnel = null;
@@ -90,10 +93,10 @@ public class PlayerA implements Player {
                 if (pipe.getCurrentPosition().equals(this.entrance)) {
                     if (currentTunnel.getNuggetCount() == 0) {
                         this.state = State.ENTERTUNNEL;
-                        TunnelCell exit = this.currentTunnel.getNearestExit(pipe.getHeadX());
+                        TunnelCell exit = this.currentTunnel.getNearestExit(head.getX());
                         if (exit == null) {
                             this.state = State.FINISH;
-                        } else if (pipe.getHeadX() < exit.getX())
+                        } else if (head.getX() < exit.getX())
                             this.currentDir = Direction.RIGHT;
                         else
                             this.currentDir = Direction.LEFT;

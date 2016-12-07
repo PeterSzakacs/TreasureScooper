@@ -28,7 +28,7 @@ public class TreasureScooper implements ManipulableGameInterface {
     private TunnelCell rootCell;
     private Map<String, HorizontalTunnel> tunnels;
     private List<Actor> searchResults;
-    private List<ManipulableActor> actors;
+    private List<Actor> actors;
 
     private class worldCallback implements TunnelEventHandler {
         @Override
@@ -148,18 +148,13 @@ public class TreasureScooper implements ManipulableGameInterface {
         for (HorizontalTunnel ht : tunnels.values())
             ht.act(this);
         for (int i = 0; i < actors.size(); i++) {
-            ManipulableActor actor = actors.get(i);
-            actor.act();
+            Actor actor = actors.get(i);
+            actor.act(this);
         }
         if (this.remainingNuggetsCount == 0)
             this.state = GameState.WON;
         if (this.pipe.getHealth() <= 0)
             this.state = GameState.LOST;
-        try {
-            Thread.sleep(80);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
     }
 
     /*
@@ -187,12 +182,12 @@ public class TreasureScooper implements ManipulableGameInterface {
         return false;
     }
 
-    public void registerActor(ManipulableActor actor) {
+    public void registerActor(Actor actor) {
         if (actor != null)
             this.actors.add(actor);
     }
 
-    public void unregisterActor(ManipulableActor actor) {
+    public void unregisterActor(Actor actor) {
         if (actor != null)
             this.actors.remove(actor);
     }

@@ -7,6 +7,7 @@ import com.szakacs.kpi.fei.tuke.game.arena.weapon.Bullet;
 import com.szakacs.kpi.fei.tuke.game.arena.weapon.Weapon;
 import com.szakacs.kpi.fei.tuke.game.enums.Direction;
 import com.szakacs.kpi.fei.tuke.game.enums.PipeSegmentType;
+import com.szakacs.kpi.fei.tuke.game.intrfc.Actor;
 import com.szakacs.kpi.fei.tuke.game.intrfc.game.ManipulableGameInterface;
 import com.szakacs.kpi.fei.tuke.game.intrfc.game.QueryableGameInterface;
 
@@ -45,6 +46,7 @@ public class Pipe {
     private boolean operationApplied;
     private boolean calculated;
     private List<PipeSegment> searchResults;
+    private List<PipeSegment> edges;
 
     public Pipe(ManipulableGameInterface world) {
         this.segmentStack = new ArrayList<>();
@@ -60,6 +62,7 @@ public class Pipe {
         this.currentPosition = world.getRootCell();
         this.weapon = new Weapon();
         weapon.enqueue(new Bullet(this.world));
+        this.edges = new ArrayList<>();
     }
 
     public void damagePipe(){
@@ -161,16 +164,12 @@ public class Pipe {
         return Collections.unmodifiableList(this.segmentStack);
     }
 
-    PipeHead getHead(){
+    public PipeHead getHead(){
         return this.head;
     }
 
     public void setOperationApplied(boolean val){
         this.operationApplied = val;
-    }
-
-    public QueryableGameInterface getWorld(){
-        return this.world;
     }
 
     public int getScore() {
@@ -179,18 +178,6 @@ public class Pipe {
 
     public int getHealth(){
         return this.healthPoints;
-    }
-
-    public int getHeadX(){
-        return this.head.getX();
-    }
-
-    public int getHeadY(){
-        return this.head.getY();
-    }
-
-    public Direction getCurrentHeadOrientation(){
-        return this.head.getDirection();
     }
 
     public TunnelCell getCurrentPosition(){
@@ -277,6 +264,10 @@ public class Pipe {
         head.setX(this.currentPosition.getX());
         head.setY(this.currentPosition.getY());
         head.setDirection(dir);
+        PipeSegment pushed = top();
+        if (pushed.getSegmentType() != PipeSegmentType.HORIZONTAL
+                && pushed.getSegmentType() != PipeSegmentType.VERTICAL)
+            this.edges.add(pushed);
         if (currentTunnel == null) {
             for (HorizontalTunnel ht : this.world.getTunnels()){
                 if (ht.getCells().contains(currentPosition))
@@ -323,24 +314,28 @@ public class Pipe {
             case HORIZONTAL:
                 break;
             case BOTTOM_LEFT:
+                this.edges.remove(popped);
                 if (head.getX() == popped.getX())
                     head.setDirection(Direction.RIGHT);
                 else
                     head.setDirection(Direction.UP);
                 break;
             case BOTTOM_RIGHT:
+                this.edges.remove(popped);
                 if (head.getX() == popped.getX())
                     head.setDirection(Direction.LEFT);
                 else
                     head.setDirection(Direction.UP);
                 break;
             case TOP_LEFT:
+                this.edges.remove(popped);
                 if (head.getX() == popped.getX())
                     head.setDirection(Direction.RIGHT);
                 else
                     head.setDirection(Direction.DOWN);
                 break;
             case TOP_RIGHT:
+                this.edges.remove(popped);
                 if (head.getX() == popped.getX())
                     head.setDirection(Direction.LEFT);
                 else
@@ -357,6 +352,16 @@ public class Pipe {
                     currentTunnel = ht;
             }
         }
+    }
+
+    public boolean intersects(Actor actor){
+        for (PipeSegment seg : this.edges){
+            if (Math.abs(seg.getX() - actor.getX()) <= world.getOffsetX() &&
+                    Math.abs(seg.getY() - actor.getY()) <= world.getOffsetY())
+                return true;
+        }
+        return Math.abs(head.getX() - actor.getX()) <= world.getOffsetX() &&
+                Math.abs(head.getY() - actor.getY()) <= world.getOffsetY();
     }
 
     /*

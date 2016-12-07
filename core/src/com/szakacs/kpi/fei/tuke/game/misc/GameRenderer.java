@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.*;
 import com.szakacs.kpi.fei.tuke.game.arena.game.TreasureScooper;
 import com.szakacs.kpi.fei.tuke.game.arena.pipe.Pipe;
+import com.szakacs.kpi.fei.tuke.game.arena.pipe.PipeHead;
 import com.szakacs.kpi.fei.tuke.game.arena.pipe.PipeSegment;
 import com.szakacs.kpi.fei.tuke.game.arena.tunnels.HorizontalTunnel;
 import com.szakacs.kpi.fei.tuke.game.arena.tunnels.TunnelCell;
@@ -114,8 +115,17 @@ public class GameRenderer implements ApplicationListener {
         Gdx.gl.glClearColor(1, 1, 1, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-        String displayMsg = Integer.toString(world.getPipe().getScore());
         world.update();
+
+        elapsedTime += Gdx.graphics.getDeltaTime();
+        batch.begin();
+        bgSprite.setPosition(0, 0);
+        bgSprite.draw(batch);
+        renderQueue();
+        renderTunnels();
+        renderActors();
+        renderPlayer();
+        String displayMsg = Integer.toString(world.getPipe().getScore());
         switch (world.getState()) {
             case PLAYING:
                 break;
@@ -128,17 +138,13 @@ public class GameRenderer implements ApplicationListener {
             default:
                 throw new IllegalStateException("Undefined game state: " + world.getState());
         }
-
-        elapsedTime += Gdx.graphics.getDeltaTime();
-        batch.begin();
-        bgSprite.setPosition(0, 0);
-        bgSprite.draw(batch);
         score.draw(batch, displayMsg, 128, 2000);
-        renderQueue();
-        renderTunnels();
-        renderActors();
-        renderPlayer();
         batch.end();
+        try {
+            Thread.sleep(90);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -217,11 +223,12 @@ public class GameRenderer implements ApplicationListener {
 
     private void renderPlayer(){
         Pipe pipe = world.getPipe();
+        PipeHead head = pipe.getHead();
         for (PipeSegment seg : pipe.getSegmentStack()){
             pipeSegmentSprites.get(seg.getSegmentType()).setPosition(seg.getX(), seg.getY());
             pipeSegmentSprites.get(seg.getSegmentType()).draw(batch);
         }
-        Animation anim = this.pipeHeadSprites.get(pipe.getCurrentHeadOrientation());
-        batch.draw(anim.getKeyFrame(elapsedTime, true), pipe.getHeadX(), pipe.getHeadY());
+        Animation anim = this.pipeHeadSprites.get(head.getDirection());
+        batch.draw(anim.getKeyFrame(elapsedTime, true), head.getX(), head.getY());
     }
 }
