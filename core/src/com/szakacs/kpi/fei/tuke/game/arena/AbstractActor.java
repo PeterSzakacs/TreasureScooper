@@ -17,6 +17,8 @@ public abstract class AbstractActor implements Actor {
     protected ManipulableGameInterface world;
 
     protected AbstractActor(ManipulableGameInterface world){
+        if (world == null)
+            throw new IllegalArgumentException("No game world passed");
         this.world = world;
     }
 
@@ -25,6 +27,7 @@ public abstract class AbstractActor implements Actor {
         this.y = y;
         this.actorType = type;
         this.dir = dir;
+        this.world = world;
     }
 
     @Override

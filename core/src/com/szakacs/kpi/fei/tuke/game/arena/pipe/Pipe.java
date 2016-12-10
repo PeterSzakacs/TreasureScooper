@@ -1,7 +1,5 @@
 package com.szakacs.kpi.fei.tuke.game.arena.pipe;
 
-import com.szakacs.kpi.fei.tuke.game.arena.Enemy;
-import com.szakacs.kpi.fei.tuke.game.arena.tunnels.HorizontalTunnel;
 import com.szakacs.kpi.fei.tuke.game.arena.tunnels.TunnelCell;
 import com.szakacs.kpi.fei.tuke.game.arena.weapon.Bullet;
 import com.szakacs.kpi.fei.tuke.game.arena.weapon.Weapon;
@@ -9,7 +7,6 @@ import com.szakacs.kpi.fei.tuke.game.enums.Direction;
 import com.szakacs.kpi.fei.tuke.game.enums.PipeSegmentType;
 import com.szakacs.kpi.fei.tuke.game.intrfc.Actor;
 import com.szakacs.kpi.fei.tuke.game.intrfc.game.ManipulableGameInterface;
-import com.szakacs.kpi.fei.tuke.game.intrfc.game.QueryableGameInterface;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -30,39 +27,37 @@ public class Pipe {
      * For convenience, the head is stored in a separate reference
      * and is not an element of the list (it is not the top of stack).
      */
+    private List<PipeSegment> searchResults;
+    private List<PipeSegment> edges;
+    private TunnelCell currentPosition;
     private PipeHead head;
+    private Direction dir;
     /**
      * For convenience, we store the direction we expect the player
      * to move in when the player calls push(), to make updating the
      * head later easier.
      */
     private Weapon weapon;
-    private Direction dir;
     private ManipulableGameInterface world;
     private int score;
     private int healthPoints;
-    private HorizontalTunnel currentTunnel;
-    private TunnelCell currentPosition;
-    private boolean operationApplied;
+    private boolean moveAllowed;
     private boolean calculated;
-    private List<PipeSegment> searchResults;
-    private List<PipeSegment> edges;
 
     public Pipe(ManipulableGameInterface world) {
         this.segmentStack = new ArrayList<>();
+        this.searchResults = new ArrayList<>();
+        this.edges = new ArrayList<>();
+        this.currentPosition = world.getRootCell();
+        this.head = new PipeHead(currentPosition.getX(), currentPosition.getY(), Direction.DOWN, world);
         this.dir = Direction.DOWN;
-        this.head = new PipeHead(15 * world.getOffsetX(), 13 * world.getOffsetY(), Direction.DOWN, world);
+        this.weapon = new Weapon();
         this.world = world;
         this.score = 0;
         this.healthPoints = 100;
-        this.currentTunnel = null;
-        this.operationApplied = false;
+        this.moveAllowed = true;
         this.calculated = false;
-        this.searchResults = new ArrayList<>();
-        this.currentPosition = world.getRootCell();
-        this.weapon = new Weapon();
         weapon.enqueue(new Bullet(this.world));
-        this.edges = new ArrayList<>();
     }
 
     public void damagePipe(){
@@ -75,7 +70,7 @@ public class Pipe {
     }
 
     public boolean loadBullet(){
-        if (weapon.isFull())
+        if (this.score < 10)
             return false;
         this.score -= 10;
         return this.weapon.enqueue(new Bullet(this.world));
@@ -108,9 +103,10 @@ public class Pipe {
      * @param segment the segment to add to the pipe
      */
     public void push(PipeSegment segment){
-        if (this.calculated) {
+        if (this.moveAllowed && this.calculated) {
             segmentStack.add(segment);
             this.calculated = false;
+            this.moveAllowed = false;
             this.updateAfterPush();
         }
     }
@@ -125,9 +121,12 @@ public class Pipe {
     public PipeSegment pop(){
         if (isEmpty())
             return null;
-        PipeSegment popped = segmentStack.remove(segmentStack.size() - 1);
-        this.updateAfterPop(popped);
-        return popped;
+        if (this.moveAllowed) {
+            PipeSegment popped = segmentStack.remove(segmentStack.size() - 1);
+            this.updateAfterPop(popped);
+            return popped;
+        }
+        return null;
     }
 
     public PipeSegment top(){
@@ -168,8 +167,9 @@ public class Pipe {
         return this.head;
     }
 
-    public void setOperationApplied(boolean val){
-        this.operationApplied = val;
+    public void allowMovement(ManipulableGameInterface world){
+        if (world != null && world.equals(this.world))
+            this.moveAllowed = true;
     }
 
     public int getScore() {
@@ -264,28 +264,11 @@ public class Pipe {
         head.setX(this.currentPosition.getX());
         head.setY(this.currentPosition.getY());
         head.setDirection(dir);
+        this.score += this.currentPosition.collectNugget(this.world, this.head);
         PipeSegment pushed = top();
         if (pushed.getSegmentType() != PipeSegmentType.HORIZONTAL
                 && pushed.getSegmentType() != PipeSegmentType.VERTICAL)
             this.edges.add(pushed);
-        if (currentTunnel == null) {
-            for (HorizontalTunnel ht : this.world.getTunnels()){
-                if (ht.getCells().contains(currentPosition))
-                    currentTunnel = ht;
-            }
-        }
-        if (currentTunnel != null) {
-            this.score += currentPosition.collectNugget(head);
-            Enemy toRemove = null;
-            for (Enemy enemy : currentTunnel.getEnemies()){
-                if (Math.abs(enemy.getX() - head.getX()) < world.getOffsetX())
-                    toRemove = enemy;
-            }
-            if (toRemove != null)
-                currentTunnel.destroyEnemy(toRemove);
-            if (head.getY() != currentTunnel.getY())
-                currentTunnel = null;
-        }
     }
 
     /**
@@ -295,20 +278,7 @@ public class Pipe {
      * @param popped the popped pipe segment.
      */
     private void updateAfterPop(PipeSegment popped){
-        switch (head.getDirection()){
-            case LEFT:
-                currentPosition = currentPosition.getCellAtDirection(Direction.RIGHT);
-                break;
-            case RIGHT:
-                currentPosition = currentPosition.getCellAtDirection(Direction.LEFT);
-                break;
-            case UP:
-                currentPosition = currentPosition.getCellAtDirection(Direction.DOWN);
-                break;
-            case DOWN:
-                currentPosition = currentPosition.getCellAtDirection(Direction.UP);
-                break;
-        }
+        currentPosition = currentPosition.getCellAtDirection(head.getDirection().getOpposite());
         switch (popped.getSegmentType()) {
             case VERTICAL:
             case HORIZONTAL:
@@ -346,12 +316,6 @@ public class Pipe {
         }
         head.setX(popped.getX());
         head.setY(popped.getY());
-        if (currentTunnel == null) {
-            for (HorizontalTunnel ht : this.world.getTunnels()) {
-                if (ht.getCells().contains(currentPosition))
-                    currentTunnel = ht;
-            }
-        }
     }
 
     public boolean intersects(Actor actor){

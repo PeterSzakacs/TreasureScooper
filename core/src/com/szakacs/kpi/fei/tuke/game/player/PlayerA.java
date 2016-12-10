@@ -6,8 +6,11 @@ import com.szakacs.kpi.fei.tuke.game.arena.tunnels.HorizontalTunnel;
 import com.szakacs.kpi.fei.tuke.game.arena.tunnels.TunnelCell;
 import com.szakacs.kpi.fei.tuke.game.enums.Direction;
 import com.szakacs.kpi.fei.tuke.game.enums.TunnelCellType;
+import com.szakacs.kpi.fei.tuke.game.intrfc.game.ManipulableGameInterface;
 import com.szakacs.kpi.fei.tuke.game.intrfc.game.QueryableGameInterface;
 import com.szakacs.kpi.fei.tuke.game.intrfc.Player;
+
+import java.lang.reflect.Field;
 
 /**
  * Created by developer on 5.11.2016.
@@ -69,6 +72,15 @@ public class PlayerA implements Player {
     public void act() {
         switch(this.state){
             case BEGIN:
+                // TODO: Investigate ways to prevent access to private member variables
+                /*try {
+                    Field f = Pipe.class.getDeclaredField("world");
+                    f.setAccessible(true); //Very important, this allows the setting to work.
+                    ManipulableGameInterface value = (ManipulableGameInterface) f.get(pipe);
+                    System.out.println(value);
+                } catch (Exception e){
+                    e.printStackTrace();
+                }*/
                 pipe.push(pipe.calculateNextSegment(currentDir));
                 currentPosition = pipe.getCurrentPosition();
                 if (currentPosition.getCellType() == TunnelCellType.ENTRANCE) {

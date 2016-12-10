@@ -1,12 +1,10 @@
 package com.szakacs.kpi.fei.tuke.game.arena.game;
 
-import com.szakacs.kpi.fei.tuke.game.arena.Enemy;
 import com.szakacs.kpi.fei.tuke.game.arena.pipe.Pipe;
 import com.szakacs.kpi.fei.tuke.game.arena.tunnels.HorizontalTunnel;
 import com.szakacs.kpi.fei.tuke.game.arena.tunnels.TunnelCell;
 import com.szakacs.kpi.fei.tuke.game.enums.*;
 import com.szakacs.kpi.fei.tuke.game.intrfc.*;
-import com.szakacs.kpi.fei.tuke.game.intrfc.callbacks.TunnelEventHandler;
 import com.szakacs.kpi.fei.tuke.game.intrfc.game.ManipulableGameInterface;
 import com.szakacs.kpi.fei.tuke.game.misc.AdvancedConfigProcessor;
 import com.szakacs.kpi.fei.tuke.game.misc.DummyTunnel;
@@ -29,18 +27,7 @@ public class TreasureScooper implements ManipulableGameInterface {
     private Map<String, HorizontalTunnel> tunnels;
     private List<Actor> searchResults;
     private List<Actor> actors;
-
-    private class worldCallback implements TunnelEventHandler {
-        @Override
-        public void onEnemyDestroyed(Enemy enemy) {
-            TreasureScooper.this.actors.remove(enemy);
-        }
-        @Override
-        public void onNuggetCollected(GoldCollector collector) {
-            TreasureScooper.this.remainingNuggetsCount--;
-        }
-    }
-    private TunnelEventHandler callback;
+    private Map<Actor, Integer> unregisteredActors;
 
 
     public TreasureScooper(AdvancedConfigProcessor configProc) {
@@ -49,15 +36,15 @@ public class TreasureScooper implements ManipulableGameInterface {
         this.offsetX = configProc.getOffsetX();
         this.offsetY = configProc.getOffsetY();
         this.rootCell = new TunnelCell(configProc.getInitX(),
-                configProc.getInitY(), TunnelCellType.INTERCONNECT, this, null);
+                configProc.getInitY(), TunnelCellType.INTERCONNECT, null, this);
         Map<String, DummyTunnel> dummyTunnels = configProc.getDummyTunnels();
-        this.callback = new worldCallback();
         this.buildTunnelGraph(dummyTunnels.get(configProc.getRootTunnel()),
                 dummyTunnels.values(), configProc.getInterconnects());
         this.pipe = new Pipe(this);
         this.player = new PlayerA(new GameProxy(this), this.pipe);
-        this.searchResults = new ArrayList<>(3 * this.tunnels.size());
         this.actors = new ArrayList<>();
+        this.searchResults = new ArrayList<>(3 * this.tunnels.size());
+        this.unregisteredActors = new HashMap<>();
         this.state = GameState.PLAYING;
     }
 
@@ -67,7 +54,7 @@ public class TreasureScooper implements ManipulableGameInterface {
         this.tunnels = new HashMap<>(dummyTunnels.size());
         for (DummyTunnel dt : dummyTunnels){
             this.tunnels.put(dt.getId(),
-                    new HorizontalTunnel(dt, this, this.callback));
+                    new HorizontalTunnel(dt, this));
         }
         Map<HorizontalTunnel, Map<Integer, HorizontalTunnel>> interconnects = new HashMap<>();
         for (DummyTunnel dt : dummyInterconnects.keySet()) {
@@ -84,7 +71,7 @@ public class TreasureScooper implements ManipulableGameInterface {
         TunnelCell newCell, prevCell = this.rootCell;
         HorizontalTunnel root = this.tunnels.get(rootDummy.getId());
         for (int y = rootCell.getY() - offsetY; y > root.getY(); y -= offsetY){
-            newCell = new TunnelCell(rootCell.getX(), y, TunnelCellType.INTERCONNECT, this, null);
+            newCell = new TunnelCell(rootCell.getX(), y, TunnelCellType.INTERCONNECT, null, this);
             newCell.setAtDirection(this, Direction.UP, prevCell);
             prevCell.setAtDirection(this, Direction.DOWN, newCell);
             prevCell = newCell;
@@ -101,7 +88,7 @@ public class TreasureScooper implements ManipulableGameInterface {
      */
 
     /*
-     * begin basic
+     * begin basicQueryable
      */
 
     public Pipe getPipe(){
@@ -140,25 +127,47 @@ public class TreasureScooper implements ManipulableGameInterface {
         return this.state;
     }
 
+    /*
+     * end basicQueryable
+     *
+     * begin basicManipulable
+     */
+
     public void update() {
         if (this.state == GameState.PLAYING) {
             this.player.act();
-            this.pipe.setOperationApplied(false);
+            this.pipe.allowMovement(this);
         }
         for (HorizontalTunnel ht : tunnels.values())
             ht.act(this);
-        for (int i = 0; i < actors.size(); i++) {
-            Actor actor = actors.get(i);
+        for (Actor actor : this.actors) {
             actor.act(this);
         }
+        for (Iterator<Actor> actorIt = this.unregisteredActors.keySet().iterator(); actorIt.hasNext(); ){
+            Actor unregistered = actorIt.next();
+            Integer counter = this.unregisteredActors.get(unregistered);
+            if (counter == 0)
+                this.actors.remove(unregistered);
+            else if (counter > 3)
+                actorIt.remove();
+            else
+                this.unregisteredActors.put(unregistered, ++counter);
+        }
+        this.unregisteredActors.clear();
         if (this.remainingNuggetsCount == 0)
             this.state = GameState.WON;
         if (this.pipe.getHealth() <= 0)
             this.state = GameState.LOST;
     }
 
+    public void onNuggetCollected() {
+        this.remainingNuggetsCount--;
+    }
+
     /*
-     * end basic
+     * end basicManipulable
+     *
+     * begin enemyQueryable
      */
 
     public List<Actor> getActors(){
@@ -174,6 +183,12 @@ public class TreasureScooper implements ManipulableGameInterface {
         return this.searchResults;
     }
 
+    /*
+     * end enemyQueryable
+     *
+     * begin enemyManipulable
+     */
+
     public void registerActor(Actor actor) {
         if (actor != null)
             this.actors.add(actor);
@@ -181,8 +196,12 @@ public class TreasureScooper implements ManipulableGameInterface {
 
     public void unregisterActor(Actor actor) {
         if (actor != null)
-            this.actors.remove(actor);
+            this.unregisteredActors.put(actor, 0);
     }
+
+    /*
+     * end enemyManipulable
+     */
 
     /*
      * end game interface methods

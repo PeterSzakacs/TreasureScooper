@@ -3,7 +3,6 @@ package com.szakacs.kpi.fei.tuke.game.arena.tunnels;
 import com.szakacs.kpi.fei.tuke.game.enums.Direction;
 import com.szakacs.kpi.fei.tuke.game.enums.TunnelCellType;
 import com.szakacs.kpi.fei.tuke.game.intrfc.GoldCollector;
-import com.szakacs.kpi.fei.tuke.game.intrfc.callbacks.TunnelEventHandler;
 import com.szakacs.kpi.fei.tuke.game.intrfc.game.ManipulableGameInterface;
 
 import java.util.EnumMap;
@@ -15,22 +14,22 @@ import java.util.Map;
 public class TunnelCell {
     private int x;
     private int y;
+    private HorizontalTunnel tunnel;
     private ManipulableGameInterface world;
     private TunnelCellType tcType;
     private int NuggetValue;
     private Map<Direction, TunnelCell> fourDirections;
-    private TunnelEventHandler handler;
 
-    public TunnelCell(int x, int y, TunnelCellType tcType, ManipulableGameInterface world, TunnelEventHandler handler) {
+    public TunnelCell(int x, int y, TunnelCellType tcType, HorizontalTunnel tunnel, ManipulableGameInterface world) {
         this.x = x;
         this.y = y;
         this.tcType = tcType;
+        this.tunnel = tunnel;
         this.world = world;
         if (tcType != TunnelCellType.INTERCONNECT)
             this.NuggetValue = 50;
         else
             this.NuggetValue = 0;
-        this.handler = handler;
         this.fourDirections = new EnumMap<>(Direction.class);
     }
 
@@ -44,6 +43,10 @@ public class TunnelCell {
 
     public TunnelCellType getTcType() {
         return tcType;
+    }
+
+    public HorizontalTunnel getTunnel(){
+        return this.tunnel;
     }
 
     public void setAtDirection(ManipulableGameInterface world, Direction dir, TunnelCell pos){
@@ -64,15 +67,17 @@ public class TunnelCell {
         return this.NuggetValue != 0;
     }
 
-    public int collectNugget(GoldCollector collector){
-        if (collector.getX() == this.x && collector.getY() == this.y) {
-            int nuggetVal = this.NuggetValue;
-            this.NuggetValue = 0;
-            if (this.handler != null && nuggetVal != 0)
-                this.handler.onNuggetCollected(collector);
-            return nuggetVal;
-        } else
-            return 0;
+    public int collectNugget(ManipulableGameInterface world, GoldCollector collector){
+        if (world != null && world.equals(this.world)){
+            if (collector.getX() == this.x && collector.getY() == this.y) {
+                int nuggetVal = this.NuggetValue;
+                this.NuggetValue = 0;
+                if (this.tunnel != null && nuggetVal != 0)
+                    this.tunnel.onNuggetCollected(collector);
+                return nuggetVal;
+            }
+        }
+        return 0;
     }
 
     void setNuggetValue(int value){

@@ -1,11 +1,10 @@
 package com.szakacs.kpi.fei.tuke.game.arena.tunnels;
 
-import com.szakacs.kpi.fei.tuke.game.arena.Enemy;
+import com.szakacs.kpi.fei.tuke.game.enums.ActorType;
 import com.szakacs.kpi.fei.tuke.game.enums.Direction;
 import com.szakacs.kpi.fei.tuke.game.enums.TunnelCellType;
 import com.szakacs.kpi.fei.tuke.game.intrfc.game.ManipulableGameInterface;
 import com.szakacs.kpi.fei.tuke.game.intrfc.GoldCollector;
-import com.szakacs.kpi.fei.tuke.game.intrfc.callbacks.TunnelEventHandler;
 import com.szakacs.kpi.fei.tuke.game.misc.DummyTunnel;
 
 import java.util.*;
@@ -20,45 +19,24 @@ public class HorizontalTunnel {
     private List<TunnelCell> cells;
     private List<TunnelCell> entrances;
     private List<TunnelCell> exits;
-    private List<Enemy> enemies;
-    private List<Enemy> searchResults;
     private int turnCounter;
     private int turnBound;
     private int nuggetCount;
     private ManipulableGameInterface world;
 
-    private class TunnelHandler implements TunnelEventHandler {
-        @Override
-        public void onEnemyDestroyed(Enemy enemy) {
-            HorizontalTunnel.this.enemies.remove(enemy);
-            HorizontalTunnel.this.worldCallback.onEnemyDestroyed(enemy);
-        }
-        @Override
-        public void onNuggetCollected(GoldCollector collector) {
-            HorizontalTunnel.this.nuggetCount--;
-            HorizontalTunnel.this.worldCallback.onNuggetCollected(collector);
-        }
-    }
-    private TunnelHandler handler;
-    private TunnelEventHandler worldCallback;
-
     /*
      * begin builder methods
      */
 
-    public HorizontalTunnel(DummyTunnel dt, ManipulableGameInterface world, TunnelEventHandler worldCallback){
+    public HorizontalTunnel(DummyTunnel dt, ManipulableGameInterface world){
         this.x = dt.getXIndex()*world.getOffsetX();
         this.y = dt.getYIndex()*world.getOffsetY();
         this.world = world;
-        this.handler = new TunnelHandler();
-        this.worldCallback = worldCallback;
+        this.buildTunnel(dt.getNumCells());
         Random rand = new Random();
         do {
             this.turnBound = rand.nextInt(200);
         } while (this.turnBound < 100);
-        this.buildTunnel(dt.getNumCells());
-        this.enemies = new ArrayList<>(3);
-        this.searchResults = new ArrayList<>(3);
         this.nuggetCount = dt.getNumCells();
     }
 
@@ -68,17 +46,17 @@ public class HorizontalTunnel {
         this.cells = new ArrayList<>(numCells);
         TunnelCell rightmostCell, prevCell, newCell;
         int rightEdge = this.x + (numCells - 1) * world.getOffsetX();
-        prevCell = new TunnelCell(this.x, this.y, TunnelCellType.LEFT_EDGE, this.world, this.handler);
+        prevCell = new TunnelCell(this.x, this.y, TunnelCellType.LEFT_EDGE, this, this.world);
         this.cells.add(prevCell);
         for (int x = this.x + world.getOffsetX(); x < rightEdge; x += world.getOffsetX()){
-            newCell = new TunnelCell(x, this.y, TunnelCellType.TUNNEL, this.world, this.handler);
+            newCell = new TunnelCell(x, this.y, TunnelCellType.TUNNEL, this, this.world);
             this.cells.add(newCell);
             newCell.setAtDirection(this.world, Direction.LEFT, prevCell);
             prevCell.setAtDirection(this.world, Direction.RIGHT, newCell);
             prevCell = newCell;
         }
         rightmostCell = new TunnelCell(
-                rightEdge, this.y, TunnelCellType.RIGHT_EDGE, this.world, this.handler);
+                rightEdge, this.y, TunnelCellType.RIGHT_EDGE, this, this.world);
         rightmostCell.setAtDirection(this.world, Direction.LEFT, prevCell);
         prevCell.setAtDirection(this.world, Direction.RIGHT, rightmostCell);
         this.cells.add(rightmostCell);
@@ -91,7 +69,7 @@ public class HorizontalTunnel {
             HorizontalTunnel exitTunnel = interconnects.get(xCoord);
             int idx = xCoord/world.getOffsetX();
             TunnelCell removed = this.cells.get(idx);
-            TunnelCell added = new TunnelCell(removed.getX(), removed.getY(), TunnelCellType.EXIT, this.world, this.handler);
+            TunnelCell added = new TunnelCell(removed.getX(), removed.getY(), TunnelCellType.EXIT, this, this.world);
             TunnelCell prevCell = added, nextCell;
             this.cells.set(idx, added);
             this.exits.add(added);
@@ -102,7 +80,7 @@ public class HorizontalTunnel {
             left.setAtDirection(this.world, Direction.RIGHT, added);
             right.setAtDirection(this.world, Direction.LEFT, added);
             for (int y = this.y - world.getOffsetY(); y > exitTunnel.getY(); y -= world.getOffsetY()){
-                nextCell = new TunnelCell(xCoord, y, TunnelCellType.INTERCONNECT, this.world, this.handler);
+                nextCell = new TunnelCell(xCoord, y, TunnelCellType.INTERCONNECT, null, this.world);
                 nextCell.setAtDirection(this.world, Direction.UP, prevCell);
                 prevCell.setAtDirection(this.world, Direction.DOWN, nextCell);
                 prevCell = nextCell;
@@ -117,7 +95,7 @@ public class HorizontalTunnel {
         int idx = entranceCell.getX()/world.getOffsetX();
         TunnelCell previous = this.cells.get(idx);
         if (previous.getX() == entranceCell.getX()) {
-            TunnelCell newCell = new TunnelCell(previous.getX(), previous.getY(), TunnelCellType.ENTRANCE, this.world, this.handler);
+            TunnelCell newCell = new TunnelCell(previous.getX(), previous.getY(), TunnelCellType.ENTRANCE, this, this.world);
             this.cells.set(idx, newCell);
             entrances.add(newCell);
             TunnelCell left = previous.getCellAtDirection(Direction.LEFT);
@@ -180,19 +158,6 @@ public class HorizontalTunnel {
         return this.nuggetCount;
     }
 
-    public List<Enemy> getEnemies() {
-        return Collections.unmodifiableList(enemies);
-    }
-
-    public List<Enemy> getEnemyBySearchCriteria(Predicate<Enemy> searchCriteria){
-        searchResults.clear();
-        for (Enemy enemy : this.enemies){
-            if (searchCriteria.test(enemy))
-                searchResults.add(enemy);
-        }
-        return searchResults;
-    }
-
 
 
     /*
@@ -202,19 +167,20 @@ public class HorizontalTunnel {
      * begin tunnel manipulation methods
      */
 
-    public void act(ManipulableGameInterface caller){
-        if (caller != null && caller.equals(world)) {
+    public void act(ManipulableGameInterface world){
+        if (world != null && world.equals(this.world)) {
             turnCounter++;
             if (turnCounter > turnBound) {
                 turnCounter = 0;
-                if (this.enemies.size() < 2)
+                if (world.getActorsBySearchCriteria(actor -> actor.getType() == ActorType.MOLE).size() < 9)
                     createNewEnemy();
             }
         }
     }
 
-    public void destroyEnemy(Enemy enemy){
-        this.handler.onEnemyDestroyed(enemy);
+    void onNuggetCollected(GoldCollector collector){
+        this.nuggetCount--;
+        this.world.onNuggetCollected();
     }
 
     /*
@@ -239,9 +205,15 @@ public class HorizontalTunnel {
     }
 
     private Enemy createNewEnemy(){
-        Direction dir = new Date().getTime() % 2 == 0 ? Direction.LEFT : Direction.RIGHT;
-        Enemy added = new Enemy(dir, this, this.handler, this.world);
-        this.enemies.add(added);
+        Direction dir; TunnelCell startPosition;
+        if (new Date().getTime() % 2 == 0){
+            dir = Direction.LEFT;
+            startPosition = this.cells.get(this.cells.size() - 1);
+        } else {
+            dir = Direction.RIGHT;
+            startPosition = this.cells.get(0);
+        }
+        Enemy added = new Enemy(dir, startPosition, this.world);
         this.world.registerActor(added);
         return added;
     }

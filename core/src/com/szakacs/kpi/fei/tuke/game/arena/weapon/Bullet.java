@@ -58,28 +58,9 @@ public class Bullet extends AbstractActor {
             this.x = position.getX();
             this.y = position.getY();
             this.dir = dir;
+            this.xDelta = dir.getXStep() * world.getOffsetX() * 2;
+            this.yDelta = dir.getYStep() * world.getOffsetY() * 2;
             world.registerActor(this);
-            switch (dir) {
-                case LEFT:
-                    this.xDelta = -world.getOffsetX() * 2;
-                    this.yDelta = 0;
-                    break;
-                case RIGHT:
-                    this.xDelta = world.getOffsetX() * 2;
-                    this.yDelta = 0;
-                    break;
-                case DOWN:
-                    this.xDelta = 0;
-                    this.yDelta = -world.getOffsetY() * 2;
-                    break;
-                case UP:
-                    this.xDelta = 0;
-                    this.yDelta = world.getOffsetY() * 2;
-                    break;
-                default:
-                    world.unregisterActor(this);
-                    System.err.println("unknown direction value passed as argument: " + dir.name());
-            }
             this.setBound(position, dir);
         }
     }
@@ -91,28 +72,12 @@ public class Bullet extends AbstractActor {
             cur = next;
             next = cur.getCellAtDirection(dir);
         }
-        switch (dir){
-            case LEFT:
-                this.xBound = cur.getX() - world.getOffsetX();
-                this.yBound = cur.getY();
-                break;
-            case RIGHT:
-                this.xBound = cur.getX() + world.getOffsetX();
-                this.yBound = cur.getY();
-                break;
-            case UP:
-                this.xBound = cur.getX();
-                this.yBound = cur.getY() + world.getOffsetY();
-                break;
-            case DOWN:
-                this.xBound = cur.getX();
-                this.yBound = cur.getY() - world.getOffsetY();
-                break;
-        }
+        this.xBound = cur.getX() + dir.getXStep() * world.getOffsetX();
+        this.yBound = cur.getY() + dir.getYStep() * world.getOffsetY();
     }
 
     private boolean boundReached(){
-        switch (dir){
+        switch (this.dir){
             case DOWN:
                 return this.y <= yBound;
             case RIGHT:

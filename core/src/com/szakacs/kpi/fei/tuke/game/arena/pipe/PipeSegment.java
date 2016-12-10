@@ -1,7 +1,6 @@
 package com.szakacs.kpi.fei.tuke.game.arena.pipe;
 
 import com.szakacs.kpi.fei.tuke.game.enums.PipeSegmentType;
-import com.szakacs.kpi.fei.tuke.game.intrfc.Actor;
 
 /**
  * Created by developer on 4.11.2016.
