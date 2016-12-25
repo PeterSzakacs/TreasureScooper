@@ -17,8 +17,6 @@ import java.util.List;
 public class Bullet extends AbstractActor {
     private int xDelta;
     private int yDelta;
-    private int xBound;
-    private int yBound;
 
     public Bullet(ManipulableGameInterface world){
         super(world);
@@ -27,8 +25,7 @@ public class Bullet extends AbstractActor {
 
     public void act(ManipulableGameInterface world){
         if (world != null && world.equals(this.world)) {
-            this.x += xDelta;
-            this.y += yDelta;
+            this.move(xDelta, yDelta, super.getDirection());
             if (boundReached()) {
                 world.unregisterActor(this);
             } else {
@@ -55,38 +52,10 @@ public class Bullet extends AbstractActor {
                     break;
                 }
             }
-            this.x = position.getX();
-            this.y = position.getY();
-            this.dir = dir;
-            this.xDelta = dir.getXStep() * world.getOffsetX() * 2;
-            this.yDelta = dir.getYStep() * world.getOffsetY() * 2;
+            this.initialize(dir, position);
+            this.xDelta = world.getOffsetX() * 2;
+            this.yDelta = world.getOffsetY() * 2;
             world.registerActor(this);
-            this.setBound(position, dir);
         }
-    }
-
-    private void setBound(TunnelCell currentPosition, Direction dir){
-        TunnelCell next = currentPosition.getCellAtDirection(dir),
-                cur = currentPosition;
-        while(next != null) {
-            cur = next;
-            next = cur.getCellAtDirection(dir);
-        }
-        this.xBound = cur.getX() + dir.getXStep() * world.getOffsetX();
-        this.yBound = cur.getY() + dir.getYStep() * world.getOffsetY();
-    }
-
-    private boolean boundReached(){
-        switch (this.dir){
-            case DOWN:
-                return this.y <= yBound;
-            case RIGHT:
-                return this.x >= xBound;
-            case LEFT:
-                return this.x <= xBound;
-            case UP:
-                return this.y >= yBound;
-        }
-        return false;
     }
 }

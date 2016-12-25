@@ -42,7 +42,7 @@ public class PlayerA implements Player {
         this.head = pipe.getHead();
         this.currentDir = this.head.getDirection();
         this.world = world;
-        this.currentPosition = pipe.getCurrentPosition();
+        this.currentPosition = pipe.getHead().getCurrentPosition();
         this.currentTunnel = null;
         this.entrance = null;
     }
@@ -82,7 +82,7 @@ public class PlayerA implements Player {
                     e.printStackTrace();
                 }*/
                 pipe.push(pipe.calculateNextSegment(currentDir));
-                currentPosition = pipe.getCurrentPosition();
+                currentPosition = pipe.getHead().getCurrentPosition();
                 if (currentPosition.getCellType() == TunnelCellType.ENTRANCE) {
                     this.entrance = currentPosition;
                     this.state = State.CLEAR;
@@ -102,7 +102,7 @@ public class PlayerA implements Player {
                 break;
             case RETURN:
                 pipe.pop();
-                if (pipe.getCurrentPosition().equals(this.entrance)) {
+                if (pipe.getHead().getCurrentPosition().equals(this.entrance)) {
                     if (currentTunnel.getNuggetCount() == 0) {
                         this.state = State.ENTERTUNNEL;
                         TunnelCell exit = this.currentTunnel.getNearestExit(head.getX());
@@ -121,7 +121,7 @@ public class PlayerA implements Player {
             case ENTERTUNNEL:
                 pipe.fire();
                 pipe.push(pipe.calculateNextSegment(currentDir));
-                if (pipe.getCurrentPosition().getCellType() == TunnelCellType.EXIT) {
+                if (pipe.getHead().getCurrentPosition().getCellType() == TunnelCellType.EXIT) {
                     currentDir = Direction.DOWN;
                     this.state = State.BEGIN;
                 }

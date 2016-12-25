@@ -1,5 +1,6 @@
 package com.szakacs.kpi.fei.tuke.game.arena;
 
+import com.szakacs.kpi.fei.tuke.game.arena.tunnels.TunnelCell;
 import com.szakacs.kpi.fei.tuke.game.enums.ActorType;
 import com.szakacs.kpi.fei.tuke.game.enums.Direction;
 import com.szakacs.kpi.fei.tuke.game.intrfc.Actor;
@@ -10,10 +11,12 @@ import com.szakacs.kpi.fei.tuke.game.intrfc.game.ManipulableGameInterface;
  */
 public abstract class AbstractActor implements Actor {
 
-    protected int x;
-    protected int y;
+    private int x;
+    private int y;
+    private TunnelCell currentPosition;
+    private Direction dir;
+    private boolean boundReached;
     protected ActorType actorType;
-    protected Direction dir;
     protected ManipulableGameInterface world;
 
     protected AbstractActor(ManipulableGameInterface world){
@@ -22,12 +25,10 @@ public abstract class AbstractActor implements Actor {
         this.world = world;
     }
 
-    protected AbstractActor(int x, int y, ActorType type, Direction dir, ManipulableGameInterface world){
-        this.x = x;
-        this.y = y;
+    protected AbstractActor(TunnelCell currentPosition, ActorType type, Direction dir, ManipulableGameInterface world){
         this.actorType = type;
-        this.dir = dir;
         this.world = world;
+        this.initialize(dir, currentPosition);
     }
 
     @Override
@@ -52,8 +53,63 @@ public abstract class AbstractActor implements Actor {
 
     @Override
     public boolean intersects(Actor other){
-        return other != null && other.getX() / world.getOffsetX() == this.x / world.getOffsetX()
-                && other.getY() / world.getOffsetY() == this.y / world.getOffsetY();
+        return other != null && other.getCurrentPosition() == this.currentPosition;
+    }
+
+    @Override
+    public TunnelCell getCurrentPosition(){
+        return this.currentPosition;
+    }
+
+    protected void setDirection(Direction direction) {
+        this.dir = direction;
+        this.boundReached = false;
+    }
+
+    protected void initialize(Direction dir, TunnelCell currentPosition){
+        this.setDirection(dir);
+        this.currentPosition = currentPosition;
+        this.x = currentPosition.getX();
+        this.y = currentPosition.getY();
+    }
+
+    protected void move(int dxAbs, int dyAbs, Direction dir){
+        if (this.dir != dir) {
+            this.boundReached = false;
+            this.dir = dir;
+        }
+        int x = this.x + dir.getXStep() * dxAbs;
+        int y = this.y + dir.getYStep() * dyAbs;
+        TunnelCell prev, next;
+        prev = next = currentPosition;
+        do{
+            if (Math.abs(next.getX() - x) < world.getOffsetX()
+                    && Math.abs(next.getY() - y) < world.getOffsetY()) {
+                currentPosition = next;
+                break;
+            }
+            prev = next;
+            next = next.getCellAtDirection(dir);
+        } while ( next != null );
+        if (next != null){
+            // successfully found the new position
+            this.x = x;
+            this.y = y;
+        } else {
+            //reached the end of a tunnel in a given direction
+            this.x = prev.getX();
+            this.y = prev.getY();
+            this.currentPosition = prev;
+            this.boundReached = true;
+        }
+    }
+
+    protected void move(int dx, int dy){
+        this.move(dx, dy, Direction.getDirectionByDeltas(dx, dy));
+    }
+
+    protected boolean boundReached(){
+        return this.boundReached;
     }
 
     public abstract void act(ManipulableGameInterface world);

@@ -1,5 +1,6 @@
 package com.szakacs.kpi.fei.tuke.game.intrfc;
 
+import com.szakacs.kpi.fei.tuke.game.arena.tunnels.TunnelCell;
 import com.szakacs.kpi.fei.tuke.game.enums.ActorType;
 import com.szakacs.kpi.fei.tuke.game.enums.Direction;
 import com.szakacs.kpi.fei.tuke.game.intrfc.game.ManipulableGameInterface;
@@ -14,4 +15,5 @@ public interface Actor {
     Direction getDirection();
     void act(ManipulableGameInterface world);
     boolean intersects(Actor other);
+    TunnelCell getCurrentPosition();
 }

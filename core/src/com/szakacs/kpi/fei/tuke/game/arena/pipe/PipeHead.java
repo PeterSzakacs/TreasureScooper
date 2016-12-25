@@ -1,5 +1,7 @@
 package com.szakacs.kpi.fei.tuke.game.arena.pipe;
 
+import com.szakacs.kpi.fei.tuke.game.arena.AbstractActor;
+import com.szakacs.kpi.fei.tuke.game.arena.tunnels.TunnelCell;
 import com.szakacs.kpi.fei.tuke.game.enums.ActorType;
 import com.szakacs.kpi.fei.tuke.game.enums.Direction;
 import com.szakacs.kpi.fei.tuke.game.intrfc.Actor;
@@ -9,37 +11,12 @@ import com.szakacs.kpi.fei.tuke.game.intrfc.game.ManipulableGameInterface;
 /**
  * Created by developer on 4.11.2016.
  */
-public class PipeHead implements GoldCollector {
-    private int x;
-    private int y;
-    private Direction direction;
+public class PipeHead extends AbstractActor implements GoldCollector {
     private ManipulableGameInterface world;
 
-    PipeHead(int x, int y, Direction direction, ManipulableGameInterface world) {
-        this.x = x;
-        this.y = y;
-        this.direction = direction;
+    PipeHead(Direction direction, ManipulableGameInterface world) {
+        super(world.getRootCell(), ActorType.PIPEHEAD, direction, world);
         this.world = world;
-    }
-
-    @Override
-    public int getX() {
-        return x;
-    }
-
-    @Override
-    public int getY() {
-        return y;
-    }
-
-    @Override
-    public ActorType getType() {
-        return ActorType.PIPEHEAD;
-    }
-
-    @Override
-    public Direction getDirection() {
-        return direction;
     }
 
     @Override
@@ -47,21 +24,11 @@ public class PipeHead implements GoldCollector {
 
     }
 
-    @Override
-    public boolean intersects(Actor other) {
-        return other != null && other.getX() / world.getOffsetX() == this.x / world.getOffsetX()
-                && other.getY() / world.getOffsetY() == this.y / world.getOffsetY();
+    protected void setDirection(Direction direction) {
+        super.setDirection(direction);
     }
 
-    void setX(int x) {
-        this.x = x;
-    }
-
-    void setY(int y) {
-        this.y = y;
-    }
-
-    void setDirection(Direction direction) {
-        this.direction = direction;
+    protected void move(int dxAbs, int dyAbs, Direction direction){
+        super.move(dxAbs, dyAbs, direction);
     }
 }
