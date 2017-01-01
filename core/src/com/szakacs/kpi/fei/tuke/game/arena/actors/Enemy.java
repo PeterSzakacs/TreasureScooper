@@ -1,15 +1,16 @@
-package com.szakacs.kpi.fei.tuke.game.arena.tunnels;
+package com.szakacs.kpi.fei.tuke.game.arena.actors;
 
-import com.szakacs.kpi.fei.tuke.game.arena.AbstractActor;
+import com.szakacs.kpi.fei.tuke.game.arena.actors.AbstractActor;
 import com.szakacs.kpi.fei.tuke.game.arena.pipe.Pipe;
+import com.szakacs.kpi.fei.tuke.game.arena.tunnels.TunnelCell;
 import com.szakacs.kpi.fei.tuke.game.enums.ActorType;
 import com.szakacs.kpi.fei.tuke.game.enums.Direction;
-import com.szakacs.kpi.fei.tuke.game.intrfc.game.ManipulableGameInterface;
+import com.szakacs.kpi.fei.tuke.game.intrfc.game.world.ManipulableGameInterface;
 
 /**
  * Created by developer on 5.11.2016.
  */
-public class Enemy extends AbstractActor {
+public class Enemy extends AbstractMoveableActor {
 
     // The Y coordinates are already in the HorizontalTunnel object.
     private Pipe player;

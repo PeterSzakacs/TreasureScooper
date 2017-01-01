@@ -6,11 +6,8 @@ import com.szakacs.kpi.fei.tuke.game.arena.tunnels.HorizontalTunnel;
 import com.szakacs.kpi.fei.tuke.game.arena.tunnels.TunnelCell;
 import com.szakacs.kpi.fei.tuke.game.enums.Direction;
 import com.szakacs.kpi.fei.tuke.game.enums.TunnelCellType;
-import com.szakacs.kpi.fei.tuke.game.intrfc.game.ManipulableGameInterface;
-import com.szakacs.kpi.fei.tuke.game.intrfc.game.QueryableGameInterface;
+import com.szakacs.kpi.fei.tuke.game.intrfc.game.world.QueryableGameInterface;
 import com.szakacs.kpi.fei.tuke.game.intrfc.Player;
-
-import java.lang.reflect.Field;
 
 /**
  * Created by developer on 5.11.2016.

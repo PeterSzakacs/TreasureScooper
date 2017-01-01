@@ -3,7 +3,7 @@ package com.szakacs.kpi.fei.tuke.game.arena.tunnels;
 import com.szakacs.kpi.fei.tuke.game.enums.Direction;
 import com.szakacs.kpi.fei.tuke.game.enums.TunnelCellType;
 import com.szakacs.kpi.fei.tuke.game.intrfc.GoldCollector;
-import com.szakacs.kpi.fei.tuke.game.intrfc.game.ManipulableGameInterface;
+import com.szakacs.kpi.fei.tuke.game.intrfc.game.world.ManipulableGameInterface;
 
 import java.util.EnumMap;
 import java.util.Map;

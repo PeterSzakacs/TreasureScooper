@@ -53,5 +53,6 @@
     <actors>
         <actor name="mole" left="true" right="true" up="false" down="false" />
         <actor name="bullet" left="true" right="true" up="true" down="true" />
+        <actor name="wall" left="true" right="false" up="false" down="false" />
     </actors>
 </config>

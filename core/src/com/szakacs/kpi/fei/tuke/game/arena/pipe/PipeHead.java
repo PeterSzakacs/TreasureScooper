@@ -1,17 +1,15 @@
 package com.szakacs.kpi.fei.tuke.game.arena.pipe;
 
-import com.szakacs.kpi.fei.tuke.game.arena.AbstractActor;
-import com.szakacs.kpi.fei.tuke.game.arena.tunnels.TunnelCell;
+import com.szakacs.kpi.fei.tuke.game.arena.actors.AbstractMoveableActor;
 import com.szakacs.kpi.fei.tuke.game.enums.ActorType;
 import com.szakacs.kpi.fei.tuke.game.enums.Direction;
-import com.szakacs.kpi.fei.tuke.game.intrfc.Actor;
 import com.szakacs.kpi.fei.tuke.game.intrfc.GoldCollector;
-import com.szakacs.kpi.fei.tuke.game.intrfc.game.ManipulableGameInterface;
+import com.szakacs.kpi.fei.tuke.game.intrfc.game.world.ManipulableGameInterface;
 
 /**
  * Created by developer on 4.11.2016.
  */
-public class PipeHead extends AbstractActor implements GoldCollector {
+public class PipeHead extends AbstractMoveableActor implements GoldCollector {
     private ManipulableGameInterface world;
 
     PipeHead(Direction direction, ManipulableGameInterface world) {

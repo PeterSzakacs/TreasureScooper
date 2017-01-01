@@ -5,8 +5,9 @@ import com.szakacs.kpi.fei.tuke.game.arena.tunnels.HorizontalTunnel;
 import com.szakacs.kpi.fei.tuke.game.arena.tunnels.TunnelCell;
 import com.szakacs.kpi.fei.tuke.game.enums.GameState;
 import com.szakacs.kpi.fei.tuke.game.intrfc.Actor;
-import com.szakacs.kpi.fei.tuke.game.intrfc.game.ManipulableGameInterface;
-import com.szakacs.kpi.fei.tuke.game.intrfc.game.QueryableGameInterface;
+import com.szakacs.kpi.fei.tuke.game.intrfc.Player;
+import com.szakacs.kpi.fei.tuke.game.intrfc.game.world.ManipulableGameInterface;
+import com.szakacs.kpi.fei.tuke.game.intrfc.game.world.QueryableGameInterface;
 
 import java.util.Collection;
 import java.util.List;
@@ -21,7 +22,7 @@ import java.util.function.Predicate;
  * from QueryableGameInterface to ManipulableGameInterface. This is therefore
  * to prevent cheating on part of the player.
  */
-public class GameProxy implements QueryableGameInterface{
+public class GameProxy implements QueryableGameInterface {
 
     private ManipulableGameInterface gameWorld;
 
@@ -75,12 +76,17 @@ public class GameProxy implements QueryableGameInterface{
     }
 
     @Override
-    public Collection<HorizontalTunnel> getTunnels() {
+    public List<HorizontalTunnel> getTunnels() {
         return gameWorld.getTunnels();
     }
 
     @Override
     public GameState getState() {
         return gameWorld.getState();
+    }
+
+    @Override
+    public Player getPlayer() {
+        return gameWorld.getPlayer();
     }
 }

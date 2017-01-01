@@ -1,5 +1,7 @@
 package com.szakacs.kpi.fei.tuke.game.arena.weapon;
 
+import com.szakacs.kpi.fei.tuke.game.arena.actors.Bullet;
+
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;

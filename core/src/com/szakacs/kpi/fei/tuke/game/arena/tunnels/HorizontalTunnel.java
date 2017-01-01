@@ -1,14 +1,13 @@
 package com.szakacs.kpi.fei.tuke.game.arena.tunnels;
 
-import com.szakacs.kpi.fei.tuke.game.enums.ActorType;
+import com.szakacs.kpi.fei.tuke.game.arena.actors.Enemy;
 import com.szakacs.kpi.fei.tuke.game.enums.Direction;
 import com.szakacs.kpi.fei.tuke.game.enums.TunnelCellType;
-import com.szakacs.kpi.fei.tuke.game.intrfc.game.ManipulableGameInterface;
+import com.szakacs.kpi.fei.tuke.game.intrfc.game.world.ManipulableGameInterface;
 import com.szakacs.kpi.fei.tuke.game.intrfc.GoldCollector;
 import com.szakacs.kpi.fei.tuke.game.misc.DummyTunnel;
 
 import java.util.*;
-import java.util.function.Predicate;
 
 /**
  * Created by developer on 5.11.2016.
@@ -16,12 +15,10 @@ import java.util.function.Predicate;
 public class HorizontalTunnel {
     private int x;
     private int y;
+    private int nuggetCount;
     private List<TunnelCell> cells;
     private List<TunnelCell> entrances;
     private List<TunnelCell> exits;
-    private int turnCounter;
-    private int turnBound;
-    private int nuggetCount;
     private ManipulableGameInterface world;
 
     /*
@@ -33,10 +30,6 @@ public class HorizontalTunnel {
         this.y = dt.getYIndex()*world.getOffsetY();
         this.world = world;
         this.buildTunnel(dt.getNumCells());
-        Random rand = new Random();
-        do {
-            this.turnBound = rand.nextInt(200);
-        } while (this.turnBound < 100);
         this.nuggetCount = dt.getNumCells();
     }
 
@@ -167,16 +160,6 @@ public class HorizontalTunnel {
      * begin tunnel manipulation methods
      */
 
-    public void act(ManipulableGameInterface world){
-        if (world != null && world.equals(this.world)) {
-            turnCounter++;
-            if (turnCounter > turnBound) {
-                turnCounter = 0;
-                if (world.getActorsBySearchCriteria(actor -> actor.getType() == ActorType.MOLE).size() < 9)
-                    createNewEnemy();
-            }
-        }
-    }
 
     void onNuggetCollected(GoldCollector collector){
         this.nuggetCount--;
@@ -202,20 +185,6 @@ public class HorizontalTunnel {
                 nearest = cell;
         }
         return nearest;
-    }
-
-    private Enemy createNewEnemy(){
-        Direction dir; TunnelCell startPosition;
-        if (new Date().getTime() % 2 == 0){
-            dir = Direction.LEFT;
-            startPosition = this.cells.get(this.cells.size() - 1);
-        } else {
-            dir = Direction.RIGHT;
-            startPosition = this.cells.get(0);
-        }
-        Enemy added = new Enemy(dir, startPosition, this.world);
-        this.world.registerActor(added);
-        return added;
     }
 
     /*

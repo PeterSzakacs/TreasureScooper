@@ -1,13 +1,12 @@
 package com.szakacs.kpi.fei.tuke.game.arena.pipe;
 
-import com.szakacs.kpi.fei.tuke.game.arena.tunnels.TunnelCell;
-import com.szakacs.kpi.fei.tuke.game.arena.weapon.Bullet;
+import com.szakacs.kpi.fei.tuke.game.arena.actors.Bullet;
 import com.szakacs.kpi.fei.tuke.game.arena.weapon.Weapon;
 import com.szakacs.kpi.fei.tuke.game.enums.ActorType;
 import com.szakacs.kpi.fei.tuke.game.enums.Direction;
 import com.szakacs.kpi.fei.tuke.game.enums.PipeSegmentType;
 import com.szakacs.kpi.fei.tuke.game.intrfc.Actor;
-import com.szakacs.kpi.fei.tuke.game.intrfc.game.ManipulableGameInterface;
+import com.szakacs.kpi.fei.tuke.game.intrfc.game.world.ManipulableGameInterface;
 
 import java.util.ArrayList;
 import java.util.Collections;

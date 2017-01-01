@@ -6,21 +6,21 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.*;
-import com.badlogic.gdx.math.Affine2;
 import com.szakacs.kpi.fei.tuke.game.arena.game.TreasureScooper;
+import com.szakacs.kpi.fei.tuke.game.arena.game.TreasureScooperBuilder;
 import com.szakacs.kpi.fei.tuke.game.arena.pipe.Pipe;
 import com.szakacs.kpi.fei.tuke.game.arena.pipe.PipeHead;
 import com.szakacs.kpi.fei.tuke.game.arena.pipe.PipeSegment;
 import com.szakacs.kpi.fei.tuke.game.arena.tunnels.HorizontalTunnel;
 import com.szakacs.kpi.fei.tuke.game.arena.tunnels.TunnelCell;
-import com.szakacs.kpi.fei.tuke.game.arena.weapon.Bullet;
+import com.szakacs.kpi.fei.tuke.game.arena.actors.Bullet;
 import com.szakacs.kpi.fei.tuke.game.arena.weapon.Weapon;
 import com.szakacs.kpi.fei.tuke.game.enums.ActorType;
 import com.szakacs.kpi.fei.tuke.game.enums.Direction;
+import com.szakacs.kpi.fei.tuke.game.enums.GameType;
 import com.szakacs.kpi.fei.tuke.game.enums.PipeSegmentType;
 import com.szakacs.kpi.fei.tuke.game.intrfc.Actor;
-import com.szakacs.kpi.fei.tuke.game.intrfc.game.ManipulableGameInterface;
-import com.szakacs.kpi.fei.tuke.game.misc.AdvancedConfigProcessor;
+import com.szakacs.kpi.fei.tuke.game.intrfc.game.world.ManipulableGameInterface;
 import org.xml.sax.SAXException;
 
 import javax.xml.parsers.ParserConfigurationException;
@@ -50,15 +50,15 @@ public class GameRenderer implements ApplicationListener {
     private Sprite queue;
     private BitmapFont score;
 
-    public GameRenderer(){
+    public GameRenderer(GameType gameType, String configFilename){
         this.configProcessor = new AdvancedConfigProcessor();
         try {
             SAXParser parser = SAXParserFactory.newInstance().newSAXParser();
-            parser.parse(new File("config.xml"), configProcessor);
+            parser.parse(new File(configFilename), configProcessor);
         } catch (SAXException | IOException | ParserConfigurationException e) {
             e.printStackTrace();
         }
-        this.world = new TreasureScooper(configProcessor);
+        this.world = new TreasureScooperBuilder().buildGameWorld(configProcessor, gameType);
     }
 
     @Override

@@ -1,4 +1,4 @@
-package com.szakacs.kpi.fei.tuke.game.intrfc.game;
+package com.szakacs.kpi.fei.tuke.game.intrfc.game.world;
 
 import com.szakacs.kpi.fei.tuke.game.intrfc.Actor;
 

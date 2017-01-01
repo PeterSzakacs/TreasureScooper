@@ -1,12 +1,11 @@
-package com.szakacs.kpi.fei.tuke.game.arena.weapon;
+package com.szakacs.kpi.fei.tuke.game.arena.actors;
 
-import com.szakacs.kpi.fei.tuke.game.arena.AbstractActor;
 import com.szakacs.kpi.fei.tuke.game.arena.tunnels.HorizontalTunnel;
 import com.szakacs.kpi.fei.tuke.game.arena.tunnels.TunnelCell;
 import com.szakacs.kpi.fei.tuke.game.enums.ActorType;
 import com.szakacs.kpi.fei.tuke.game.enums.Direction;
 import com.szakacs.kpi.fei.tuke.game.intrfc.Actor;
-import com.szakacs.kpi.fei.tuke.game.intrfc.game.ManipulableGameInterface;
+import com.szakacs.kpi.fei.tuke.game.intrfc.game.world.ManipulableGameInterface;
 
 import java.util.Collection;
 import java.util.List;
@@ -14,13 +13,12 @@ import java.util.List;
 /**
  * Created by developer on 6.11.2016.
  */
-public class Bullet extends AbstractActor {
+public class Bullet extends AbstractMoveableActor {
     private int xDelta;
     private int yDelta;
 
     public Bullet(ManipulableGameInterface world){
-        super(world);
-        this.actorType = ActorType.BULLET;
+        super(world, ActorType.BULLET);
     }
 
     public void act(ManipulableGameInterface world){
