@@ -80,6 +80,12 @@ public class TunnelCell {
         return 0;
     }
 
+    @Override
+    public String toString(){
+        return super.toString() + ": " + tcType.name()
+                + "\nX: " + this.x + " y: " + this.y;
+    }
+
     void setNuggetValue(int value){
 
     }

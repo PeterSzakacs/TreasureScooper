@@ -1,15 +1,17 @@
-package com.szakacs.kpi.fei.tuke.game.misc;
+package com.szakacs.kpi.fei.tuke.game.misc.updaters;
 
 import com.szakacs.kpi.fei.tuke.game.arena.actors.Enemy;
 import com.szakacs.kpi.fei.tuke.game.arena.tunnels.HorizontalTunnel;
 import com.szakacs.kpi.fei.tuke.game.arena.tunnels.TunnelCell;
 import com.szakacs.kpi.fei.tuke.game.enums.ActorType;
 import com.szakacs.kpi.fei.tuke.game.enums.Direction;
+import com.szakacs.kpi.fei.tuke.game.intrfc.Actor;
 import com.szakacs.kpi.fei.tuke.game.intrfc.game.GameUpdater;
 import com.szakacs.kpi.fei.tuke.game.intrfc.game.world.ManipulableGameInterface;
 
+import java.util.ArrayList;
 import java.util.Date;
-import java.util.Iterator;
+import java.util.List;
 import java.util.Random;
 
 /**
@@ -20,10 +22,12 @@ public class GameUpdaterEnemies implements GameUpdater {
     private int turnCounter;
     private int turnBound;
     private HorizontalTunnel previous;
+    private List<Actor> createdEnemies;
 
     public GameUpdaterEnemies(ManipulableGameInterface world){
         this.world = world;
         this.turnCounter = 0;
+        this.createdEnemies = new ArrayList<>(10);
         Random rand = new Random();
         do {
             this.turnBound = rand.nextInt(200);
@@ -35,7 +39,7 @@ public class GameUpdaterEnemies implements GameUpdater {
             turnCounter++;
             if (turnCounter > turnBound) {
                 turnCounter = 0;
-                if (world.getActorsBySearchCriteria(actor -> actor.getType() == ActorType.MOLE).size() < 9)
+                if (createdEnemies.size() < 9)
                     createNewEnemy();
             }
         }
@@ -59,6 +63,10 @@ public class GameUpdaterEnemies implements GameUpdater {
             dir = Direction.RIGHT;
             startPosition = ht.getCells().get(0);
         }
-        world.registerActor(new Enemy(dir, startPosition, this.world));
+        world.registerActor(new Enemy(dir, startPosition, this::removeEnemy, this.world));
+    }
+
+    private void removeEnemy(Actor enemy){
+        this.createdEnemies.remove(enemy);
     }
 }

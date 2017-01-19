@@ -57,7 +57,7 @@ public abstract class AbstractMoveableActor extends AbstractActor {
     }
 
     protected void move(int dx, int dy){
-        this.move(dx, dy, Direction.getDirectionByDeltas(dx, dy));
+        this.move(Math.abs(dx), Math.abs(dy), Direction.getDirectionByDeltas(dx, dy));
     }
 
     protected boolean boundReached(){

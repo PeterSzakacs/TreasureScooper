@@ -1,5 +1,6 @@
 package com.szakacs.kpi.fei.tuke.game.arena.pipe;
 
+import com.szakacs.kpi.fei.tuke.game.arena.tunnels.TunnelCell;
 import com.szakacs.kpi.fei.tuke.game.enums.Direction;
 import com.szakacs.kpi.fei.tuke.game.enums.PipeSegmentType;
 
@@ -7,26 +8,28 @@ import com.szakacs.kpi.fei.tuke.game.enums.PipeSegmentType;
  * Created by developer on 4.11.2016.
  */
 public class PipeSegment {
-    private int x;
-    private int y;
+    private TunnelCell currentPosition;
     private PipeSegmentType segmentType;
 
-    PipeSegment(int x, int y, Direction from, Direction to) {
-        this.x = x;
-        this.y = y;
+    PipeSegment(TunnelCell currentPosition, Direction from, Direction to) {
+        this.currentPosition = currentPosition;
         this.setSegmentType(from, to);
     }
 
     public int getX() {
-        return x;
+        return currentPosition.getX();
     }
 
     public int getY() {
-        return y;
+        return currentPosition.getY();
     }
 
     public PipeSegmentType getSegmentType() {
         return segmentType;
+    }
+
+    public TunnelCell getCurrentPosition(){
+        return currentPosition;
     }
 
     private void setSegmentType(Direction from, Direction to){

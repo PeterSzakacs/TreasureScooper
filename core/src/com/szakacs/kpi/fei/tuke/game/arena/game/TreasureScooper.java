@@ -3,6 +3,7 @@ package com.szakacs.kpi.fei.tuke.game.arena.game;
 import com.szakacs.kpi.fei.tuke.game.arena.pipe.Pipe;
 import com.szakacs.kpi.fei.tuke.game.arena.tunnels.HorizontalTunnel;
 import com.szakacs.kpi.fei.tuke.game.arena.tunnels.TunnelCell;
+import com.szakacs.kpi.fei.tuke.game.arena.tunnels.Wall;
 import com.szakacs.kpi.fei.tuke.game.enums.*;
 import com.szakacs.kpi.fei.tuke.game.intrfc.*;
 import com.szakacs.kpi.fei.tuke.game.intrfc.game.GameUpdater;
@@ -26,13 +27,14 @@ public class TreasureScooper implements ManipulableGameInterface {
     private List<HorizontalTunnel> tunnels;
     private List<Actor> actors;
     private List<Actor> searchResults;
+    private Map<Actor, Runnable> onDestroyActions;
     private Map<Actor, Integer> unregisteredActors;
-
 
     public TreasureScooper() {
         this.actors = new ArrayList<>();
         this.searchResults = new ArrayList<>();
         this.unregisteredActors = new HashMap<>();
+        this.onDestroyActions = new HashMap<>(20);
     }
 
     void setGameUpdaters(Set<GameUpdater> updaters){
@@ -64,12 +66,8 @@ public class TreasureScooper implements ManipulableGameInterface {
      */
 
     /*
-     * begin basicQueryable
+     * begin QueryableGameInterface
      */
-
-    public Pipe getPipe(){
-        return this.pipe;
-    }
 
     public TunnelCell getRootCell() {
         return this.rootCell;
@@ -107,48 +105,9 @@ public class TreasureScooper implements ManipulableGameInterface {
         return this.player;
     }
 
-    /*
-     * end basicQueryable
-     *
-     * begin basicManipulable
-     */
-
-    public void update() {
-        if (this.state == GameState.PLAYING) {
-            this.player.act();
-            this.pipe.allowMovement(this);
-        }
-        for (Actor actor : this.actors) {
-            actor.act(this);
-        }
-        for (Iterator<Actor> actorIt = this.unregisteredActors.keySet().iterator(); actorIt.hasNext(); ) {
-            Actor unregistered = actorIt.next();
-            Integer counter = this.unregisteredActors.get(unregistered);
-            if (counter == 0)
-                this.actors.remove(unregistered);
-            else if (counter > 3)
-                actorIt.remove();
-            else
-                this.unregisteredActors.put(unregistered, ++counter);
-        }
-        //this.unregisteredActors.clear();
-        for (GameUpdater updater : this.gameUpdaters)
-            updater.update(this);
-        if (this.remainingNuggetsCount == 0)
-            this.state = GameState.WON;
-        if (this.pipe.getHealth() <= 0)
-            this.state = GameState.LOST;
+    public Pipe getPipe(){
+        return this.pipe;
     }
-
-    public void onNuggetCollected() {
-        this.remainingNuggetsCount--;
-    }
-
-    /*
-     * end basicManipulable
-     *
-     * begin enemyQueryable
-     */
 
     public List<Actor> getActors(){
         return Collections.unmodifiableList(this.actors);
@@ -164,34 +123,99 @@ public class TreasureScooper implements ManipulableGameInterface {
     }
 
     /*
-     * end enemyQueryable
+     * end QueryableGameInterface
      *
-     * begin enemyManipulable
+     * begin ManipulableGameInterface
      */
 
-    public void registerActor(Actor actor) {
-        if (actor != null)
-            this.actors.add(actor);
+    public void update() {
+        for (GameUpdater updater : this.gameUpdaters)
+            updater.update(this);
     }
 
+    public void onNuggetCollected() {
+        this.remainingNuggetsCount--;
+    }
+
+    /**
+     * Sets a method (an action) that is to be called (performed) when
+     * the actor specified is unregistered, that is, removed from the
+     * game world.
+     *
+     * @param actor: The actor
+     * @param action: The action to be performed when the actor is unregistered,
+     *              must be a method returning void and taking no arguments
+     */
+    public void setOnDestroy(Actor actor, Runnable action) {
+        this.onDestroyActions.put(actor, action);
+    }
+
+
+    /**
+     * Registers an actor, thereby adding the actor to the game world
+     *
+     * @param actor Not Null: The actor to add to the game world
+     *
+     */
+    public void registerActor(Actor actor) {
+        if (actor != null) {
+            System.out.println("Registering: " + actor.toString());
+            this.actors.add(actor);
+        }
+    }
+
+    /**
+     * Unregisters an actor for later removal from the list of actors,
+     * (late removal to prevent ConcurrentModificationException) thereby
+     * removing the actor from the game world. Optionally also executes
+     * a method that is to be called when the actor is destroyed (removed)
+     * if such a method has been set, otherwise it does nothing.
+     *
+     * @param actor Not Null: The actor to remove
+     */
     public void unregisterActor(Actor actor) {
-        if (actor != null)
+        if (actor != null) {
+            System.out.println("Unregistering: " + actor.toString());
             this.unregisteredActors.put(actor, 0);
+            Runnable action = this.onDestroyActions.get(actor);
+            if (action != null) {
+                action.run();
+                this.onDestroyActions.remove(actor, action);
+            }
+        }
     }
 
     /*
-     * end enemyManipulable
+     * end ManipulableGameInterface
      */
 
     /*
      * end game interface methods
      */
 
-    //Map<Actor, Integer> getUnregisteredActors(){
-    //    return this.unregisteredActors;
-    //}
 
-    //void setState(GameState state){
-    //    this.state = state;
-    //}
+    /*
+     * Methods for accessing internals of the actual game world object.
+     * Restricted only to package local classes which need to have access
+     * to these member variables for their functionality which is tightly
+     * bound to this object (updaters & builders, though the proxy object
+     * currently doesn't seem to need any such functionality, therefore,
+     * we currently do not pass it a reference to the actual object type).
+     */
+
+    Map<Actor, Integer> getUnregisteredActors(){
+        return this.unregisteredActors;
+    }
+
+    List<Actor> getActorsList(){
+        return this.actors;
+    }
+
+    Map<Actor, Runnable> getOnDestroyActions(){
+        return this.onDestroyActions;
+    }
+
+    void setState(GameState state){
+        this.state = state;
+    }
 }

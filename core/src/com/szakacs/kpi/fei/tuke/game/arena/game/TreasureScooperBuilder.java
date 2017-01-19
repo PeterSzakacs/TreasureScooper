@@ -10,8 +10,8 @@ import com.szakacs.kpi.fei.tuke.game.intrfc.game.GameUpdater;
 import com.szakacs.kpi.fei.tuke.game.intrfc.game.world.ManipulableGameInterface;
 import com.szakacs.kpi.fei.tuke.game.misc.AdvancedConfigProcessor;
 import com.szakacs.kpi.fei.tuke.game.misc.DummyTunnel;
-import com.szakacs.kpi.fei.tuke.game.misc.GameUpdaterEnemies;
-import com.szakacs.kpi.fei.tuke.game.misc.GameUpdaterWalls;
+import com.szakacs.kpi.fei.tuke.game.misc.updaters.GameUpdaterEnemies;
+import com.szakacs.kpi.fei.tuke.game.misc.updaters.GameUpdaterWalls;
 import com.szakacs.kpi.fei.tuke.game.player.PlayerA;
 
 import java.util.*;
@@ -29,25 +29,24 @@ public class TreasureScooperBuilder {
     public ManipulableGameInterface buildGameWorld(AdvancedConfigProcessor configProcessor, GameType gameType) {
         this.world = new TreasureScooper();
         this.initialize(configProcessor);
+        Set<GameUpdater> updaters = new HashSet<>(3);
+        updaters.add(new TreasureScooperBaseUpdater(this.world));
         switch (gameType) {
             case STACK:
-                this.world.setGameUpdaters(new HashSet<GameUpdater>(3));
+                this.world.setGameUpdaters(updaters);
                 break;
             case QUEUE:
-                Set<GameUpdater> updatersQueue = new HashSet<>(3);
-                updatersQueue.add(new GameUpdaterWalls(this.world));
-                this.world.setGameUpdaters(updatersQueue);
+                updaters.add(new GameUpdaterWalls(this.world));
+                this.world.setGameUpdaters(updaters);
                 break;
             case ENEMIES:
-                Set<GameUpdater> updatersEnemies = new HashSet<>(3);
-                updatersEnemies.add(new GameUpdaterEnemies(this.world));
-                this.world.setGameUpdaters(updatersEnemies);
+                updaters.add(new GameUpdaterEnemies(this.world));
+                this.world.setGameUpdaters(updaters);
                 break;
             case ULTIMATE:
-                Set<GameUpdater> updatersUltimate = new HashSet<>(3);
-                updatersUltimate.add(new GameUpdaterWalls(this.world));
-                updatersUltimate.add(new GameUpdaterEnemies(this.world));
-                this.world.setGameUpdaters(updatersUltimate);
+                updaters.add(new GameUpdaterWalls(this.world));
+                updaters.add(new GameUpdaterEnemies(this.world));
+                this.world.setGameUpdaters(updaters);
                 break;
         }
         return this.world;

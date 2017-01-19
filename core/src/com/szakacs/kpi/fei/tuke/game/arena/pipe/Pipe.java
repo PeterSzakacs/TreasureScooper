@@ -23,12 +23,12 @@ public class Pipe {
      * presenting an external Stack ADT interface for manipulation.
      */
     private List<PipeSegment> segmentStack;
+    private List<PipeSegment> searchResults;
+    private List<PipeSegment> edges;
     /**
      * For convenience, the head is stored in a separate reference
      * and is not an element of the list (it is not the top of stack).
      */
-    private List<PipeSegment> searchResults;
-    private List<PipeSegment> edges;
     private PipeHead head;
     private Direction dir;
     /**
@@ -55,7 +55,7 @@ public class Pipe {
         this.healthPoints = 100;
         this.moveAllowed = true;
         this.calculated = false;
-        weapon.enqueue(new Bullet(this.world));
+        //weapon.enqueue(new Bullet(this.world));
     }
 
     public void damagePipe(){
@@ -67,14 +67,12 @@ public class Pipe {
         this.healthPoints += byHowMuch;
     }
 
-    public boolean loadBullet(){
-        if (this.score < 10)
-            return false;
-        this.score -= 10;
-        return this.weapon.enqueue(new Bullet(this.world));
+    public void loadBullet(Bullet bullet){
+        if (bullet != null)
+            this.weapon.enqueue(bullet);
     }
 
-    public void fire(){
+    public void fireBullet(){
         if (!weapon.isEmpty()){
             Bullet fired = this.weapon.dequeue();
             fired.launch(this.head.getCurrentPosition(), this.head.getDirection(), this.world);
@@ -187,6 +185,10 @@ public class Pipe {
         return this.head.getCurrentPosition().getCellAtDirection(dir) == null;
     }
 
+    public List<PipeSegment> getEdges(){
+        return this.edges;
+    }
+
     /*
      * end getters
      */
@@ -221,8 +223,25 @@ public class Pipe {
         } else {
             this.dir = dir;
             this.calculated = true;
-            return new PipeSegment(head.getX(), head.getY(), head.getDirection().getOpposite(), dir);
+            return new PipeSegment(head.getCurrentPosition(), head.getDirection().getOpposite(), dir);
         }
+    }
+
+    public Bullet buyBullet(){
+        if (score > 10){
+            score -= 10;
+            return new Bullet(world);
+        }
+        return null;
+    }
+
+    public boolean intersects(Actor actor){
+        for (PipeSegment seg : this.edges){
+            if (Math.abs(seg.getX() - actor.getX()) <= world.getOffsetX() &&
+                    Math.abs(seg.getY() - actor.getY()) <= world.getOffsetY())
+                return true;
+        }
+        return this.head.intersects(actor);
     }
 
     /**
@@ -263,15 +282,6 @@ public class Pipe {
                     head.getX() - top.getX(), head.getY() - top.getY()
             ));
         }
-    }
-
-    public boolean intersects(Actor actor){
-        for (PipeSegment seg : this.edges){
-            if (Math.abs(seg.getX() - actor.getX()) <= world.getOffsetX() &&
-                    Math.abs(seg.getY() - actor.getY()) <= world.getOffsetY())
-                return true;
-        }
-        return this.head.intersects(actor);
     }
 
     private boolean intersectsHead(Actor actor){

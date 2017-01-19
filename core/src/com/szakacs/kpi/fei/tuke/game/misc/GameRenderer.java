@@ -177,7 +177,7 @@ public class GameRenderer implements ApplicationListener {
     }
 
     /*
-     * helper methods
+     * helper rendering methods
      */
 
     private void renderQueue(){

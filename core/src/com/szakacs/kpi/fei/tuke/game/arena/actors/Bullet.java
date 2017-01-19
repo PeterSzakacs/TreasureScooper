@@ -29,7 +29,7 @@ public class Bullet extends AbstractMoveableActor {
             } else {
                 List<Actor> intersecting = world.getActorsBySearchCriteria(
                         (Actor a) ->
-                        a.getType() == ActorType.MOLE
+                                (a.getType() != ActorType.BULLET && a.getType() != ActorType.PIPEHEAD)
                                 && a.intersects(this));
                 if (!intersecting.isEmpty()) {
                     world.unregisterActor(intersecting.get(0));
@@ -40,8 +40,9 @@ public class Bullet extends AbstractMoveableActor {
     }
 
     public void launch(TunnelCell position, Direction dir, ManipulableGameInterface world){
+        System.out.println("launching Bullet");
         if (world != null && world.equals(this.world)) {
-            TunnelCell current = position.getCellAtDirection(dir);
+            /*TunnelCell current = position.getCellAtDirection(dir);
             if (current == null)
                 return;
             Collection<HorizontalTunnel> tunnels = world.getTunnels();
@@ -49,11 +50,17 @@ public class Bullet extends AbstractMoveableActor {
                 if (ht.getCells().contains(current)) {
                     break;
                 }
-            }
+            }*/
             this.initialize(dir, position);
             this.xDelta = world.getOffsetX() * 2;
             this.yDelta = world.getOffsetY() * 2;
             world.registerActor(this);
         }
+    }
+
+    @Override
+    public String toString(){
+        return super.toString() + " moving: " + super.getDirection()
+                + "\nX: " + super.getX() + " Y: " + super.getY();
     }
 }

@@ -9,6 +9,8 @@ import com.szakacs.kpi.fei.tuke.game.enums.TunnelCellType;
 import com.szakacs.kpi.fei.tuke.game.intrfc.game.world.QueryableGameInterface;
 import com.szakacs.kpi.fei.tuke.game.intrfc.Player;
 
+import java.util.List;
+
 /**
  * Created by developer on 5.11.2016.
  *
@@ -33,7 +35,7 @@ public class PlayerA implements Player {
     private TunnelCell entrance;
     private QueryableGameInterface world;
 
-    public PlayerA(QueryableGameInterface world, Pipe pipe){
+    public PlayerA(QueryableGameInterface world, Pipe pipe) {
         this.state = State.BEGIN;
         this.pipe = pipe;
         this.head = pipe.getHead();
@@ -67,66 +69,98 @@ public class PlayerA implements Player {
 
     @Override
     public void act() {
-        switch(this.state){
+        // TODO: Investigate ways to prevent access to private member variables
+        /*try {
+            Field f = Pipe.class.getDeclaredField("world");
+            f.setAccessible(true); //Very important, this allows the setting to work.
+            ManipulableGameInterface value = (ManipulableGameInterface) f.get(pipe);
+            System.out.println(value);
+        } catch (Exception e){
+            e.printStackTrace();
+        }*/
+        switch(this.state) {
             case BEGIN:
-                // TODO: Investigate ways to prevent access to private member variables
-                /*try {
-                    Field f = Pipe.class.getDeclaredField("world");
-                    f.setAccessible(true); //Very important, this allows the setting to work.
-                    ManipulableGameInterface value = (ManipulableGameInterface) f.get(pipe);
-                    System.out.println(value);
-                } catch (Exception e){
-                    e.printStackTrace();
-                }*/
-                pipe.push(pipe.calculateNextSegment(currentDir));
-                currentPosition = pipe.getHead().getCurrentPosition();
-                if (currentPosition.getCellType() == TunnelCellType.ENTRANCE) {
-                    this.entrance = currentPosition;
-                    this.state = State.CLEAR;
-                    this.currentDir = Direction.LEFT;
-                    for (HorizontalTunnel ht : world.getTunnels()) {
-                        if (ht.getEntrances().contains(currentPosition))
-                            this.currentTunnel = ht;
-                    }
-                }
+                this.handleBegin();
                 break;
             case CLEAR:
-                pipe.loadBullet();
-                pipe.push(pipe.calculateNextSegment(currentDir));
-                if (pipe.isWall(currentDir)){
-                    this.state = State.RETURN;
-                }
+                this.handleClear();
                 break;
             case RETURN:
-                pipe.pop();
-                if (pipe.getHead().getCurrentPosition().equals(this.entrance)) {
-                    if (currentTunnel.getNuggetCount() == 0) {
-                        this.state = State.ENTERTUNNEL;
-                        TunnelCell exit = this.currentTunnel.getNearestExit(head.getX());
-                        if (exit == null) {
-                            this.state = State.FINISH;
-                        } else if (head.getX() < exit.getX())
-                            this.currentDir = Direction.RIGHT;
-                        else
-                            this.currentDir = Direction.LEFT;
-                    }else {
-                        currentDir = Direction.RIGHT;
-                        this.state = State.CLEAR;
-                    }
-                }
+                this.handleReturn();
                 break;
             case ENTERTUNNEL:
-                pipe.fire();
-                pipe.push(pipe.calculateNextSegment(currentDir));
-                if (pipe.getHead().getCurrentPosition().getCellType() == TunnelCellType.EXIT) {
-                    currentDir = Direction.DOWN;
-                    this.state = State.BEGIN;
-                }
+                this.handleEntertunnel();
                 break;
             case FINISH:
                 if (!pipe.isEmpty())
                     pipe.pop();
                 break;
+        }
+    }
+
+    private void handleEntertunnel() {
+        //pipe.fireBullet();
+        pipe.push(pipe.calculateNextSegment(currentDir));
+        if (pipe.getHead().getCurrentPosition().getCellType() == TunnelCellType.EXIT) {
+            currentDir = Direction.DOWN;
+            this.state = State.BEGIN;
+        }
+    }
+
+    private TunnelCell findNearestExit() {
+        List<TunnelCell> exits = this.currentTunnel.getCellsBySearchCriteria((cell) ->
+                cell.getCellType() == TunnelCellType.EXIT
+        );
+        TunnelCell nearest = exits.get(0);
+        int nearest_diff = Math.abs(nearest.getX() - head.getX()), diff_x;
+        for (TunnelCell cell : exits) {
+            diff_x = Math.abs(head.getX() - cell.getX());
+            if (diff_x < nearest_diff)
+                nearest = cell;
+        }
+        return nearest;
+    }
+
+    private void handleBegin() {
+        pipe.push(pipe.calculateNextSegment(currentDir));
+        currentPosition = head.getCurrentPosition();
+        if (currentPosition.getCellType() == TunnelCellType.ENTRANCE) {
+            this.entrance = currentPosition;
+            this.state = State.CLEAR;
+            this.currentDir = Direction.LEFT;
+            this.currentTunnel = currentPosition.getTunnel();
+        }
+    }
+
+    private void handleReturn() {
+        pipe.pop();
+        if (pipe.getHead().getCurrentPosition().equals(this.entrance)) {
+            if (currentTunnel.getNuggetCount() == 0) {
+                this.state = State.ENTERTUNNEL;
+                TunnelCell exit = this.findNearestExit();
+                if (exit == null) {
+                    this.state = State.FINISH;
+                } else if (head.getX() < exit.getX())
+                    this.currentDir = Direction.RIGHT;
+                else
+                    this.currentDir = Direction.LEFT;
+            }else {
+                currentDir = Direction.RIGHT;
+                this.state = State.CLEAR;
+            }
+        }
+    }
+
+    private void handleClear() {
+        pipe.loadBullet(pipe.buyBullet());
+        pipe.push(pipe.calculateNextSegment(currentDir));
+        if (pipe.isWall(currentDir)){
+            TunnelCellType cellType = head.getCurrentPosition().getCellType();
+            if (cellType != TunnelCellType.LEFT_EDGE
+                    && cellType != TunnelCellType.RIGHT_EDGE)
+                pipe.fireBullet();
+            else
+                this.state = State.RETURN;
         }
     }
 }

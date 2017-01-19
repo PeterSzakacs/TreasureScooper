@@ -8,6 +8,7 @@ import com.szakacs.kpi.fei.tuke.game.intrfc.GoldCollector;
 import com.szakacs.kpi.fei.tuke.game.misc.DummyTunnel;
 
 import java.util.*;
+import java.util.function.Predicate;
 
 /**
  * Created by developer on 5.11.2016.
@@ -19,6 +20,7 @@ public class HorizontalTunnel {
     private List<TunnelCell> cells;
     private List<TunnelCell> entrances;
     private List<TunnelCell> exits;
+    private List<TunnelCell> searchResults;
     private ManipulableGameInterface world;
 
     /*
@@ -31,6 +33,7 @@ public class HorizontalTunnel {
         this.world = world;
         this.buildTunnel(dt.getNumCells());
         this.nuggetCount = dt.getNumCells();
+        this.searchResults = new ArrayList<>(dt.getNumCells());
     }
 
     private void buildTunnel(int numCells){
@@ -131,26 +134,17 @@ public class HorizontalTunnel {
         return Collections.unmodifiableList(cells);
     }
 
-    public List<TunnelCell> getEntrances(){
-        return Collections.unmodifiableList(this.entrances);
-    }
-
-    public List<TunnelCell> getExits(){
-        return Collections.unmodifiableList(this.exits);
-    }
-
-    public TunnelCell getNearestEntrance(int x) {
-        return getNearestCell(entrances, x);
-    }
-
-    public TunnelCell getNearestExit(int x) {
-        return getNearestCell(exits, x);
-    }
-
     public int getNuggetCount(){
         return this.nuggetCount;
     }
 
+    public List<TunnelCell> getCellsBySearchCriteria(Predicate<TunnelCell> criteria){
+        searchResults.clear();
+        for (TunnelCell cell : this.cells)
+            if (criteria.test(cell))
+                searchResults.add(cell);
+        return searchResults;
+    }
 
 
     /*
@@ -168,26 +162,5 @@ public class HorizontalTunnel {
 
     /*
      * end tunnel manipulation methods
-     */
-    /*
-     * begin helper methods
-     */
-
-    private TunnelCell getNearestCell(List<TunnelCell> cells, int x){
-        if (cells == null || cells.isEmpty()){
-            return null;
-        }
-        TunnelCell nearest = cells.get(0);
-        int nearest_diff = Math.abs(nearest.getX() - x), diff_x;
-        for (TunnelCell cell : cells) {
-            diff_x = Math.abs(x - cell.getX());
-            if (diff_x < nearest_diff)
-                nearest = cell;
-        }
-        return nearest;
-    }
-
-    /*
-     * end helper methods
      */
 }
