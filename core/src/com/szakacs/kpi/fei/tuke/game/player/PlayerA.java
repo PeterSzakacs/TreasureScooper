@@ -98,6 +98,16 @@ public class PlayerA implements Player {
         }
     }
 
+    @Override
+    public void initialize() {
+
+    }
+
+    @Override
+    public void deallocate() {
+
+    }
+
     private void handleEntertunnel() {
         //pipe.fireBullet();
         pipe.push(pipe.calculateNextSegment(currentDir));

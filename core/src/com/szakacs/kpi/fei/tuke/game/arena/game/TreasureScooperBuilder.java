@@ -13,6 +13,7 @@ import com.szakacs.kpi.fei.tuke.game.misc.DummyTunnel;
 import com.szakacs.kpi.fei.tuke.game.misc.updaters.GameUpdaterEnemies;
 import com.szakacs.kpi.fei.tuke.game.misc.updaters.GameUpdaterWalls;
 import com.szakacs.kpi.fei.tuke.game.player.PlayerA;
+import com.szakacs.kpi.fei.tuke.game.player.PlayerNativeA;
 
 import java.util.*;
 

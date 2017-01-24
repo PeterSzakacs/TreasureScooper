@@ -9,3 +9,14 @@ sourceSets.main.java.srcDirs = [ "src/" ]
 eclipse.project {
     name = appName + "-core"
 }
+
+task libGen (type: Exec) {
+    workingDir "$projectDir/src/nativeCode"
+    if (System.getProperty('os.name').toLowerCase().contains('windows')) {
+        commandLine 'cmd', '/c', './script.bat'
+    } else {
+        commandLine 'sh', '-c', './script.sh'
+    }
+}
+
+compileJava.dependsOn libGen

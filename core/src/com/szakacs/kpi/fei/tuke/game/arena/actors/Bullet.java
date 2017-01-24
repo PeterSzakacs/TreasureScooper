@@ -1,6 +1,5 @@
 package com.szakacs.kpi.fei.tuke.game.arena.actors;
 
-import com.szakacs.kpi.fei.tuke.game.arena.tunnels.HorizontalTunnel;
 import com.szakacs.kpi.fei.tuke.game.arena.tunnels.TunnelCell;
 import com.szakacs.kpi.fei.tuke.game.enums.ActorType;
 import com.szakacs.kpi.fei.tuke.game.enums.Direction;

@@ -5,4 +5,8 @@ package com.szakacs.kpi.fei.tuke.game.intrfc;
  */
 public interface Player {
     void act();
+
+    void initialize();
+
+    void deallocate();
 }

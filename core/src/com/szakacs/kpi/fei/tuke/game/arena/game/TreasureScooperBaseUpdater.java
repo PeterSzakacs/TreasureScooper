@@ -24,7 +24,7 @@ public class TreasureScooperBaseUpdater implements GameUpdater {
     private List<Actor> actors;
     private Map<Actor, Runnable> onDestroyActions;
     private Map<Actor, Integer> unregisteredActors;
-    
+
     TreasureScooperBaseUpdater(TreasureScooper world){
         this.gameWorld = world;
         this.player = world.getPlayer();
@@ -56,7 +56,9 @@ public class TreasureScooperBaseUpdater implements GameUpdater {
         //this.unregisteredActors.clear();
         if (world.getRemainingNuggetsCount() == 0)
             gameWorld.setState(GameState.WON);
-        if (this.pipe.getHealth() <= 0)
+        if (this.pipe.getHealth() <= 0) {
             gameWorld.setState(GameState.LOST);
+            this.player.deallocate();
+        }
     }
 }

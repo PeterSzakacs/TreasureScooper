@@ -99,6 +99,7 @@ public class Pipe {
      * @param segment the segment to add to the pipe
      */
     public void push(PipeSegment segment){
+        System.out.println("pipe.push");
         if (this.moveAllowed && this.calculated && segment != null) {
             segmentStack.add(segment);
             this.calculated = false;
@@ -209,6 +210,7 @@ public class Pipe {
      * @throws IllegalArgumentException if null or an unknown Direction enum value passed as parameter
      */
     public PipeSegment calculateNextSegment(Direction dir) throws IllegalArgumentException {
+        System.out.println("calculating new segment: " + dir.name());
         switch (dir) {
             case LEFT:
             case RIGHT:

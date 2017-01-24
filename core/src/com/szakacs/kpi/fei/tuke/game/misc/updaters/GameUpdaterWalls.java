@@ -35,7 +35,7 @@ public class GameUpdaterWalls implements GameUpdater {
         this.turnCounter = 0;
         Random rand = new Random();
         do {
-            this.turnBound = rand.nextInt(31);
+            this.turnBound = rand.nextInt(26);
         } while (this.turnBound < 20);
         this.previousPicks = new ArrayList<>(10);
     }
