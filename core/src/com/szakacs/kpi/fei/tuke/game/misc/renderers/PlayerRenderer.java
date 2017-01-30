@@ -8,7 +8,8 @@ import com.szakacs.kpi.fei.tuke.game.arena.pipe.PipeHead;
 import com.szakacs.kpi.fei.tuke.game.arena.pipe.PipeSegment;
 import com.szakacs.kpi.fei.tuke.game.enums.Direction;
 import com.szakacs.kpi.fei.tuke.game.enums.PipeSegmentType;
-import com.szakacs.kpi.fei.tuke.game.intrfc.game.world.ManipulableGameInterface;
+import com.szakacs.kpi.fei.tuke.game.intrfc.game.Game;
+import com.szakacs.kpi.fei.tuke.game.intrfc.game.GamePrivileged;
 
 import java.util.ArrayList;
 import java.util.EnumMap;
@@ -25,8 +26,8 @@ public class PlayerRenderer extends AbstractGameRenderer {
     private Map<PipeSegmentType, Sprite> pipeSegmentSprites;
     private float elapsedTime;
 
-    public PlayerRenderer(SpriteBatch batch, ManipulableGameInterface world) {
-        super(batch, world);
+    public PlayerRenderer(SpriteBatch batch, GamePrivileged game) {
+        super(batch, game);
         this.initializeSprites();
     }
 
@@ -52,7 +53,7 @@ public class PlayerRenderer extends AbstractGameRenderer {
     @Override
     public void render() {
         elapsedTime += Gdx.graphics.getDeltaTime();
-        Pipe pipe = world.getPipe();
+        Pipe pipe = actorManager.getPipe();
         PipeHead head = pipe.getHead();
         for (PipeSegment seg : pipe.getSegmentStack()){
             pipeSegmentSprites.get(seg.getSegmentType()).setPosition(seg.getX(), seg.getY());

@@ -1,8 +1,9 @@
 package com.szakacs.kpi.fei.tuke.game.misc.renderers;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.szakacs.kpi.fei.tuke.game.intrfc.game.GameRenderer;
-import com.szakacs.kpi.fei.tuke.game.intrfc.game.world.ManipulableGameInterface;
+import com.szakacs.kpi.fei.tuke.game.intrfc.actors.ActorManagerPrivileged;
+import com.szakacs.kpi.fei.tuke.game.intrfc.game.*;
+import com.szakacs.kpi.fei.tuke.game.intrfc.actors.ActorManager;
 
 /**
  * Created by developer on 24.1.2017.
@@ -10,10 +11,14 @@ import com.szakacs.kpi.fei.tuke.game.intrfc.game.world.ManipulableGameInterface;
 public abstract class AbstractGameRenderer implements GameRenderer {
 
     protected SpriteBatch batch;
-    protected ManipulableGameInterface world;
+    protected GamePrivileged game;
+    protected GameWorld world;
+    protected ActorManagerPrivileged actorManager;
 
-    protected AbstractGameRenderer(SpriteBatch batch, ManipulableGameInterface world){
+    protected AbstractGameRenderer(SpriteBatch batch, GamePrivileged game){
         this.batch = batch;
-        this.world = world;
+        this.game = game;
+        this.world = game.getGameWorld();
+        this.actorManager = game.getActorManager();
     }
 }

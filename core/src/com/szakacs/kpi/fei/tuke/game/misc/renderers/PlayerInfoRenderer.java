@@ -7,8 +7,10 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.szakacs.kpi.fei.tuke.game.arena.actors.Bullet;
+import com.szakacs.kpi.fei.tuke.game.arena.weapon.AmmoQueue;
 import com.szakacs.kpi.fei.tuke.game.arena.weapon.Weapon;
-import com.szakacs.kpi.fei.tuke.game.intrfc.game.world.ManipulableGameInterface;
+import com.szakacs.kpi.fei.tuke.game.intrfc.game.Game;
+import com.szakacs.kpi.fei.tuke.game.intrfc.game.GamePrivileged;
 
 import java.util.List;
 
@@ -21,8 +23,8 @@ public class PlayerInfoRenderer extends AbstractGameRenderer {
     private Sprite bulletSprite;
     private Sprite queue;
 
-    public PlayerInfoRenderer(SpriteBatch batch, ManipulableGameInterface world) {
-        super(batch, world);
+    public PlayerInfoRenderer(SpriteBatch batch, GamePrivileged game) {
+        super(batch, game);
         this.score = new BitmapFont();
         this.score.setColor(Color.YELLOW);
         this.score.getData().setScale(5);
@@ -35,8 +37,8 @@ public class PlayerInfoRenderer extends AbstractGameRenderer {
 
     @Override
     public void render() {
-        String displayMsg = Integer.toString(world.getPipe().getScore());
-        switch (world.getState()) {
+        String displayMsg = Integer.toString(game.getScore());
+        switch (game.getState()) {
             case PLAYING:
                 break;
             case WON:
@@ -46,11 +48,11 @@ public class PlayerInfoRenderer extends AbstractGameRenderer {
                 displayMsg += "\nGame over!";
                 break;
             default:
-                throw new IllegalStateException("Undefined game state: " + world.getState());
+                throw new IllegalStateException("Illegal game state: " + game.getState());
         }
         score.draw(batch, displayMsg, 128, 2000);
         queue.draw(batch);
-        Weapon weapon = world.getPipe().getWeapon(this.world);
+        Weapon weapon = actorManager.getPipe().getHead().getWeapon();
         List<Bullet> bullets = weapon.getBullets();
         if (!weapon.isEmpty()) {
             for (int i = 0; i < weapon.getCapacity(); i++) {
@@ -61,10 +63,10 @@ public class PlayerInfoRenderer extends AbstractGameRenderer {
             }
             Color original = bulletSprite.getColor();
             bulletSprite.setColor(Color.CORAL);
-            bulletSprite.setPosition(3744 + weapon.getFront() * 32, 1824);
+            bulletSprite.setPosition(3744 + weapon.getFrontIndex() * 32, 1824);
             bulletSprite.draw(batch);
             bulletSprite.setColor(Color.GREEN);
-            bulletSprite.setPosition(3744 + weapon.getRear() * 32, 1824);
+            bulletSprite.setPosition(3744 + weapon.getRearIndex() * 32, 1824);
             bulletSprite.draw(batch);
             bulletSprite.setColor(original);
         }

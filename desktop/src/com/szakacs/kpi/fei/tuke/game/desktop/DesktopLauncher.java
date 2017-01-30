@@ -20,7 +20,7 @@ public class DesktopLauncher {
         CoreGameRenderer game = new CoreGameRenderer(GameType.ULTIMATE, "config.xml");
         config.width = game.getWorld().getWidth();
         config.height = game.getWorld().getHeight();
-        config.title = "TreasureScooper";
+        config.title = "TreasureScooperWorld";
         new LwjglApplication(game, config);
     }
 }

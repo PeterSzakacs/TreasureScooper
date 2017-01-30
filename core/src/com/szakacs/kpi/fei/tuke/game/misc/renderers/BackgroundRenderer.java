@@ -1,13 +1,11 @@
 package com.szakacs.kpi.fei.tuke.game.misc.renderers;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.szakacs.kpi.fei.tuke.game.intrfc.game.GameRenderer;
-import com.szakacs.kpi.fei.tuke.game.intrfc.game.world.ManipulableGameInterface;
+import com.szakacs.kpi.fei.tuke.game.intrfc.game.Game;
+import com.szakacs.kpi.fei.tuke.game.intrfc.game.GamePrivileged;
 
 /**
  * Created by developer on 24.1.2017.
@@ -15,10 +13,9 @@ import com.szakacs.kpi.fei.tuke.game.intrfc.game.world.ManipulableGameInterface;
 public class BackgroundRenderer extends AbstractGameRenderer {
 
     private Sprite bgSprite;
-    private BitmapFont score;
 
-    public BackgroundRenderer(SpriteBatch batch, ManipulableGameInterface world) {
-        super(batch, world);
+    public BackgroundRenderer(SpriteBatch batch, GamePrivileged game) {
+        super(batch, game);
         this.bgSprite = new Sprite(new Texture(Gdx.files.internal("images/128/background.png")));
     }
 

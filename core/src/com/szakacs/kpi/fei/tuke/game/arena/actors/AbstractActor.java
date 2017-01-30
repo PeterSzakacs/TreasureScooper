@@ -1,10 +1,10 @@
 package com.szakacs.kpi.fei.tuke.game.arena.actors;
 
-import com.szakacs.kpi.fei.tuke.game.arena.tunnels.TunnelCell;
+import com.szakacs.kpi.fei.tuke.game.arena.world.TunnelCell;
 import com.szakacs.kpi.fei.tuke.game.enums.ActorType;
 import com.szakacs.kpi.fei.tuke.game.enums.Direction;
-import com.szakacs.kpi.fei.tuke.game.intrfc.Actor;
-import com.szakacs.kpi.fei.tuke.game.intrfc.game.world.ManipulableGameInterface;
+import com.szakacs.kpi.fei.tuke.game.intrfc.actors.Actor;
+import com.szakacs.kpi.fei.tuke.game.intrfc.proxies.ActorGameInterface;
 
 /**
  * Created by developer on 7.12.2016.
@@ -16,16 +16,16 @@ public abstract class AbstractActor implements Actor {
     private TunnelCell currentPosition;
     private Direction dir;
     protected ActorType actorType;
-    protected ManipulableGameInterface world;
+    protected ActorGameInterface world;
 
-    protected AbstractActor(ManipulableGameInterface world, ActorType at){
+    protected AbstractActor(ActorGameInterface world, ActorType at){
         if (world == null)
             throw new IllegalArgumentException("No game world passed");
         this.world = world;
         this.actorType = at;
     }
 
-    protected AbstractActor(TunnelCell currentPosition, ActorType type, Direction dir, ManipulableGameInterface world){
+    protected AbstractActor(TunnelCell currentPosition, ActorType type, Direction dir, ActorGameInterface world){
         this.actorType = type;
         this.world = world;
         this.initialize(dir, currentPosition);
@@ -83,6 +83,4 @@ public abstract class AbstractActor implements Actor {
         this.x = currentPosition.getX();
         this.y = currentPosition.getY();
     }
-
-    public abstract void act(ManipulableGameInterface world);
 }

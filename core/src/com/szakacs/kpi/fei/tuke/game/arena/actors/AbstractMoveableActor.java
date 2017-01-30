@@ -1,9 +1,9 @@
 package com.szakacs.kpi.fei.tuke.game.arena.actors;
 
-import com.szakacs.kpi.fei.tuke.game.arena.tunnels.TunnelCell;
+import com.szakacs.kpi.fei.tuke.game.arena.world.TunnelCell;
 import com.szakacs.kpi.fei.tuke.game.enums.ActorType;
 import com.szakacs.kpi.fei.tuke.game.enums.Direction;
-import com.szakacs.kpi.fei.tuke.game.intrfc.game.world.ManipulableGameInterface;
+import com.szakacs.kpi.fei.tuke.game.intrfc.proxies.ActorGameInterface;
 
 /**
  * Created by developer on 31.12.2016.
@@ -12,11 +12,11 @@ public abstract class AbstractMoveableActor extends AbstractActor {
 
     private boolean boundReached;
 
-    protected AbstractMoveableActor(ManipulableGameInterface world, ActorType at) {
+    protected AbstractMoveableActor(ActorGameInterface world, ActorType at) {
         super(world, at);
     }
 
-    protected AbstractMoveableActor(TunnelCell currentPosition, ActorType type, Direction dir, ManipulableGameInterface world) {
+    protected AbstractMoveableActor(TunnelCell currentPosition, ActorType type, Direction dir, ActorGameInterface world) {
         super(currentPosition, type, dir, world);
     }
 

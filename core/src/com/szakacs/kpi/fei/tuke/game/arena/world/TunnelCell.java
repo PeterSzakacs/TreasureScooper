@@ -1,9 +1,9 @@
-package com.szakacs.kpi.fei.tuke.game.arena.tunnels;
+package com.szakacs.kpi.fei.tuke.game.arena.world;
 
 import com.szakacs.kpi.fei.tuke.game.enums.Direction;
 import com.szakacs.kpi.fei.tuke.game.enums.TunnelCellType;
-import com.szakacs.kpi.fei.tuke.game.intrfc.GoldCollector;
-import com.szakacs.kpi.fei.tuke.game.intrfc.game.world.ManipulableGameInterface;
+import com.szakacs.kpi.fei.tuke.game.intrfc.actors.GoldCollector;
+import com.szakacs.kpi.fei.tuke.game.intrfc.game.GameWorld;
 
 import java.util.EnumMap;
 import java.util.Map;
@@ -15,12 +15,12 @@ public class TunnelCell {
     private int x;
     private int y;
     private HorizontalTunnel tunnel;
-    private ManipulableGameInterface world;
+    private GameWorld world;
     private TunnelCellType tcType;
     private int NuggetValue;
     private Map<Direction, TunnelCell> fourDirections;
 
-    public TunnelCell(int x, int y, TunnelCellType tcType, HorizontalTunnel tunnel, ManipulableGameInterface world) {
+    public TunnelCell(int x, int y, TunnelCellType tcType, HorizontalTunnel tunnel, GameWorld world) {
         this.x = x;
         this.y = y;
         this.tcType = tcType;
@@ -49,7 +49,7 @@ public class TunnelCell {
         return this.tunnel;
     }
 
-    public void setAtDirection(ManipulableGameInterface world, Direction dir, TunnelCell pos){
+    public void setAtDirection(Direction dir, TunnelCell pos, GameWorld world){
         if (world != null && world.equals(this.world)) {
             fourDirections.put(dir, pos);
         }
@@ -67,13 +67,13 @@ public class TunnelCell {
         return this.NuggetValue != 0;
     }
 
-    public int collectNugget(ManipulableGameInterface world, GoldCollector collector){
+    public int collectNugget(GameWorld world, GoldCollector collector){
         if (world != null && world.equals(this.world)){
             if (collector.getX() == this.x && collector.getY() == this.y) {
                 int nuggetVal = this.NuggetValue;
                 this.NuggetValue = 0;
                 if (this.tunnel != null && nuggetVal != 0)
-                    this.tunnel.onNuggetCollected(collector);
+                    this.tunnel.onNuggetCollected(nuggetVal);
                 return nuggetVal;
             }
         }

@@ -22,7 +22,7 @@
         @attributes y: The vertical coordinate of the tunnel (cell index from bottom)
         @attributes width: The width of the tunnel, described as the number of cells
                            of width offsetX and height offsetY
-    @elm <ic>: an interconnection (vertical tunnel) between tunnels
+    @elm <ic>: an interconnection (vertical tunnel) between world
         @attributes x: the horizontal coordinate of the interconnection
         @attributes from: the identifier of the horizontal tunnel connecting to
                           the upper side of the interconnection

@@ -1,12 +1,12 @@
 package com.szakacs.kpi.fei.tuke.game.arena.actors;
 
-import com.szakacs.kpi.fei.tuke.game.arena.tunnels.TunnelCell;
+import com.szakacs.kpi.fei.tuke.game.arena.world.TunnelCell;
 import com.szakacs.kpi.fei.tuke.game.enums.ActorType;
 import com.szakacs.kpi.fei.tuke.game.enums.Direction;
-import com.szakacs.kpi.fei.tuke.game.intrfc.Actor;
-import com.szakacs.kpi.fei.tuke.game.intrfc.game.world.ManipulableGameInterface;
+import com.szakacs.kpi.fei.tuke.game.intrfc.actors.Actor;
+import com.szakacs.kpi.fei.tuke.game.intrfc.proxies.ActorGameInterface;
+import com.szakacs.kpi.fei.tuke.game.intrfc.game.GameWorld;
 
-import java.util.Collection;
 import java.util.List;
 
 /**
@@ -16,36 +16,36 @@ public class Bullet extends AbstractMoveableActor {
     private int xDelta;
     private int yDelta;
 
-    public Bullet(ManipulableGameInterface world){
+    public Bullet(ActorGameInterface world){
         super(world, ActorType.BULLET);
     }
 
-    public void act(ManipulableGameInterface world){
-        if (world != null && world.equals(this.world)) {
+    public void act(ActorGameInterface world){
+        if (world != null && world.equals(super.world)) {
             this.move(xDelta, yDelta, super.getDirection());
             if (boundReached()) {
-                world.unregisterActor(this);
+                super.world.unregisterActor(this);
             } else {
-                List<Actor> intersecting = world.getActorsBySearchCriteria(
+                List<Actor> intersecting = super.world.getActorsBySearchCriteria(
                         (Actor a) ->
                                 (a.getType() != ActorType.BULLET && a.getType() != ActorType.PIPEHEAD)
                                 && a.intersects(this));
                 if (!intersecting.isEmpty()) {
-                    world.unregisterActor(intersecting.get(0));
-                    world.unregisterActor(this);
+                    super.world.unregisterActor(intersecting.get(0));
+                    super.world.unregisterActor(this);
                 }
             }
         }
     }
 
-    public void launch(TunnelCell position, Direction dir, ManipulableGameInterface world){
+    public void launch(TunnelCell position, Direction dir, ActorGameInterface world){
         System.out.println("launching Bullet");
         if (world != null && world.equals(this.world)) {
             /*TunnelCell current = position.getCellAtDirection(dir);
             if (current == null)
                 return;
-            Collection<HorizontalTunnel> tunnels = world.getTunnels();
-            for (HorizontalTunnel ht : tunnels) {
+            Collection<HorizontalTunnel> world = world.getTunnels();
+            for (HorizontalTunnel ht : world) {
                 if (ht.getCells().contains(current)) {
                     break;
                 }

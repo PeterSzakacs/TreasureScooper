@@ -2,18 +2,18 @@ package com.szakacs.kpi.fei.tuke.game.player;
 
 import com.szakacs.kpi.fei.tuke.game.arena.pipe.Pipe;
 import com.szakacs.kpi.fei.tuke.game.arena.pipe.PipeHead;
-import com.szakacs.kpi.fei.tuke.game.arena.tunnels.HorizontalTunnel;
-import com.szakacs.kpi.fei.tuke.game.arena.tunnels.TunnelCell;
+import com.szakacs.kpi.fei.tuke.game.arena.world.HorizontalTunnel;
+import com.szakacs.kpi.fei.tuke.game.arena.world.TunnelCell;
 import com.szakacs.kpi.fei.tuke.game.enums.Direction;
 import com.szakacs.kpi.fei.tuke.game.intrfc.Player;
-import com.szakacs.kpi.fei.tuke.game.intrfc.game.world.QueryableGameInterface;
+import com.szakacs.kpi.fei.tuke.game.intrfc.proxies.PlayerGameInterface;
 
 /**
  * Created by developer on 22.1.2017.
  */
 public class PlayerNativeA implements Player {
 
-    private final PipeHead head;
+    private PipeHead head;
     // again, this is all code the student can implement
     private Pipe pipe;
 
@@ -21,10 +21,14 @@ public class PlayerNativeA implements Player {
     private TunnelCell currentPosition;
     private HorizontalTunnel currentTunnel;
     private TunnelCell entrance;
-    private QueryableGameInterface world;
+    private PlayerGameInterface world;
 
-    public PlayerNativeA(QueryableGameInterface world, Pipe pipe) {
-        this.pipe = pipe;
+    public PlayerNativeA(PlayerGameInterface world) {
+    }
+
+    @Override
+    public void initialize(PlayerGameInterface world){
+        this.pipe = world.getPipe();
         this.head = pipe.getHead();
         this.currentDir = this.head.getDirection();
         this.world = world;
@@ -32,14 +36,13 @@ public class PlayerNativeA implements Player {
         this.currentTunnel = null;
         this.entrance = null;
         System.loadLibrary("player");
-        this.initialize();
+        this.initializeNativeCode(world);
     }
+
+    private native void initializeNativeCode(PlayerGameInterface world);
 
     @Override
     public native void act();
-
-    @Override
-    public native void initialize();
 
     @Override
     public native void deallocate();

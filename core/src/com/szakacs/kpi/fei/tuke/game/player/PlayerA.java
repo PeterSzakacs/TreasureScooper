@@ -2,11 +2,11 @@ package com.szakacs.kpi.fei.tuke.game.player;
 
 import com.szakacs.kpi.fei.tuke.game.arena.pipe.Pipe;
 import com.szakacs.kpi.fei.tuke.game.arena.pipe.PipeHead;
-import com.szakacs.kpi.fei.tuke.game.arena.tunnels.HorizontalTunnel;
-import com.szakacs.kpi.fei.tuke.game.arena.tunnels.TunnelCell;
+import com.szakacs.kpi.fei.tuke.game.arena.world.HorizontalTunnel;
+import com.szakacs.kpi.fei.tuke.game.arena.world.TunnelCell;
 import com.szakacs.kpi.fei.tuke.game.enums.Direction;
 import com.szakacs.kpi.fei.tuke.game.enums.TunnelCellType;
-import com.szakacs.kpi.fei.tuke.game.intrfc.game.world.QueryableGameInterface;
+import com.szakacs.kpi.fei.tuke.game.intrfc.proxies.PlayerGameInterface;
 import com.szakacs.kpi.fei.tuke.game.intrfc.Player;
 
 import java.util.List;
@@ -18,7 +18,7 @@ import java.util.List;
  */
 public class PlayerA implements Player {
 
-    private final PipeHead head;
+    private PipeHead head;
     // again, this is all code the student can implement
     private Pipe pipe;
 
@@ -33,17 +33,9 @@ public class PlayerA implements Player {
     private TunnelCell currentPosition;
     private HorizontalTunnel currentTunnel;
     private TunnelCell entrance;
-    private QueryableGameInterface world;
+    private PlayerGameInterface world;
 
-    public PlayerA(QueryableGameInterface world, Pipe pipe) {
-        this.state = State.BEGIN;
-        this.pipe = pipe;
-        this.head = pipe.getHead();
-        this.currentDir = this.head.getDirection();
-        this.world = world;
-        this.currentPosition = pipe.getHead().getCurrentPosition();
-        this.currentTunnel = null;
-        this.entrance = null;
+    public PlayerA() {
     }
 
     /**
@@ -59,7 +51,7 @@ public class PlayerA implements Player {
     // what has changed:
     // the underground tunnel maze is now represented as a graph of cells,
     // enabling reduction of background code complexity and allowing more
-    // options for tunnel network design, such as tunnels that do not stretch
+    // options for tunnel network design, such as world that do not stretch
     // from one end of the screen to the next (not tested yet)
     //
     // also it should make the programming API easier for students to use
@@ -73,7 +65,7 @@ public class PlayerA implements Player {
         /*try {
             Field f = Pipe.class.getDeclaredField("world");
             f.setAccessible(true); //Very important, this allows the setting to work.
-            ManipulableGameInterface value = (ManipulableGameInterface) f.get(pipe);
+            ActorGameInterface value = (ActorGameInterface) f.get(pipe);
             System.out.println(value);
         } catch (Exception e){
             e.printStackTrace();
@@ -99,8 +91,15 @@ public class PlayerA implements Player {
     }
 
     @Override
-    public void initialize() {
-
+    public void initialize(PlayerGameInterface world) {
+        this.state = State.BEGIN;
+        this.pipe = world.getPipe();
+        this.head = pipe.getHead();
+        this.currentDir = this.head.getDirection();
+        this.world = world;
+        this.currentPosition = pipe.getHead().getCurrentPosition();
+        this.currentTunnel = null;
+        this.entrance = null;
     }
 
     @Override
@@ -162,13 +161,13 @@ public class PlayerA implements Player {
     }
 
     private void handleClear() {
-        pipe.loadBullet(pipe.buyBullet());
+        head.getWeapon().loadBullet(pipe.buyBullet());
         pipe.push(pipe.calculateNextSegment(currentDir));
         if (pipe.isWall(currentDir)){
             TunnelCellType cellType = head.getCurrentPosition().getCellType();
             if (cellType != TunnelCellType.LEFT_EDGE
                     && cellType != TunnelCellType.RIGHT_EDGE)
-                pipe.fireBullet();
+                head.getWeapon().fireBullet();
             else
                 this.state = State.RETURN;
         }

@@ -5,8 +5,9 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.szakacs.kpi.fei.tuke.game.enums.ActorType;
 import com.szakacs.kpi.fei.tuke.game.enums.Direction;
-import com.szakacs.kpi.fei.tuke.game.intrfc.Actor;
-import com.szakacs.kpi.fei.tuke.game.intrfc.game.world.ManipulableGameInterface;
+import com.szakacs.kpi.fei.tuke.game.intrfc.actors.Actor;
+import com.szakacs.kpi.fei.tuke.game.intrfc.game.Game;
+import com.szakacs.kpi.fei.tuke.game.intrfc.game.GamePrivileged;
 
 import java.util.EnumMap;
 import java.util.List;
@@ -19,8 +20,8 @@ public class ActorRenderer extends AbstractGameRenderer {
 
     private Map<ActorType, Map<Direction, Sprite>> actorSprites;
 
-    public ActorRenderer(SpriteBatch batch, ManipulableGameInterface world, Map<ActorType, List<Direction>> mappings) {
-        super(batch, world);
+    public ActorRenderer(SpriteBatch batch, GamePrivileged game, Map<ActorType, List<Direction>> mappings) {
+        super(batch, game);
         this.initializeActorSprites(mappings);
     }
 
@@ -41,7 +42,7 @@ public class ActorRenderer extends AbstractGameRenderer {
 
     @Override
     public void render() {
-        for (Actor actor : world.getActors()){
+        for (Actor actor : actorManager.getActors()){
             Sprite actorSprite = actorSprites.get(actor.getType()).get(actor.getDirection());
             actorSprite.setPosition(actor.getX(), actor.getY());
             actorSprite.draw(batch);

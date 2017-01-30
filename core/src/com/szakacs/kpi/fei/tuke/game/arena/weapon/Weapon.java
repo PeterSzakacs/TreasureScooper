@@ -1,74 +1,56 @@
 package com.szakacs.kpi.fei.tuke.game.arena.weapon;
 
 import com.szakacs.kpi.fei.tuke.game.arena.actors.Bullet;
+import com.szakacs.kpi.fei.tuke.game.arena.pipe.PipeHead;
+import com.szakacs.kpi.fei.tuke.game.intrfc.proxies.ActorGameInterface;
 
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
 /**
- * Created by developer on 1.12.2016.
+ * Created by developer on 29.1.2017.
  */
 public class Weapon {
+    private AmmoQueue ammoQueue;
+    private ActorGameInterface world;
+    private PipeHead head;
 
-    private Bullet[] bullets;
-    private int front;
-    private int rear;
-    private int capacity;
-    private int numBullets;
-
-    public Weapon(){
-        this.capacity = 10;
-        this.front = 0;
-        this.rear = -1;
-        this.numBullets = 0;
-        this.bullets = new Bullet[this.capacity];
+    public Weapon(int capacity, PipeHead head, ActorGameInterface world){
+        this.ammoQueue = new AmmoQueue(capacity);
+        this.head = head;
+        this.world = world;
     }
 
-    public boolean isEmpty(){
-        return numBullets == 0;
+    public void loadBullet(Bullet bullet){
+        if (bullet != null)
+            this.ammoQueue.enqueue(bullet);
     }
 
-    public boolean isFull(){
-        return numBullets == capacity;
+    public void fireBullet(){
+        if (!ammoQueue.isEmpty()){
+            Bullet fired = this.ammoQueue.dequeue();
+            fired.launch(head.getCurrentPosition(), head.getDirection(), world);
+        }
     }
 
-    public boolean enqueue(Bullet bullet){
-        if (isFull())
-            return false;
-        rear++; numBullets++;
-        if (rear == capacity)
-            rear = 0;
-        this.bullets[rear] = bullet;
-        return true;
+    public int getFrontIndex() {
+        return ammoQueue.getFront();
     }
 
-    public Bullet dequeue(){
-        Bullet toReturn = this.bullets[front];
-        this.bullets[front] = null;
-        numBullets--; front++;
-        if (front == capacity)
-            front = 0;
-        return toReturn;
+    public int getRearIndex() {
+        return ammoQueue.getRear();
     }
 
-    public int getFront() {
-        return front;
-    }
-
-    public int getRear() {
-        return rear;
-    }
+    public int getNumBullets(){ return ammoQueue.getNumBullets(); }
 
     public int getCapacity() {
-        return capacity;
+        return ammoQueue.getCapacity();
     }
 
-    public int getNumBullets(){
-        return this.numBullets;
-    }
+    public boolean isEmpty(){ return ammoQueue.isEmpty(); }
 
     public List<Bullet> getBullets(){
-        return Collections.unmodifiableList(Arrays.asList(bullets));
+        return Collections.unmodifiableList(Arrays.asList(ammoQueue.getBulletArray()));
     }
 }

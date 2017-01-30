@@ -2,6 +2,7 @@ package com.szakacs.kpi.fei.tuke.game.misc;
 
 import com.szakacs.kpi.fei.tuke.game.enums.ActorType;
 import com.szakacs.kpi.fei.tuke.game.enums.Direction;
+import com.szakacs.kpi.fei.tuke.game.intrfc.game.GameWorldInitializer;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
@@ -11,7 +12,7 @@ import java.util.*;
 /**
  * Created by developer on 16.11.2016.
  */
-public class AdvancedConfigProcessor extends DefaultHandler {
+public class AdvancedConfigProcessor extends DefaultHandler implements GameWorldInitializer {
 
     private int width;
     private int height;
@@ -70,6 +71,11 @@ public class AdvancedConfigProcessor extends DefaultHandler {
             case INTERCONNECTIONS:
                 if (qName.equalsIgnoreCase("ic")){
                     DummyTunnel dt = dummyTunnels.get(attributes.getValue("from"));
+                    dt.addConnectionToTunnelBelow(
+                            Integer.parseInt(attributes.getValue("x")),
+                            dummyTunnels.get(attributes.getValue("to"))
+                    );
+                    /*DummyTunnel dt = dummyTunnels.get(attributes.getValue("from"));
                     Map<Integer, DummyTunnel> exitMap = interconnects.get(dt);
                     if (exitMap == null) {
                         exitMap = new HashMap<>(3);
@@ -78,7 +84,7 @@ public class AdvancedConfigProcessor extends DefaultHandler {
                     exitMap.put(
                             Integer.parseInt(attributes.getValue("x")) * this.offsetX,
                             dummyTunnels.get(attributes.getValue("to") )
-                    );
+                    );*/
                 }
                 break;
             case ACTORS:
@@ -134,7 +140,7 @@ public class AdvancedConfigProcessor extends DefaultHandler {
         return initY;
     }
 
-    public String getRootTunnel() {
+    public String getRootTunnelId() {
         return rootTunnel;
     }
 

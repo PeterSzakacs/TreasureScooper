@@ -1,13 +1,11 @@
 package com.szakacs.kpi.fei.tuke.game.misc.updaters;
 
 import com.szakacs.kpi.fei.tuke.game.arena.pipe.PipeSegment;
-import com.szakacs.kpi.fei.tuke.game.arena.tunnels.HorizontalTunnel;
-import com.szakacs.kpi.fei.tuke.game.arena.tunnels.TunnelCell;
-import com.szakacs.kpi.fei.tuke.game.arena.tunnels.Wall;
-import com.szakacs.kpi.fei.tuke.game.enums.ActorType;
-import com.szakacs.kpi.fei.tuke.game.intrfc.Actor;
-import com.szakacs.kpi.fei.tuke.game.intrfc.game.GameUpdater;
-import com.szakacs.kpi.fei.tuke.game.intrfc.game.world.ManipulableGameInterface;
+import com.szakacs.kpi.fei.tuke.game.arena.world.HorizontalTunnel;
+import com.szakacs.kpi.fei.tuke.game.arena.world.TunnelCell;
+import com.szakacs.kpi.fei.tuke.game.arena.actors.Wall;
+import com.szakacs.kpi.fei.tuke.game.intrfc.actors.Actor;
+import com.szakacs.kpi.fei.tuke.game.intrfc.game.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,9 +14,8 @@ import java.util.Random;
 /**
  * Created by developer on 1.1.2017.
  */
-public class GameUpdaterWalls implements GameUpdater {
+public class GameUpdaterWalls extends AbstractGameUpdater {
 
-    private final ManipulableGameInterface world;
     private List<HorizontalTunnel> tunnels;
     private List<Actor> createdWalls;
     private int turnCounter;
@@ -27,9 +24,9 @@ public class GameUpdaterWalls implements GameUpdater {
     private HorizontalTunnel previousTunnel;
     private List<TunnelCell> previousPicks;
 
-    public GameUpdaterWalls(ManipulableGameInterface world) {
-        this.world = world;
-        this.tunnels = world.getTunnels();
+    public GameUpdaterWalls(GamePrivileged game) {
+        super(game);
+        this.tunnels = game.getGameWorld().getTunnels();
         this.wallCountMax = calculateWallCountMax();
         this.createdWalls = new ArrayList<>(this.wallCountMax);
         this.turnCounter = 0;
@@ -41,20 +38,18 @@ public class GameUpdaterWalls implements GameUpdater {
     }
 
     @Override
-    public void update(ManipulableGameInterface world) {
-        if (world != null && world.equals(this.world)) {
-            turnCounter++;
-            if (turnCounter > turnBound) {
-                turnCounter = 0;
-                if (createdWalls.size() < 20)
-                    addWall();
-            }
+    public void update(Game game) {
+        turnCounter++;
+        if (turnCounter > turnBound) {
+            turnCounter = 0;
+            if (createdWalls.size() < 20)
+                addWall();
         }
     }
 
     private void addWall() {
-        TunnelCell headPosition = world.getPipe().getHead().getCurrentPosition();
-        List<PipeSegment> segmentStack = world.getPipe().getSegmentStack();
+        TunnelCell headPosition = actorManager.getPipe().getHead().getCurrentPosition();
+        List<PipeSegment> segmentStack = actorManager.getPipe().getSegmentStack();
         List<TunnelCell> positions = new ArrayList<>(segmentStack.size());
         for (PipeSegment seg : segmentStack){
             positions.add(seg.getCurrentPosition());
@@ -77,8 +72,8 @@ public class GameUpdaterWalls implements GameUpdater {
             cell = cells.get(1 + rand.nextInt(cells.size() - 2));
         } while (previousPicks.contains(cell) || cell.equals(headPosition) || positions.contains(cell));
         previousPicks.add(cell);
-        Wall wall = new Wall(cell, this.world, this::removeWall);
-        world.registerActor(wall);
+        Wall wall = new Wall(cell, super.actorManager.getActorGameProxy(), this::removeWall);
+        actorManager.registerActor(wall);
         this.createdWalls.add(wall);
     }
 

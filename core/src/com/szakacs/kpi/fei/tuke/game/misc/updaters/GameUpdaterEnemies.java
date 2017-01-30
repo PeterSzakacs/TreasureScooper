@@ -1,13 +1,11 @@
 package com.szakacs.kpi.fei.tuke.game.misc.updaters;
 
 import com.szakacs.kpi.fei.tuke.game.arena.actors.Enemy;
-import com.szakacs.kpi.fei.tuke.game.arena.tunnels.HorizontalTunnel;
-import com.szakacs.kpi.fei.tuke.game.arena.tunnels.TunnelCell;
-import com.szakacs.kpi.fei.tuke.game.enums.ActorType;
+import com.szakacs.kpi.fei.tuke.game.arena.world.HorizontalTunnel;
+import com.szakacs.kpi.fei.tuke.game.arena.world.TunnelCell;
 import com.szakacs.kpi.fei.tuke.game.enums.Direction;
-import com.szakacs.kpi.fei.tuke.game.intrfc.Actor;
-import com.szakacs.kpi.fei.tuke.game.intrfc.game.GameUpdater;
-import com.szakacs.kpi.fei.tuke.game.intrfc.game.world.ManipulableGameInterface;
+import com.szakacs.kpi.fei.tuke.game.intrfc.actors.Actor;
+import com.szakacs.kpi.fei.tuke.game.intrfc.game.*;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -17,15 +15,15 @@ import java.util.Random;
 /**
  * Created by developer on 31.12.2016.
  */
-public class GameUpdaterEnemies implements GameUpdater {
-    private ManipulableGameInterface world;
+public class GameUpdaterEnemies extends AbstractGameUpdater {
+
     private int turnCounter;
     private int turnBound;
     private HorizontalTunnel previous;
     private List<Actor> createdEnemies;
 
-    public GameUpdaterEnemies(ManipulableGameInterface world){
-        this.world = world;
+    public GameUpdaterEnemies(GamePrivileged game){
+        super(game);
         this.turnCounter = 0;
         this.createdEnemies = new ArrayList<>(10);
         Random rand = new Random();
@@ -34,20 +32,18 @@ public class GameUpdaterEnemies implements GameUpdater {
         } while (this.turnBound < 100);
     }
 
-    public void update(ManipulableGameInterface world){
-        if (world != null && world.equals(this.world)) {
-            turnCounter++;
-            if (turnCounter > turnBound) {
-                turnCounter = 0;
-                if (createdEnemies.size() < 9)
-                    createNewEnemy();
-            }
+    public void update(Game game){
+        turnCounter++;
+        if (turnCounter > turnBound) {
+            turnCounter = 0;
+            if (createdEnemies.size() < 9)
+                createNewEnemy();
         }
     }
 
     private void createNewEnemy() {
         HorizontalTunnel ht = null;
-        for (HorizontalTunnel horizontalTunnel : world.getTunnels()) {
+        for (HorizontalTunnel horizontalTunnel : gameWorld.getTunnels()) {
             ht = horizontalTunnel;
             if (!ht.equals(previous)) {
                 this.previous = ht;
@@ -63,7 +59,7 @@ public class GameUpdaterEnemies implements GameUpdater {
             dir = Direction.RIGHT;
             startPosition = ht.getCells().get(0);
         }
-        world.registerActor(new Enemy(dir, startPosition, this::removeEnemy, this.world));
+        actorManager.registerActor(new Enemy(dir, startPosition, this::removeEnemy, super.actorManager.getActorGameProxy()));
     }
 
     private void removeEnemy(Actor enemy){

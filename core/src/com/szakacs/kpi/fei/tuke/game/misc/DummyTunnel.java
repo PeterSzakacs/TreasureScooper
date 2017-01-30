@@ -1,5 +1,8 @@
 package com.szakacs.kpi.fei.tuke.game.misc;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * Created by developer on 24.11.2016.
  *
@@ -8,16 +11,19 @@ package com.szakacs.kpi.fei.tuke.game.misc;
  * in the game code.
  */
 public class DummyTunnel {
-   private int xIndex;
-   private int yIndex;
-   private int numCells;
-   private String id;
 
-    public DummyTunnel(int x, int y, int numCells, String id) {
-        this.xIndex = x;
-        this.yIndex = y;
+    private int xIndex;
+    private int yIndex;
+    private int numCells;
+    private String id;
+    private Map<Integer, DummyTunnel> connectedTunnelsBelow;
+
+    public DummyTunnel(int xIndex, int yIndex, int numCells, String id) {
+        this.xIndex = xIndex;
+        this.yIndex = yIndex;
         this.numCells = numCells;
         this.id = id;
+        this.connectedTunnelsBelow = new HashMap<>();
     }
 
     public int getXIndex() {
@@ -34,5 +40,13 @@ public class DummyTunnel {
 
     public String getId(){
         return this.id;
+    }
+
+    public Map<Integer, DummyTunnel> getConnectedTunnelsBelow(){
+        return this.connectedTunnelsBelow;
+    }
+
+    public void addConnectionToTunnelBelow(int xIndex, DummyTunnel dt){
+        this.connectedTunnelsBelow.put(xIndex, dt);
     }
 }

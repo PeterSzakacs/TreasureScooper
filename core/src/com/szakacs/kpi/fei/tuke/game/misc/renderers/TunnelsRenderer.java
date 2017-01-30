@@ -4,9 +4,10 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.szakacs.kpi.fei.tuke.game.arena.tunnels.HorizontalTunnel;
-import com.szakacs.kpi.fei.tuke.game.arena.tunnels.TunnelCell;
-import com.szakacs.kpi.fei.tuke.game.intrfc.game.world.ManipulableGameInterface;
+import com.szakacs.kpi.fei.tuke.game.arena.world.HorizontalTunnel;
+import com.szakacs.kpi.fei.tuke.game.arena.world.TunnelCell;
+import com.szakacs.kpi.fei.tuke.game.intrfc.game.Game;
+import com.szakacs.kpi.fei.tuke.game.intrfc.game.GamePrivileged;
 
 import java.util.List;
 
@@ -17,8 +18,8 @@ public class TunnelsRenderer extends AbstractGameRenderer {
 
     private Sprite nuggetSprite;
 
-    public TunnelsRenderer(SpriteBatch batch, ManipulableGameInterface world) {
-        super(batch, world);
+    public TunnelsRenderer(SpriteBatch batch, GamePrivileged game) {
+        super(batch, game);
         this.nuggetSprite = new Sprite(new Texture(Gdx.files.internal("images/128/Objects/nugget.png")));
     }
 

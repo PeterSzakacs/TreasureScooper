@@ -1,15 +1,15 @@
-package com.szakacs.kpi.fei.tuke.game.arena.game;
+package com.szakacs.kpi.fei.tuke.game.misc.proxies;
 
 import com.szakacs.kpi.fei.tuke.game.arena.pipe.Pipe;
-import com.szakacs.kpi.fei.tuke.game.arena.tunnels.HorizontalTunnel;
-import com.szakacs.kpi.fei.tuke.game.arena.tunnels.TunnelCell;
-import com.szakacs.kpi.fei.tuke.game.enums.GameState;
-import com.szakacs.kpi.fei.tuke.game.intrfc.Actor;
-import com.szakacs.kpi.fei.tuke.game.intrfc.Player;
-import com.szakacs.kpi.fei.tuke.game.intrfc.game.world.ManipulableGameInterface;
-import com.szakacs.kpi.fei.tuke.game.intrfc.game.world.QueryableGameInterface;
+import com.szakacs.kpi.fei.tuke.game.arena.world.HorizontalTunnel;
+import com.szakacs.kpi.fei.tuke.game.arena.world.TunnelCell;
+import com.szakacs.kpi.fei.tuke.game.intrfc.actors.Actor;
+import com.szakacs.kpi.fei.tuke.game.intrfc.actors.ActorManagerPrivileged;
+import com.szakacs.kpi.fei.tuke.game.intrfc.game.*;
+import com.szakacs.kpi.fei.tuke.game.intrfc.actors.ActorManagerChangeable;
+import com.szakacs.kpi.fei.tuke.game.intrfc.proxies.PlayerGameInterface;
 
-import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.function.Predicate;
 
@@ -19,30 +19,34 @@ import java.util.function.Predicate;
  * Used as a proxy object to make it impossible for the player to access
  * methods of the game world he/she has no authorization to access (registerActor(),
  * unregisterActor(), update()) by downcasting the reference to the game world
- * from QueryableGameInterface to ManipulableGameInterface. This is therefore
+ * from PlayerGameInterface to ActorGameInterface. This is therefore
  * to prevent cheating on part of the player.
  */
-public class GameProxy implements QueryableGameInterface {
+public class PlayerGameProxy implements PlayerGameInterface {
 
-    private ManipulableGameInterface gameWorld;
+    protected GamePrivileged game;
+    protected GameWorld gameWorld;
+    protected ActorManagerPrivileged actorManager;
 
-    public GameProxy(ManipulableGameInterface gameWorld){
-        this.gameWorld = gameWorld;
+    public PlayerGameProxy(GamePrivileged game){
+        this.game = game;
+        this.gameWorld = game.getGameWorld();
+        this.actorManager = game.getActorManager();
     }
 
     @Override
     public List<Actor> getActors() {
-        return gameWorld.getActors();
+        return Collections.unmodifiableList(actorManager.getActors());
     }
 
     @Override
     public List<Actor> getActorsBySearchCriteria(Predicate<Actor> predicate) {
-        return gameWorld.getActorsBySearchCriteria(predicate);
+        return actorManager.getActorsBySearchCriteria(predicate);
     }
 
     @Override
     public Pipe getPipe() {
-        return gameWorld.getPipe();
+        return actorManager.getPipe();
     }
 
     @Override
@@ -71,22 +75,12 @@ public class GameProxy implements QueryableGameInterface {
     }
 
     @Override
-    public int getRemainingNuggetsCount() {
-        return gameWorld.getRemainingNuggetsCount();
+    public int getNuggetCount() {
+        return gameWorld.getNuggetCount();
     }
 
     @Override
     public List<HorizontalTunnel> getTunnels() {
         return gameWorld.getTunnels();
-    }
-
-    @Override
-    public GameState getState() {
-        return gameWorld.getState();
-    }
-
-    @Override
-    public Player getPlayer() {
-        return gameWorld.getPlayer();
     }
 }

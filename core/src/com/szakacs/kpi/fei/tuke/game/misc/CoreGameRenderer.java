@@ -2,26 +2,14 @@ package com.szakacs.kpi.fei.tuke.game.misc;
 
 import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.*;
-import com.szakacs.kpi.fei.tuke.game.arena.game.TreasureScooper;
 import com.szakacs.kpi.fei.tuke.game.arena.game.TreasureScooperBuilder;
-import com.szakacs.kpi.fei.tuke.game.arena.pipe.Pipe;
-import com.szakacs.kpi.fei.tuke.game.arena.pipe.PipeHead;
-import com.szakacs.kpi.fei.tuke.game.arena.pipe.PipeSegment;
-import com.szakacs.kpi.fei.tuke.game.arena.tunnels.HorizontalTunnel;
-import com.szakacs.kpi.fei.tuke.game.arena.tunnels.TunnelCell;
-import com.szakacs.kpi.fei.tuke.game.arena.actors.Bullet;
-import com.szakacs.kpi.fei.tuke.game.arena.weapon.Weapon;
-import com.szakacs.kpi.fei.tuke.game.enums.ActorType;
-import com.szakacs.kpi.fei.tuke.game.enums.Direction;
 import com.szakacs.kpi.fei.tuke.game.enums.GameType;
-import com.szakacs.kpi.fei.tuke.game.enums.PipeSegmentType;
-import com.szakacs.kpi.fei.tuke.game.intrfc.Actor;
+import com.szakacs.kpi.fei.tuke.game.intrfc.game.Game;
+import com.szakacs.kpi.fei.tuke.game.intrfc.game.GamePrivileged;
 import com.szakacs.kpi.fei.tuke.game.intrfc.game.GameRenderer;
-import com.szakacs.kpi.fei.tuke.game.intrfc.game.world.ManipulableGameInterface;
+import com.szakacs.kpi.fei.tuke.game.intrfc.game.GameWorld;
 import com.szakacs.kpi.fei.tuke.game.misc.renderers.*;
 import org.xml.sax.SAXException;
 
@@ -36,7 +24,8 @@ import java.util.*;
  * Created by developer on 2.12.2016.
  */
 public class CoreGameRenderer implements ApplicationListener {
-    private ManipulableGameInterface world;
+
+    private GamePrivileged game;
     private AdvancedConfigProcessor configProcessor;
     private List<GameRenderer> renderers;
 
@@ -50,18 +39,18 @@ public class CoreGameRenderer implements ApplicationListener {
         } catch (SAXException | IOException | ParserConfigurationException e) {
             e.printStackTrace();
         }
-        this.world = new TreasureScooperBuilder().buildGameWorld(configProcessor, gameType);
-        this.renderers = new ArrayList<>();
+        this.game = new TreasureScooperBuilder().buildGame(configProcessor, gameType);
     }
 
     @Override
     public void create() {
         this.batch = new SpriteBatch();
-        this.renderers.add(new BackgroundRenderer(batch, world));
-        this.renderers.add(new TunnelsRenderer(batch, world));
-        this.renderers.add(new ActorRenderer(batch, world, configProcessor.getActorToDirectionsMap()));
-        this.renderers.add(new PlayerRenderer(batch, world));
-        this.renderers.add(new PlayerInfoRenderer(batch, world));
+        this.renderers = new ArrayList<>();
+        this.renderers.add(new BackgroundRenderer(batch, game));
+        this.renderers.add(new TunnelsRenderer(batch, game));
+        this.renderers.add(new ActorRenderer(batch, game, configProcessor.getActorToDirectionsMap()));
+        this.renderers.add(new PlayerRenderer(batch, game));
+        this.renderers.add(new PlayerInfoRenderer(batch, game));
         //let the garbage collector now do its job on the config processor
         this.configProcessor = null;
     }
@@ -74,7 +63,7 @@ public class CoreGameRenderer implements ApplicationListener {
         Gdx.gl.glClearColor(1, 1, 1, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-        world.update();
+        game.update();
 
         batch.begin();
         for (GameRenderer renderer : this.renderers)
@@ -101,8 +90,8 @@ public class CoreGameRenderer implements ApplicationListener {
         }
     }
 
-    public ManipulableGameInterface getWorld() {
-        return world;
+    public GameWorld getWorld() {
+        return game.getGameWorld();
     }
 
     /*

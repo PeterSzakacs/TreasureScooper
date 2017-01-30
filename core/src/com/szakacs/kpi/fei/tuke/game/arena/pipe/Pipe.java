@@ -1,12 +1,14 @@
 package com.szakacs.kpi.fei.tuke.game.arena.pipe;
 
 import com.szakacs.kpi.fei.tuke.game.arena.actors.Bullet;
+import com.szakacs.kpi.fei.tuke.game.arena.weapon.AmmoQueue;
 import com.szakacs.kpi.fei.tuke.game.arena.weapon.Weapon;
 import com.szakacs.kpi.fei.tuke.game.enums.ActorType;
 import com.szakacs.kpi.fei.tuke.game.enums.Direction;
 import com.szakacs.kpi.fei.tuke.game.enums.PipeSegmentType;
-import com.szakacs.kpi.fei.tuke.game.intrfc.Actor;
-import com.szakacs.kpi.fei.tuke.game.intrfc.game.world.ManipulableGameInterface;
+import com.szakacs.kpi.fei.tuke.game.intrfc.actors.Actor;
+import com.szakacs.kpi.fei.tuke.game.intrfc.proxies.ActorGameInterface;
+import com.szakacs.kpi.fei.tuke.game.intrfc.game.GameWorld;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -36,22 +38,18 @@ public class Pipe {
      * to move in when the player calls push(), to make updating the
      * head later easier.
      */
-    private Weapon weapon;
-    private ManipulableGameInterface world;
-    private int score;
+    private ActorGameInterface world;
     private int healthPoints;
     private boolean moveAllowed;
     private boolean calculated;
 
-    public Pipe(ManipulableGameInterface world) {
+    public Pipe(ActorGameInterface world) {
         this.segmentStack = new ArrayList<>();
         this.searchResults = new ArrayList<>();
         this.edges = new ArrayList<>();
         this.head = new PipeHead(Direction.DOWN, world);
         this.dir = Direction.DOWN;
-        this.weapon = new Weapon();
         this.world = world;
-        this.score = 0;
         this.healthPoints = 100;
         this.moveAllowed = true;
         this.calculated = false;
@@ -63,27 +61,8 @@ public class Pipe {
     }
 
     public void repairPipe(int byHowMuch){
-        this.score -= byHowMuch * 5;
+        world.setScore(world.getScore() - byHowMuch * 5);
         this.healthPoints += byHowMuch;
-    }
-
-    public void loadBullet(Bullet bullet){
-        if (bullet != null)
-            this.weapon.enqueue(bullet);
-    }
-
-    public void fireBullet(){
-        if (!weapon.isEmpty()){
-            Bullet fired = this.weapon.dequeue();
-            fired.launch(this.head.getCurrentPosition(), this.head.getDirection(), this.world);
-        }
-    }
-
-    public Weapon getWeapon(ManipulableGameInterface world){
-        if (world != null && world.equals(this.world))
-            return this.weapon;
-        else
-            return null;
     }
 
 
@@ -164,13 +143,9 @@ public class Pipe {
         return this.head;
     }
 
-    public void allowMovement(ManipulableGameInterface world){
+    public void allowMovement(GameWorld world){
         if (world != null && world.equals(this.world))
             this.moveAllowed = true;
-    }
-
-    public int getScore() {
-        return score;
     }
 
     public int getHealth(){
@@ -230,8 +205,8 @@ public class Pipe {
     }
 
     public Bullet buyBullet(){
-        if (score > 10){
-            score -= 10;
+        if (world.getScore() > 10){
+            world.setScore(world.getScore() - 10);
             return new Bullet(world);
         }
         return null;
@@ -252,7 +227,7 @@ public class Pipe {
      */
     private void updateAfterPush(){
         head.move(world.getOffsetX(), world.getOffsetY(), dir);
-        this.score += this.head.getCurrentPosition().collectNugget(this.world, this.head);
+        this.head.getCurrentPosition().collectNugget(this.world.getGameWorld(), this.head);
         PipeSegment pushed = top();
         if (pushed.getSegmentType() != PipeSegmentType.HORIZONTAL
                 && pushed.getSegmentType() != PipeSegmentType.VERTICAL)
