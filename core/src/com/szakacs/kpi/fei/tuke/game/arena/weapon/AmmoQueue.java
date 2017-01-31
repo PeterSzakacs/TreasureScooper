@@ -17,12 +17,31 @@ public class AmmoQueue {
     private int capacity;
     private int numBullets;
 
-    public AmmoQueue(int capacity){
+    AmmoQueue(int capacity){
         this.capacity = capacity;
         this.front = 0;
         this.rear = -1;
         this.numBullets = 0;
         this.bullets = new Bullet[this.capacity];
+    }
+
+    boolean enqueue(Bullet bullet){
+        if (isFull())
+            return false;
+        rear++; numBullets++;
+        if (rear == capacity)
+            rear = 0;
+        this.bullets[rear] = bullet;
+        return true;
+    }
+
+    Bullet dequeue(){
+        Bullet toReturn = this.bullets[front];
+        this.bullets[front] = null;
+        numBullets--; front++;
+        if (front == capacity)
+            front = 0;
+        return toReturn;
     }
 
     public boolean isEmpty(){
@@ -33,42 +52,23 @@ public class AmmoQueue {
         return numBullets == capacity;
     }
 
-    public boolean enqueue(Bullet bullet){
-        if (isFull())
-            return false;
-        rear++; numBullets++;
-        if (rear == capacity)
-            rear = 0;
-        this.bullets[rear] = bullet;
-        return true;
-    }
-
-    public Bullet dequeue(){
-        Bullet toReturn = this.bullets[front];
-        this.bullets[front] = null;
-        numBullets--; front++;
-        if (front == capacity)
-            front = 0;
-        return toReturn;
-    }
-
-    Bullet[] getBulletArray(){
-        return this.bullets;
-    }
-
-    int getFront() {
+    public int getFrontIndex() {
         return front;
     }
 
-    int getRear() {
+    public int getRearIndex() {
         return rear;
     }
 
-    int getCapacity() {
+    public int getCapacity() {
         return capacity;
     }
 
-    int getNumBullets(){
+    public int getNumBullets(){
         return this.numBullets;
+    }
+
+    public List<Bullet> getBullets(){
+        return Collections.unmodifiableList(Arrays.asList(bullets));
     }
 }

@@ -24,33 +24,17 @@ public class Weapon {
 
     public void loadBullet(Bullet bullet){
         if (bullet != null)
-            this.ammoQueue.enqueue(bullet);
+            ammoQueue.enqueue(bullet);
     }
 
     public void fireBullet(){
         if (!ammoQueue.isEmpty()){
-            Bullet fired = this.ammoQueue.dequeue();
+            Bullet fired = ammoQueue.dequeue();
             fired.launch(head.getCurrentPosition(), head.getDirection(), world);
         }
     }
 
-    public int getFrontIndex() {
-        return ammoQueue.getFront();
-    }
-
-    public int getRearIndex() {
-        return ammoQueue.getRear();
-    }
-
-    public int getNumBullets(){ return ammoQueue.getNumBullets(); }
-
-    public int getCapacity() {
-        return ammoQueue.getCapacity();
-    }
-
-    public boolean isEmpty(){ return ammoQueue.isEmpty(); }
-
-    public List<Bullet> getBullets(){
-        return Collections.unmodifiableList(Arrays.asList(ammoQueue.getBulletArray()));
+    public AmmoQueue getAmmoQueue(){
+        return this.ammoQueue;
     }
 }

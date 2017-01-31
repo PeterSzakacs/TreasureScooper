@@ -52,10 +52,10 @@ public class PlayerInfoRenderer extends AbstractGameRenderer {
         }
         score.draw(batch, displayMsg, 128, 2000);
         queue.draw(batch);
-        Weapon weapon = actorManager.getPipe().getHead().getWeapon();
-        List<Bullet> bullets = weapon.getBullets();
-        if (!weapon.isEmpty()) {
-            for (int i = 0; i < weapon.getCapacity(); i++) {
+        AmmoQueue ammoQueue = actorManager.getPipe().getHead().getWeapon().getAmmoQueue();
+        List<Bullet> bullets = ammoQueue.getBullets();
+        if (!ammoQueue.isEmpty()) {
+            for (int i = 0; i < ammoQueue.getCapacity(); i++) {
                 if (bullets.get(i) != null) {
                     bulletSprite.setPosition(3744 + i * 32, 1824);
                     bulletSprite.draw(batch);
@@ -63,10 +63,10 @@ public class PlayerInfoRenderer extends AbstractGameRenderer {
             }
             Color original = bulletSprite.getColor();
             bulletSprite.setColor(Color.CORAL);
-            bulletSprite.setPosition(3744 + weapon.getFrontIndex() * 32, 1824);
+            bulletSprite.setPosition(3744 + ammoQueue.getFrontIndex() * 32, 1824);
             bulletSprite.draw(batch);
             bulletSprite.setColor(Color.GREEN);
-            bulletSprite.setPosition(3744 + weapon.getRearIndex() * 32, 1824);
+            bulletSprite.setPosition(3744 + ammoQueue.getRearIndex() * 32, 1824);
             bulletSprite.draw(batch);
             bulletSprite.setColor(original);
         }
