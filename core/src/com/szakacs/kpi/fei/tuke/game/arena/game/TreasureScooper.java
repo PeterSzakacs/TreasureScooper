@@ -16,7 +16,7 @@ import java.util.Set;
  */
 public class TreasureScooper implements GamePrivileged {
 
-    private TreasureScooperWorld gameWorld;
+    private GameWorld gameWorld;
     private ActorManagerPrivileged actorManager;
 
     private Set<GameUpdater> gameUpdaters;
@@ -72,7 +72,7 @@ public class TreasureScooper implements GamePrivileged {
     @Override
     public void update() {
         for (GameUpdater updater : this.gameUpdaters)
-            updater.update(this);
+            updater.update();
         if (gameWorld.getNuggetCount() == 0)
             this.state = GameState.WON;
         if (actorManager.getPipe().getHealth() <= 0) {

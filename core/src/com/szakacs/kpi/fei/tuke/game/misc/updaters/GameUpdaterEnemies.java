@@ -4,6 +4,7 @@ import com.szakacs.kpi.fei.tuke.game.arena.actors.Enemy;
 import com.szakacs.kpi.fei.tuke.game.arena.world.HorizontalTunnel;
 import com.szakacs.kpi.fei.tuke.game.arena.world.TunnelCell;
 import com.szakacs.kpi.fei.tuke.game.enums.Direction;
+import com.szakacs.kpi.fei.tuke.game.enums.TunnelCellType;
 import com.szakacs.kpi.fei.tuke.game.intrfc.actors.Actor;
 import com.szakacs.kpi.fei.tuke.game.intrfc.game.*;
 
@@ -14,55 +15,122 @@ import java.util.Random;
 
 /**
  * Created by developer on 31.12.2016.
+ *
+ * Updater class to manage enemies during the game,
+ * specifically, their creation and destruction
  */
 public class GameUpdaterEnemies extends AbstractGameUpdater {
 
     private int turnCounter;
+
+    // determines the number of iterations of the game loop
+    // before creating a new enemy.
     private int turnBound;
-    private HorizontalTunnel previous;
-    private List<Actor> createdEnemies;
+
+    // max. number of enemies that can exist at the same time in the game
+    private int enemyCountMax;
+
+    // current number of enemies in the game world
+    private int createdEnemiesCount;
+
+    // list of all previous positions where an enemy actor was put,
+    // serves to prevent creating enemies always at the same position
+    private List<TunnelCell> previousPositions;
+
+    // list of all positions where to put an enemy Actor,
+    // basically all LEFT_EDGE and RIGHT_EDGE positions
+    // of all tunnels in the game world,
+    private List<TunnelCell> eligiblePositions;
+
+
 
     public GameUpdaterEnemies(GamePrivileged game){
         super(game);
-        this.turnCounter = 0;
-        this.createdEnemies = new ArrayList<>(10);
+        this.initialize();
         Random rand = new Random();
         do {
-            this.turnBound = rand.nextInt(200);
-        } while (this.turnBound < 100);
+            this.turnBound = rand.nextInt(31);
+        } while (this.turnBound < 20);
     }
 
-    public void update(Game game){
+    public GameUpdaterEnemies(GamePrivileged game, int turnBound){
+        super(game);
+        this.initialize();
+        this.turnBound = turnBound;
+    }
+
+    /**
+     * Initializes the collections used in this class
+     * and calculates the maximum number of enemies
+     * that can exist at the same time in the game
+     */
+    private void initialize(){
+        this.turnCounter = 0;
+        this.eligiblePositions = new ArrayList<>();
+        for (HorizontalTunnel ht : gameWorld.getTunnels()){
+            eligiblePositions.addAll(ht.getCellsBySearchCriteria(
+                    (cell) ->
+                            cell.getCellType() == TunnelCellType.LEFT_EDGE
+                                    || cell.getCellType() == TunnelCellType.RIGHT_EDGE
+                    )
+            );
+        }
+        this.enemyCountMax = eligiblePositions.size() - 4;
+        this.previousPositions = new ArrayList<>(enemyCountMax);
+    }
+
+
+
+    /**
+     * Updates the game by creating new enemies
+     * at turnBound-th iterations of the game
+     * loop.
+     */
+    @Override
+    public void update(){
         turnCounter++;
-        if (turnCounter > turnBound) {
+        if (turnCounter > turnBound && createdEnemiesCount < enemyCountMax) {
             turnCounter = 0;
-            if (createdEnemies.size() < 9)
-                createNewEnemy();
+            createNewEnemy();
         }
     }
 
+    /**
+     * Creates a new enemy Actor and registers it
+     * in the list of actors of the actor manager
+     */
     private void createNewEnemy() {
-        HorizontalTunnel ht = null;
-        for (HorizontalTunnel horizontalTunnel : gameWorld.getTunnels()) {
-            ht = horizontalTunnel;
-            if (!ht.equals(previous)) {
-                this.previous = ht;
-                break;
-            }
-        }
+        // pick a random position that was not selected before
+        TunnelCell cell; Random rand = new Random();
+        if (previousPositions.size() == enemyCountMax)
+            previousPositions.clear();
+        do {
+            cell = eligiblePositions.get(rand.nextInt(eligiblePositions.size()));
+        } while (previousPositions.contains(cell) || cell.equals(actorManager.getPipe().getHead().getCurrentPosition()));
+        previousPositions.add(cell);
+
+        // select direction for enemy to move in based on the picked tunnel cell
         Direction dir;
-        TunnelCell startPosition;
-        if (new Date().getTime() % 2 == 0) {
+        if (cell.getCellType() == TunnelCellType.RIGHT_EDGE) {
             dir = Direction.LEFT;
-            startPosition = ht.getCells().get(ht.getCells().size() - 1);
         } else {
             dir = Direction.RIGHT;
-            startPosition = ht.getCells().get(0);
         }
-        actorManager.registerActor(new Enemy(dir, startPosition, this::removeEnemy, super.actorManager.getActorGameProxy()));
+
+        // register the actor
+        actorManager.registerActor(
+                new Enemy(dir, cell, this::removeEnemy, super.actorManager.getActorGameProxy())
+        );
+        this.createdEnemiesCount++;
     }
 
+    /**
+     * Callback function that the enemy shall call when
+     * it removes itself from the game.
+     *
+     * @param enemy the enemy to remove (the caller basically)
+     */
     private void removeEnemy(Actor enemy){
-        this.createdEnemies.remove(enemy);
+        this.createdEnemiesCount--;
     }
 }

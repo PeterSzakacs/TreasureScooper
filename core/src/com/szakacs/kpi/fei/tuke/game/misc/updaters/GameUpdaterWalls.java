@@ -4,6 +4,7 @@ import com.szakacs.kpi.fei.tuke.game.arena.pipe.PipeSegment;
 import com.szakacs.kpi.fei.tuke.game.arena.world.HorizontalTunnel;
 import com.szakacs.kpi.fei.tuke.game.arena.world.TunnelCell;
 import com.szakacs.kpi.fei.tuke.game.arena.actors.Wall;
+import com.szakacs.kpi.fei.tuke.game.enums.TunnelCellType;
 import com.szakacs.kpi.fei.tuke.game.intrfc.actors.Actor;
 import com.szakacs.kpi.fei.tuke.game.intrfc.game.*;
 
@@ -13,80 +14,122 @@ import java.util.Random;
 
 /**
  * Created by developer on 1.1.2017.
+ *
+ * Updater class to manage walls during the game,
+ * specifically. their creation and destruction
  */
 public class GameUpdaterWalls extends AbstractGameUpdater {
 
-    private List<HorizontalTunnel> tunnels;
-    private List<Actor> createdWalls;
     private int turnCounter;
+
+    // determines the number of iterations of the game loop
+    // before creating a new wall.
     private int turnBound;
+
+    // max. number of walls that can exist at the same time in the game
     private int wallCountMax;
-    private HorizontalTunnel previousTunnel;
-    private List<TunnelCell> previousPicks;
+
+    // current number of walls in the game world
+    private int createdWallsCount;
+
+    // list of all previous positions where a wall actor was put,
+    // serves to prevent creating walls always at the same position
+    private List<TunnelCell> previousPositions;
+
+    // list of all positions where to put a wall Actor,
+    // basically all TUNNEL type positions of all tunnels
+    // in the game world,
+    private List<TunnelCell> eligiblePositions;
+
+
 
     public GameUpdaterWalls(GamePrivileged game) {
         super(game);
-        this.tunnels = game.getGameWorld().getTunnels();
-        this.wallCountMax = calculateWallCountMax();
-        this.createdWalls = new ArrayList<>(this.wallCountMax);
-        this.turnCounter = 0;
+        this.initialize();
         Random rand = new Random();
         do {
-            this.turnBound = rand.nextInt(26);
+            this.turnBound = rand.nextInt(31);
         } while (this.turnBound < 20);
-        this.previousPicks = new ArrayList<>(10);
     }
 
+    public GameUpdaterWalls(GamePrivileged game, int turnBound) {
+        super(game);
+        this.initialize();
+        this.turnBound = turnBound;
+    }
+
+    /**
+     * Initializes the collections used in this class
+     * and calculates the maximum number of walls
+     * that can exist at the same time in the game
+     */
+    private void initialize(){
+        this.turnCounter = 0;
+        this.eligiblePositions = new ArrayList<>();
+        for (HorizontalTunnel ht : gameWorld.getTunnels()){
+            eligiblePositions.addAll(ht.getCellsBySearchCriteria(
+                    (cell) ->
+                            cell.getCellType() == TunnelCellType.TUNNEL
+                    )
+            );
+        }
+        this.wallCountMax = eligiblePositions.size()/6;
+        this.previousPositions = new ArrayList<>(wallCountMax);
+    }
+
+
+
+    /**
+     * Updates the game by creating new walls
+     * at turnBound-th iterations of the game
+     * loop.
+     */
     @Override
-    public void update(Game game) {
+    public void update() {
         turnCounter++;
-        if (turnCounter > turnBound) {
+        if (turnCounter > turnBound && createdWallsCount < wallCountMax) {
             turnCounter = 0;
-            if (createdWalls.size() < 20)
-                addWall();
+            addWall();
         }
     }
 
+    /**
+     * Creates a new wall Actor and registers it
+     * in the list of actors of the actor manager
+     */
     private void addWall() {
-        TunnelCell headPosition = actorManager.getPipe().getHead().getCurrentPosition();
+        // get all positions, where the pipe is located, including the head
         List<PipeSegment> segmentStack = actorManager.getPipe().getSegmentStack();
         List<TunnelCell> positions = new ArrayList<>(segmentStack.size());
         for (PipeSegment seg : segmentStack){
             positions.add(seg.getCurrentPosition());
         }
-        // Pick a random horizontal tunnel different from the previous one
-        Random rand = new Random();
-        HorizontalTunnel ht;
-        do {
-            ht = tunnels.get(rand.nextInt(tunnels.size()));
-        } while (ht == previousTunnel);
-        previousTunnel = ht;
+        positions.add(actorManager.getPipe().getHead().getCurrentPosition());
 
-        // Pick a random cell from this tunnel different from previous picks
-        // and one where there is no pipe segment
-        List<TunnelCell> cells = ht.getCells();
-        TunnelCell cell;
-        if (previousPicks.size() == this.wallCountMax)
-            previousPicks.clear();
+        // pick a random TunnelCell where to put the new wall actor
+        TunnelCell cell; Random rand = new Random();
+        if (previousPositions.size() == wallCountMax)
+            previousPositions.clear();
         do {
-            cell = cells.get(1 + rand.nextInt(cells.size() - 2));
-        } while (previousPicks.contains(cell) || cell.equals(headPosition) || positions.contains(cell));
-        previousPicks.add(cell);
-        Wall wall = new Wall(cell, super.actorManager.getActorGameProxy(), this::removeWall);
-        actorManager.registerActor(wall);
-        this.createdWalls.add(wall);
+            cell = eligiblePositions.get(rand.nextInt(eligiblePositions.size()));
+        } while (previousPositions.contains(cell) || positions.contains(cell));
+        previousPositions.add(cell);
+
+        // register the wall actor
+        actorManager.registerActor(
+                new Wall(cell, super.actorManager.getActorGameProxy(), this::removeWall)
+        );
+        this.createdWallsCount++;
     }
 
+    /**
+     * Callback function that the wall shall call when
+     * it removes itself from the game.
+     *
+     * @param wall the wall to remove (the caller basically)
+     */
     private void removeWall(Actor wall){
-        this.createdWalls.remove(wall);
-        this.previousPicks.remove(wall.getCurrentPosition());
-    }
-
-    private int calculateWallCountMax(){
-        int numCells = 0;
-        for (HorizontalTunnel ht : this.tunnels){
-            numCells += ht.getNumCells() - 2;
-        }
-        return numCells/6;
+        this.createdWallsCount--;
+        this.previousPositions.remove(wall.getCurrentPosition());
     }
 }
