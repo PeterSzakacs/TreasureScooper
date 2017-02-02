@@ -5,7 +5,6 @@ import com.szakacs.kpi.fei.tuke.game.enums.ActorType;
 import com.szakacs.kpi.fei.tuke.game.enums.Direction;
 import com.szakacs.kpi.fei.tuke.game.intrfc.actors.Actor;
 import com.szakacs.kpi.fei.tuke.game.intrfc.proxies.ActorGameInterface;
-import com.szakacs.kpi.fei.tuke.game.intrfc.game.GameWorld;
 
 import java.util.List;
 
@@ -17,7 +16,7 @@ public class Bullet extends AbstractMoveableActor {
     private int yDelta;
 
     public Bullet(ActorGameInterface world){
-        super(world, ActorType.BULLET);
+        super(ActorType.BULLET, world);
     }
 
     public void act(ActorGameInterface world){

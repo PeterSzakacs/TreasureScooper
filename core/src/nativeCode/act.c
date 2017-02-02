@@ -1,15 +1,15 @@
 #include<jni.h>
 #include"playerNativeA.h"
-#include"nativeHelpers/nativeHeaders/classSignatures.h"
+#include"nativeHeaders/classSignatures.h"
 
 static Pipe pipe;
 static int turn = 0;
 static Direction currentDir = DOWN;
 
 JNIEXPORT void JNICALL
-Java_com_szakacs_kpi_fei_tuke_game_player_PlayerNativeA_initialize
-    (JNIEnv *env, jobject thisPlayer){
-    initializePipe(&pipe, env, thisPlayer);
+Java_com_szakacs_kpi_fei_tuke_game_player_PlayerNativeA_initializeNativeCode
+    (JNIEnv *env, jobject thisPlayer, jobject world){
+    initializePipe(env, &pipe, thisPlayer);
     initializeDirection(env);
 }
 
@@ -31,4 +31,11 @@ Java_com_szakacs_kpi_fei_tuke_game_player_PlayerNativeA_act
         printf("movingLeft\n");
         //pipe.push(&pipe, pipe.calculateSegment(&pipe, LEFT, pipeObjJava));
     }
+}
+
+JNIEXPORT void JNICALL
+Java_com_szakacs_kpi_fei_tuke_game_player_PlayerNativeA_deallocate
+  (JNIEnv *env, jobject thisPlayer){
+    deallocatePipe(env, &pipe);
+    deallocateDirection(env);
 }

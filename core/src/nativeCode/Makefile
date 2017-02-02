@@ -1,5 +1,5 @@
 JNI_INCL="/usr/lib/jvm/java-8-oracle/include"
-SRC_DIR="nativeHelpers"
+SRC_DIR="nativeSources"
 
 
 all: libplayer.so

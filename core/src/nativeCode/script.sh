@@ -1,4 +1,4 @@
 #!/bin/sh
 
 make all
-mv libplayer.so ../../assets
+mv libplayer.so ../../libs

@@ -1,20 +1,14 @@
 package com.szakacs.kpi.fei.tuke.game.arena.game;
 
-import com.szakacs.kpi.fei.tuke.game.arena.world.HorizontalTunnel;
-import com.szakacs.kpi.fei.tuke.game.arena.world.TreasureScooperWorld;
-import com.szakacs.kpi.fei.tuke.game.arena.world.TunnelCell;
-import com.szakacs.kpi.fei.tuke.game.enums.Direction;
 import com.szakacs.kpi.fei.tuke.game.enums.GameType;
-import com.szakacs.kpi.fei.tuke.game.enums.TunnelCellType;
-import com.szakacs.kpi.fei.tuke.game.intrfc.game.Game;
 import com.szakacs.kpi.fei.tuke.game.intrfc.game.GamePrivileged;
 import com.szakacs.kpi.fei.tuke.game.intrfc.game.GameUpdater;
 import com.szakacs.kpi.fei.tuke.game.misc.AdvancedConfigProcessor;
-import com.szakacs.kpi.fei.tuke.game.misc.DummyTunnel;
 import com.szakacs.kpi.fei.tuke.game.misc.updaters.GameUpdaterEnemies;
 import com.szakacs.kpi.fei.tuke.game.misc.updaters.GameUpdaterWalls;
 import com.szakacs.kpi.fei.tuke.game.misc.updaters.GameUpdaterBasic;
 import com.szakacs.kpi.fei.tuke.game.player.PlayerA;
+import com.szakacs.kpi.fei.tuke.game.player.PlayerNativeA;
 
 import java.util.*;
 

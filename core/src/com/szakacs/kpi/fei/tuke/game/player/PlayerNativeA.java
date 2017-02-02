@@ -23,7 +23,7 @@ public class PlayerNativeA implements Player {
     private TunnelCell entrance;
     private PlayerGameInterface world;
 
-    public PlayerNativeA(PlayerGameInterface world) {
+    public PlayerNativeA() {
     }
 
     @Override

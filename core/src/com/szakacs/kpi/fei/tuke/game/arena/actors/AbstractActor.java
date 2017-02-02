@@ -18,7 +18,7 @@ public abstract class AbstractActor implements Actor {
     protected ActorType actorType;
     protected ActorGameInterface world;
 
-    protected AbstractActor(ActorGameInterface world, ActorType at){
+    protected AbstractActor(ActorType at, ActorGameInterface world){
         if (world == null)
             throw new IllegalArgumentException("No game world passed");
         this.world = world;

@@ -38,5 +38,6 @@
 
     typedef struct pipe Pipe;
 
-    void initializePipe(Pipe *pipeObj, JNIEnv *env, jobject thisPlayer);
+    void initializePipe(JNIEnv *env, Pipe *self, jobject thisPlayer);
+    void deallocatePipe(JNIEnv *env, Pipe *self);
 #endif

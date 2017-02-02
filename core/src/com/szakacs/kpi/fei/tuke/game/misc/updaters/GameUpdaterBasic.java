@@ -43,10 +43,12 @@ public class GameUpdaterBasic extends AbstractGameUpdater {
             Integer counter = this.unregisteredActors.get(unregistered);
             if (counter == 0) {
                 this.actors.remove(unregistered);
-            } else if (counter > 3)
-                actorIt.remove();
-            else
                 this.unregisteredActors.put(unregistered, ++counter);
+            } else if (counter > 3) {
+                actorIt.remove();
+            } else {
+                this.unregisteredActors.put(unregistered, ++counter);
+            }
         }
         //this.unregisteredActors.clear();
         /*if (world.getRemainingNuggetsCount() == 0)

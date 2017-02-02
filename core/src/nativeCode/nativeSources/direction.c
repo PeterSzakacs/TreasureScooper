@@ -1,5 +1,5 @@
 #include<stdlib.h>
-#include"nativeHeaders/classSignatures.h"
+#include"../nativeHeaders/classSignatures.h"
 
 static jDirection jLeft;
 static jDirection jRight;
@@ -14,6 +14,7 @@ void initializeDirection(JNIEnv *env){
             (*env)->GetStaticFieldID(env, cls, "LEFT", DIRECTION_CLASS)
         )
     );
+    printf("directionLeft: %p\n", jLeft.directionJava);
     jRight.direction = RIGHT;
     jRight.directionJava = (*env)->NewGlobalRef(env,
         (*env)->GetStaticObjectField(env, cls,
@@ -32,6 +33,14 @@ void initializeDirection(JNIEnv *env){
             (*env)->GetStaticFieldID(env, cls, "DOWN", DIRECTION_CLASS)
         )
     );
+    printf("directionDown: %p\n", jDown.directionJava);
+}
+
+void deallocateDirection(JNIEnv *env){
+    (*env)->DeleteGlobalRef(env, jLeft.directionJava);
+    (*env)->DeleteGlobalRef(env, jRight.directionJava);
+    (*env)->DeleteGlobalRef(env, jUp.directionJava);
+    (*env)->DeleteGlobalRef(env, jDown.directionJava);
 }
 
 jobject getDirectionJava(Direction direction){

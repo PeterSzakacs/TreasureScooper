@@ -20,6 +20,7 @@
     typedef struct jdirection jDirection;
 
     void initializeDirection(JNIEnv *env);
+    void deallocateDirection(JNIEnv *env);
     jobject getDirectionJava(Direction dir);
 
 #endif

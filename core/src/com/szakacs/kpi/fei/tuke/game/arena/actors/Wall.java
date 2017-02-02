@@ -6,7 +6,6 @@ import com.szakacs.kpi.fei.tuke.game.enums.Direction;
 import com.szakacs.kpi.fei.tuke.game.intrfc.actors.Actor;
 import com.szakacs.kpi.fei.tuke.game.intrfc.callbacks.OnActorRemovedCallback;
 import com.szakacs.kpi.fei.tuke.game.intrfc.proxies.ActorGameInterface;
-import com.szakacs.kpi.fei.tuke.game.intrfc.game.GameWorld;
 
 import java.util.List;
 
@@ -18,7 +17,7 @@ public class Wall extends AbstractActor {
     private OnActorRemovedCallback onDestroyCallback;
 
     public Wall(TunnelCell cell, ActorGameInterface world, OnActorRemovedCallback onDestroyCallback) {
-        super(world, ActorType.WALL);
+        super(ActorType.WALL, world);
         super.initialize(Direction.LEFT, cell);
         this.neighbouringCell = cell.getCellAtDirection(Direction.RIGHT);
         this.onDestroyCallback = onDestroyCallback;
