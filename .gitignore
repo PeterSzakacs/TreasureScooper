@@ -70,4 +70,4 @@ build/
 Thumbs.db
 
 ## JNI native player implementations
-core/libs/*.so
+core/libs/*
