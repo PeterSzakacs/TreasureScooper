@@ -4,12 +4,12 @@ import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.*;
-import com.szakacs.kpi.fei.tuke.game.arena.game.TreasureScooperBuilder;
-import com.szakacs.kpi.fei.tuke.game.enums.GameType;
-import com.szakacs.kpi.fei.tuke.game.intrfc.game.Game;
+import com.szakacs.kpi.fei.tuke.game.arena.game.GameManager;
+import com.szakacs.kpi.fei.tuke.game.enums.GameState;
 import com.szakacs.kpi.fei.tuke.game.intrfc.game.GamePrivileged;
 import com.szakacs.kpi.fei.tuke.game.intrfc.game.GameRenderer;
 import com.szakacs.kpi.fei.tuke.game.intrfc.game.GameWorld;
+import com.szakacs.kpi.fei.tuke.game.misc.levels.CoreConfigProcessor;
 import com.szakacs.kpi.fei.tuke.game.misc.renderers.*;
 import org.xml.sax.SAXException;
 
@@ -26,20 +26,23 @@ import java.util.*;
 public class CoreGameRenderer implements ApplicationListener {
 
     private GamePrivileged game;
-    private AdvancedConfigProcessor configProcessor;
+    private GameManager manager;
+    private CoreConfigProcessor configProcessor;
     private List<GameRenderer> renderers;
 
     private SpriteBatch batch;
+    private int counter = 0;
 
-    public CoreGameRenderer(GameType gameType, String configFilename){
-        this.configProcessor = new AdvancedConfigProcessor();
+    public CoreGameRenderer(String configFilename){
+        this.configProcessor = new CoreConfigProcessor();
         try {
             SAXParser parser = SAXParserFactory.newInstance().newSAXParser();
             parser.parse(new File(configFilename), configProcessor);
         } catch (SAXException | IOException | ParserConfigurationException e) {
             e.printStackTrace();
         }
-        this.game = new TreasureScooperBuilder().buildGame(configProcessor, gameType);
+        this.manager = new GameManager(this.configProcessor);
+        this.game = manager.getNextGameLevel();
     }
 
     @Override
@@ -70,9 +73,25 @@ public class CoreGameRenderer implements ApplicationListener {
             renderer.render();
         batch.end();
         try {
-            Thread.sleep(90);
+            Thread.sleep(80);
         } catch (InterruptedException e) {
             e.printStackTrace();
+        }
+
+        if (game.getState() != GameState.PLAYING){
+            counter++;
+            if (counter > 30) {
+                counter = 0;
+                GamePrivileged game = manager.getNextGameLevel();
+                if (game == null) {
+                    Gdx.app.exit();
+                } else {
+                    this.game = game;
+                    for (GameRenderer renderer : renderers) {
+                        renderer.reset(game);
+                    }
+                }
+            }
         }
     }
 

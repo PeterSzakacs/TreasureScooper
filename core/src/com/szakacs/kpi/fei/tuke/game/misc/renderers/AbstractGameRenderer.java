@@ -21,4 +21,11 @@ public abstract class AbstractGameRenderer implements GameRenderer {
         this.world = game.getGameWorld();
         this.actorManager = game.getActorManager();
     }
+
+    @Override
+    public void reset(GamePrivileged game){
+        this.game = game;
+        this.world = game.getGameWorld();
+        this.actorManager = game.getActorManager();
+    }
 }

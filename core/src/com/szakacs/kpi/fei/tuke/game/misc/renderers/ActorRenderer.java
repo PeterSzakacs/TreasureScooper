@@ -12,6 +12,7 @@ import com.szakacs.kpi.fei.tuke.game.intrfc.game.GamePrivileged;
 import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * Created by developer on 24.1.2017.
@@ -20,12 +21,12 @@ public class ActorRenderer extends AbstractGameRenderer {
 
     private Map<ActorType, Map<Direction, Sprite>> actorSprites;
 
-    public ActorRenderer(SpriteBatch batch, GamePrivileged game, Map<ActorType, List<Direction>> mappings) {
+    public ActorRenderer(SpriteBatch batch, GamePrivileged game, Map<ActorType, Set<Direction>> mappings) {
         super(batch, game);
         this.initializeActorSprites(mappings);
     }
 
-    private void initializeActorSprites(Map<ActorType, List<Direction>> mappings){
+    private void initializeActorSprites(Map<ActorType, Set<Direction>> mappings){
         this.actorSprites = new EnumMap<>(ActorType.class);
         for (ActorType at : mappings.keySet()){
             Map<Direction, Sprite> directionsToSpritesMap = new EnumMap<>(Direction.class);

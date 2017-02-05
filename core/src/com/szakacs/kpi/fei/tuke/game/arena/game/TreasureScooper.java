@@ -7,6 +7,7 @@ import com.szakacs.kpi.fei.tuke.game.intrfc.callbacks.OnNuggetCollectedCallback;
 import com.szakacs.kpi.fei.tuke.game.intrfc.Player;
 import com.szakacs.kpi.fei.tuke.game.intrfc.game.*;
 import com.szakacs.kpi.fei.tuke.game.intrfc.actors.ActorManagerPrivileged;
+import com.szakacs.kpi.fei.tuke.game.intrfc.game.GameWorldPrototype;
 import com.szakacs.kpi.fei.tuke.game.misc.proxies.PlayerGameProxy;
 
 import java.util.Set;
@@ -31,7 +32,7 @@ public class TreasureScooper implements GamePrivileged {
         }
     };
 
-    TreasureScooper(GameWorldInitializer initializer){
+    TreasureScooper(GameWorldPrototype initializer){
         this.gameWorld = new TreasureScooperWorld(initializer, this.gameCallback);
         this.actorManager = new ActorManagerImpl(this);
         this.score = 0;

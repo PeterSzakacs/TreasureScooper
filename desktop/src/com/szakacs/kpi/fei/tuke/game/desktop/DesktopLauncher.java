@@ -39,10 +39,11 @@ public class DesktopLauncher {
 
     public static void main (String[] arg) {
         LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
-        CoreGameRenderer game = new CoreGameRenderer(GameType.ULTIMATE, "config.xml");
+        CoreGameRenderer game = new CoreGameRenderer("config.xml");
         config.width = game.getWorld().getWidth();
         config.height = game.getWorld().getHeight();
         config.title = "TreasureScooperWorld";
+        config.forceExit = true;
         new LwjglApplication(game, config);
     }
 }

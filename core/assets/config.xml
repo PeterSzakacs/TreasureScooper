@@ -1,55 +1,40 @@
 <?xml version="1.0" encoding="UTF-8" ?>
+
 <!--
- == XML configuration file for a particular game map or level ==
+    == XML configuration file for the entire game ==
 
-    Entries here describe each horizontal tunnel in the game,
-    specifically, its Y (vertical) coordinate in the image,
-    relative to the bottom left corner of the image as well
-    as the X coordinates of all entrances into that tunnel,
-    also measured from the same coordinate origin.
+    @elm <level>: One level of the game. Levels are played in sequential order
+                  from top to bottom.
+        @attributes gameType: a string describing the type of the game level
+                              and which features it incorporates (are there
+                              enemies, walls, both, ... ?)
+                              See @GameType enum and @TreasureScooperBuilder
+                              class to see how the change of this attribute
+                              changes the game level.
+        @attributes world: the path (relative to the current directory)
+                           of the game world configuration file.
 
-    @elm <config>: root element and also contains basic game attributes
-        @attributes width: the game field width, in number of cells of width == offsetX
-        @attributes height: the game field height, in number of cells of height == offsetY
-        @attributes offsetX: the width of the smallest cell in the game, in pixels
-        @attributes offsetY: the height of the smallest cell in the game, in pixels
-        @attributes initX: the initial horizontal position of the player (cell index from left)
-        @attributes initY: the initial vertical position of the player (cell index from bottom)
-        @attributes to: the identifier of the root tunnel (first directly reachable horizontal tunnel)
-    @elm <ht>: a horizontal tunnel in the game
-        @attributes id: the identifier of the tunnel, created from the coordinates of the tunnel
-        @attributes x: The horizontal coordinate of the leftmost edge of the tunnel (cell index from left)
-        @attributes y: The vertical coordinate of the tunnel (cell index from bottom)
-        @attributes width: The width of the tunnel, described as the number of cells
-                           of width offsetX and height offsetY
-    @elm <ic>: an interconnection (vertical tunnel) between world
-        @attributes x: the horizontal coordinate of the interconnection
-        @attributes from: the identifier of the horizontal tunnel connecting to
-                          the upper side of the interconnection
-        @attributes to: the identifier of the horizontal tunnel connecting to
-                        the bottom side of the interconnection
+    @elm <actor>: The name (or rather type) of a singular actor in the game.
+                  All actors described here have specific sprites representing
+                  them on the screen and a unique @ActorType enum.
+        @attributes name: a string describing this actors actor type (unique).
+                          See @ActorType enum.
+        @attributes left:
+                    right:
+                    up:
+                    down: Boolean true/false specifying, whether there are specific sprites
+                          to represent this actor when oriented in the specified direction.
 -->
-<config width="32" height="16" offsetX="128" offsetY="128" initX="15" initY="13" to="x0y1408">
-    <htunnels>
-        <ht id="x0y1408" x="0" y="11" width="32" />
-        <ht id="x0y1152" x="0" y="9" width="32" />
-        <ht id="x0y896" x="0" y="7" width="32" />
-        <ht id="x0y640" x="0" y="5" width="32" />
-        <ht id="x0y384" x="0" y="3" width="32" />
-        <ht id="x0y128" x="0" y="1" width="32" />
-    </htunnels>
-    <interconnections>
-        <ic x="6" from="x0y1408" to="x0y1152" />
-        <ic x="21" from="x0y1408" to="x0y1152" />
-        <ic x="10" from="x0y1152" to="x0y896" />
-        <ic x="27" from="x0y1152" to="x0y896" />
-        <ic x="3" from="x0y896" to="x0y640" />
-        <ic x="16" from="x0y896" to="x0y640" />
-        <ic x="5" from="x0y640" to="x0y384" />
-        <ic x="21" from="x0y640" to="x0y384" />
-        <ic x="8" from="x0y384" to="x0y128" />
-        <ic x="25" from="x0y384" to="x0y128" />
-    </interconnections>
+
+<config>
+    <levels>
+        <level gameType="stack" world="worlds/world1.xml"/>
+        <level gameType="queue" world="worlds/world2.xml"/>
+        <level gameType="enemies" world="worlds/world3.xml"/>
+        <level gameType="enemies" world="worlds/world1.xml"/>
+        <level gameType="ultimate" world="worlds/world2.xml"/>
+        <level gameType="ultimate" world="worlds/world3.xml"/>
+    </levels>
     <actors>
         <actor name="mole" left="true" right="true" up="false" down="false" />
         <actor name="bullet" left="true" right="true" up="true" down="true" />

@@ -1,0 +1,27 @@
+<!ELEMENT world (htunnels, interconnections, entrances)>
+<!ATTLIST world width CDATA #REQUIRED >
+<!ATTLIST world height CDATA #REQUIRED >
+<!ATTLIST world offsetX CDATA #REQUIRED >
+<!ATTLIST world offsetY CDATA #REQUIRED >
+
+    <!ELEMENT htunnels (ht+)>
+
+        <!ELEMENT ht EMPTY>
+        <!ATTLIST ht x CDATA #REQUIRED >
+        <!ATTLIST ht y CDATA #REQUIRED >
+        <!ATTLIST ht width CDATA #REQUIRED >
+        <!ATTLIST ht id ID #REQUIRED >
+
+    <!ELEMENT interconnections (ic+)>
+
+        <!ELEMENT ic EMPTY>
+        <!ATTLIST ic x CDATA #REQUIRED >
+        <!ATTLIST ic from IDREF #REQUIRED >
+        <!ATTLIST ic to IDREF #REQUIRED >
+
+    <!ELEMENT entrances (entrance+)>
+
+        <!ELEMENT entrance EMPTY>
+        <!ATTLIST entrance x CDATA #REQUIRED >
+        <!ATTLIST entrance y CDATA #REQUIRED >
+        <!ATTLIST entrance to IDREF #REQUIRED >

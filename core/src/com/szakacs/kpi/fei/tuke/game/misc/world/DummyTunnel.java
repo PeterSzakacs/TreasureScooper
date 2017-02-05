@@ -1,4 +1,4 @@
-package com.szakacs.kpi.fei.tuke.game.misc;
+package com.szakacs.kpi.fei.tuke.game.misc.world;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -12,17 +12,21 @@ import java.util.Map;
  */
 public class DummyTunnel {
 
-    private int xIndex;
-    private int yIndex;
-    private int numCells;
-    private String id;
-    private Map<Integer, DummyTunnel> connectedTunnelsBelow;
+    int xIndex;
+    int yIndex;
+    int numCells;
+    String id;
+    Map<Integer, DummyTunnel> connectedTunnelsBelow;
 
-    public DummyTunnel(int xIndex, int yIndex, int numCells, String id) {
+    DummyTunnel(int xIndex, int yIndex, int numCells, String id) {
+        this();
         this.xIndex = xIndex;
         this.yIndex = yIndex;
         this.numCells = numCells;
         this.id = id;
+    }
+
+    DummyTunnel() {
         this.connectedTunnelsBelow = new HashMap<>();
     }
 
@@ -44,9 +48,5 @@ public class DummyTunnel {
 
     public Map<Integer, DummyTunnel> getConnectedTunnelsBelow(){
         return this.connectedTunnelsBelow;
-    }
-
-    public void addConnectionToTunnelBelow(int xIndex, DummyTunnel dt){
-        this.connectedTunnelsBelow.put(xIndex, dt);
     }
 }

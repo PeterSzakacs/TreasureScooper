@@ -9,4 +9,6 @@ public interface GameRenderer {
     void render();
 
     void dispose();
+
+    void reset(GamePrivileged game);
 }

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE world SYSTEM "gameworld.dtd">
+<world width="32" height="16" offsetX="128" offsetY="128">
+    <htunnels>
+        <ht id="x0y1408" x="6" y="12" width="20" />
+        <ht id="x0y1152" x="9" y="9" width="16" />
+        <ht id="x0y896" x="0" y="7" width="28" />
+        <ht id="x0y640" x="0" y="5" width="32" />
+        <ht id="x0y384" x="0" y="3" width="32" />
+        <ht id="x0y128" x="0" y="1" width="32" />
+    </htunnels>
+    <interconnections>
+        <ic x="14" from="x0y1408" to="x0y1152" />
+        <ic x="21" from="x0y1408" to="x0y1152" />
+        <ic x="16" from="x0y1152" to="x0y896" />
+        <ic x="20" from="x0y1152" to="x0y896" />
+        <ic x="3" from="x0y896" to="x0y640" />
+        <ic x="12" from="x0y896" to="x0y640" />
+        <ic x="5" from="x0y640" to="x0y384" />
+        <ic x="21" from="x0y640" to="x0y384" />
+        <ic x="8" from="x0y384" to="x0y128" />
+        <ic x="25" from="x0y384" to="x0y128" />
+    </interconnections>
+    <entrances>
+        <entrance x="10" y="13" to="x0y1408"/>
+    </entrances>
+</world>

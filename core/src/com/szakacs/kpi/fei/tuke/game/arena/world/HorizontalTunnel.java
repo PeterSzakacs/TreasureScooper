@@ -4,7 +4,7 @@ import com.szakacs.kpi.fei.tuke.game.enums.Direction;
 import com.szakacs.kpi.fei.tuke.game.enums.TunnelCellType;
 import com.szakacs.kpi.fei.tuke.game.intrfc.callbacks.OnNuggetCollectedCallback;
 import com.szakacs.kpi.fei.tuke.game.intrfc.game.GameWorld;
-import com.szakacs.kpi.fei.tuke.game.misc.DummyTunnel;
+import com.szakacs.kpi.fei.tuke.game.misc.world.DummyTunnel;
 
 import java.util.*;
 import java.util.function.Predicate;
@@ -17,8 +17,8 @@ public class HorizontalTunnel {
     private int y;
     private int nuggetCount;
     private List<TunnelCell> cells;
-    private List<TunnelCell> entrances;
-    private List<TunnelCell> exits;
+    /*private List<TunnelCell> entrances;
+    private List<TunnelCell> exits;*/
     private List<TunnelCell> searchResults;
     private GameWorld world;
     private OnNuggetCollectedCallback worldCallback;
@@ -38,8 +38,8 @@ public class HorizontalTunnel {
     }
 
     private void buildTunnel(int numCells){
-        this.entrances = new ArrayList<>(3);
-        this.exits = new ArrayList<>(3);
+        /*this.entrances = new ArrayList<>(3);
+        this.exits = new ArrayList<>(3);*/
         this.cells = new ArrayList<>(numCells);
         TunnelCell rightmostCell, prevCell, newCell;
         int rightEdge = this.x + (numCells - 1) * world.getOffsetX();
@@ -59,46 +59,53 @@ public class HorizontalTunnel {
         this.cells.add(rightmostCell);
     }
 
-    public void addInterconnects(Integer xIndex, HorizontalTunnel exitTunnel) {
+    public void addInterconnects(int x, HorizontalTunnel exitTunnel) {
         /*if (interconnects == null || interconnects.isEmpty())
             return;*/
-        TunnelCell removed = this.cells.get(xIndex);
-        TunnelCell added = new TunnelCell(removed.getX(), removed.getY(), TunnelCellType.EXIT, this, this.world);
-        TunnelCell prevCell = added, nextCell;
-        this.cells.set(xIndex, added);
-        this.exits.add(added);
-        TunnelCell left = removed.getCellAtDirection(Direction.LEFT);
-        TunnelCell right = removed.getCellAtDirection(Direction.RIGHT);
-        added.setAtDirection(Direction.LEFT, left, this.world);
-        added.setAtDirection(Direction.RIGHT, right, this.world);
-        left.setAtDirection(Direction.RIGHT, added, this.world);
-        right.setAtDirection(Direction.LEFT, added, this.world);
-        for (int y = this.y - world.getOffsetY(); y > exitTunnel.getY(); y -= world.getOffsetY()){
-            nextCell = new TunnelCell(added.getX(), y, TunnelCellType.INTERCONNECT, null, this.world);
-            nextCell.setAtDirection(Direction.UP, prevCell, this.world);
-            prevCell.setAtDirection(Direction.DOWN, nextCell, this.world);
-            prevCell = nextCell;
+        for (int idx = 0; idx < cells.size() ; idx++) {
+            TunnelCell previous = cells.get(idx);
+            if (previous.getX() == x) {
+                TunnelCell removed = this.cells.get(idx);
+                TunnelCell added = new TunnelCell(removed.getX(), removed.getY(), TunnelCellType.EXIT, this, this.world);
+                TunnelCell prevCell = added, nextCell;
+                this.cells.set(idx, added);
+                //this.exits.add(added);
+                TunnelCell left = removed.getCellAtDirection(Direction.LEFT);
+                TunnelCell right = removed.getCellAtDirection(Direction.RIGHT);
+                added.setAtDirection(Direction.LEFT, left, this.world);
+                added.setAtDirection(Direction.RIGHT, right, this.world);
+                left.setAtDirection(Direction.RIGHT, added, this.world);
+                right.setAtDirection(Direction.LEFT, added, this.world);
+                for (int y = this.y - world.getOffsetY(); y > exitTunnel.getY(); y -= world.getOffsetY()) {
+                    nextCell = new TunnelCell(added.getX(), y, TunnelCellType.INTERCONNECT, null, this.world);
+                    nextCell.setAtDirection(Direction.UP, prevCell, this.world);
+                    prevCell.setAtDirection(Direction.DOWN, nextCell, this.world);
+                    prevCell = nextCell;
+                }
+                exitTunnel.setEntrance(prevCell);
+            }
         }
-        exitTunnel.setEntrance(prevCell);
     }
 
     public void setEntrance(TunnelCell entranceCell) {
         if (entranceCell == null || Math.abs(entranceCell.getY() - this.y) > world.getOffsetY())
             return;
-        int idx = entranceCell.getX()/world.getOffsetX();
-        TunnelCell previous = this.cells.get(idx);
-        if (previous.getX() == entranceCell.getX()) {
-            TunnelCell newCell = new TunnelCell(previous.getX(), previous.getY(), TunnelCellType.ENTRANCE, this, this.world);
-            this.cells.set(idx, newCell);
-            entrances.add(newCell);
-            TunnelCell left = previous.getCellAtDirection(Direction.LEFT);
-            TunnelCell right = previous.getCellAtDirection(Direction.RIGHT);
-            left.setAtDirection(Direction.RIGHT, newCell, this.world);
-            right.setAtDirection(Direction.LEFT, newCell, this.world);
-            newCell.setAtDirection(Direction.LEFT, left, this.world);
-            newCell.setAtDirection(Direction.RIGHT, right, this.world);
-            newCell.setAtDirection(Direction.UP, entranceCell, this.world);
-            entranceCell.setAtDirection(Direction.DOWN, newCell, this.world);
+        for (int idx = 0; idx < cells.size() ; idx++){
+            TunnelCell previous = cells.get(idx);
+            if (previous.getX() == entranceCell.getX()) {
+                TunnelCell newCell = new TunnelCell(previous.getX(), previous.getY(), TunnelCellType.ENTRANCE, this, this.world);
+                this.cells.set(idx, newCell);
+                //entrances.add(newCell);
+                TunnelCell left = previous.getCellAtDirection(Direction.LEFT);
+                TunnelCell right = previous.getCellAtDirection(Direction.RIGHT);
+                left.setAtDirection(Direction.RIGHT, newCell, this.world);
+                right.setAtDirection(Direction.LEFT, newCell, this.world);
+                newCell.setAtDirection(Direction.LEFT, left, this.world);
+                newCell.setAtDirection(Direction.RIGHT, right, this.world);
+                newCell.setAtDirection(Direction.UP, entranceCell, this.world);
+                entranceCell.setAtDirection(Direction.DOWN, newCell, this.world);
+                break;
+            }
         }
     }
 
@@ -150,10 +157,6 @@ public class HorizontalTunnel {
     /*
      * begin tunnel manipulation methods
      */
-
-    /*void setOnNuggetCollected(OnNuggetCollectedCallback callback){
-        this.worldCallback = callback;
-    }*/
 
     void onNuggetCollected(int nuggetValue){
         this.nuggetCount--;
