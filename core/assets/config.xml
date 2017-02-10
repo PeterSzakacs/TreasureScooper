@@ -15,9 +15,9 @@
                            of the game world configuration file.
 
     @elm <actor>: The name (or rather type) of a singular actor in the game.
-                  All actors described here have specific sprites representing
+                  All arena described here have specific sprites representing
                   them on the screen and a unique @ActorType enum.
-        @attributes name: a string describing this actors actor type (unique).
+        @attributes name: a string describing this arena actor type (unique).
                           See @ActorType enum.
         @attributes left:
                     right:
@@ -27,6 +27,9 @@
 -->
 
 <config>
+<!--    <meta>
+        <player-package>com.szakacs.kpi.fei.tuke.game.player</player-package>
+    </meta>-->
     <levels>
         <level gameType="stack" world="worlds/world1.xml"/>
         <level gameType="queue" world="worlds/world2.xml"/>
