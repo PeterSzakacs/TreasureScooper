@@ -3,6 +3,7 @@ package com.szakacs.kpi.fei.tuke.game.arena.game;
 import com.szakacs.kpi.fei.tuke.game.arena.actors.ActorManagerImpl;
 import com.szakacs.kpi.fei.tuke.game.arena.world.TreasureScooperWorld;
 import com.szakacs.kpi.fei.tuke.game.enums.GameState;
+import com.szakacs.kpi.fei.tuke.game.intrfc.callbacks.OnItemBoughtCallback;
 import com.szakacs.kpi.fei.tuke.game.intrfc.callbacks.OnNuggetCollectedCallback;
 import com.szakacs.kpi.fei.tuke.game.intrfc.Player;
 import com.szakacs.kpi.fei.tuke.game.intrfc.game.*;
@@ -17,14 +18,6 @@ import java.util.Set;
  */
 public class TreasureScooper implements GamePrivileged {
 
-    private GameWorld gameWorld;
-    private ActorManagerPrivileged actorManager;
-
-    private Set<GameUpdater> gameUpdaters;
-    private Player player;
-    private GameState state;
-    private int score;
-
     private OnNuggetCollectedCallback gameCallback = new OnNuggetCollectedCallback() {
         @Override
         public void onNuggetCollected(int nuggetValue) {
@@ -32,10 +25,30 @@ public class TreasureScooper implements GamePrivileged {
         }
     };
 
+    private OnItemBoughtCallback scoreChangeCallback = new OnItemBoughtCallback() {
+        @Override
+        public void onItemBought(int price) {
+            TreasureScooper.this.score -= price;
+            if (score < 0) {
+                score = 0;
+            }
+        }
+    };
+
+    private GameWorld gameWorld;
+    private ActorManagerPrivileged actorManager;
+    private GameShop gameShop;
+
+    private Set<GameUpdater> gameUpdaters;
+    private Player player;
+    private GameState state;
+    private int score;
+
     TreasureScooper(GameWorldPrototype initializer){
         this.gameWorld = new TreasureScooperWorld(initializer, this.gameCallback);
         this.actorManager = new ActorManagerImpl(this);
         this.score = 0;
+        this.gameShop = new GameShop(actorManager.getActorGameProxy(), scoreChangeCallback);
     }
 
     @Override
@@ -64,10 +77,8 @@ public class TreasureScooper implements GamePrivileged {
     }
 
     @Override
-    public void setScore(int score) {
-        this.score = score;
-        if (score < 0)
-            this.score = 0;
+    public GameShop getGameShop() {
+        return this.gameShop;
     }
 
     @Override

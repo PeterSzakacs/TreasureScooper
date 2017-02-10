@@ -1,8 +1,11 @@
 package com.szakacs.kpi.fei.tuke.game.misc.proxies;
 
+import com.szakacs.kpi.fei.tuke.game.arena.game.GameShop;
 import com.szakacs.kpi.fei.tuke.game.arena.pipe.Pipe;
 import com.szakacs.kpi.fei.tuke.game.arena.world.HorizontalTunnel;
 import com.szakacs.kpi.fei.tuke.game.arena.world.TunnelCell;
+import com.szakacs.kpi.fei.tuke.game.enums.GameState;
+import com.szakacs.kpi.fei.tuke.game.intrfc.Player;
 import com.szakacs.kpi.fei.tuke.game.intrfc.actors.Actor;
 import com.szakacs.kpi.fei.tuke.game.intrfc.actors.ActorManagerPrivileged;
 import com.szakacs.kpi.fei.tuke.game.intrfc.game.*;
@@ -82,5 +85,30 @@ public class PlayerGameProxy implements PlayerGameInterface {
     @Override
     public List<HorizontalTunnel> getTunnels() {
         return gameWorld.getTunnels();
+    }
+
+    @Override
+    public Player getPlayer() {
+        return game.getPlayer();
+    }
+
+    @Override
+    public GameState getState() {
+        return game.getState();
+    }
+
+    @Override
+    public GameWorld getGameWorld() {
+        return game.getGameWorld();
+    }
+
+    @Override
+    public int getScore() {
+        return game.getScore();
+    }
+
+    @Override
+    public GameShop getGameShop() {
+        return game.getGameShop();
     }
 }

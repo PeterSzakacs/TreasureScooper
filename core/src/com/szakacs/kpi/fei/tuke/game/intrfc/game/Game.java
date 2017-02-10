@@ -1,5 +1,6 @@
 package com.szakacs.kpi.fei.tuke.game.intrfc.game;
 
+import com.szakacs.kpi.fei.tuke.game.arena.game.GameShop;
 import com.szakacs.kpi.fei.tuke.game.enums.GameState;
 import com.szakacs.kpi.fei.tuke.game.intrfc.Player;
 import com.szakacs.kpi.fei.tuke.game.intrfc.proxies.ActorGameInterface;
@@ -18,5 +19,5 @@ public interface Game {
 
     int getScore();
 
-    void setScore(int score);
+    GameShop getGameShop();
 }

@@ -6,7 +6,6 @@ import com.szakacs.kpi.fei.tuke.game.enums.ActorType;
 import com.szakacs.kpi.fei.tuke.game.enums.Direction;
 import com.szakacs.kpi.fei.tuke.game.intrfc.callbacks.OnActorRemovedCallback;
 import com.szakacs.kpi.fei.tuke.game.intrfc.proxies.ActorGameInterface;
-import com.szakacs.kpi.fei.tuke.game.intrfc.game.GameWorld;
 
 /**
  * Created by developer on 5.11.2016.
@@ -14,7 +13,7 @@ import com.szakacs.kpi.fei.tuke.game.intrfc.game.GameWorld;
 public class Enemy extends AbstractMoveableActor {
 
     // The Y coordinates are already in the HorizontalTunnel object.
-    private Pipe player;
+    private Pipe pipe;
     private int xDelta;
     private int yDelta;
     private boolean moving;
@@ -25,7 +24,7 @@ public class Enemy extends AbstractMoveableActor {
         super(currentPosition, ActorType.MOLE, direction, world);
         this.xDelta = world.getOffsetX()/4;
         this.yDelta = world.getOffsetY()/4;
-        this.player = world.getPipe();
+        this.pipe = world.getPipe();
         this.moving = true;
         this.onDestroyCallback = onDestroyCallback;
     }
@@ -33,18 +32,21 @@ public class Enemy extends AbstractMoveableActor {
     public void act(ActorGameInterface world){
         if (world != null && world.equals(super.world)) {
             if (moving) {
-                this.move(this.xDelta, this.yDelta, super.getDirection());
+                this.move(xDelta, yDelta, super.getDirection());
                 if (boundReached()) {
-                    this.world.unregisterActor(this);
-                    this.onDestroyCallback.onRemove(this);
+                    world.unregisterActor(this);
+                    onDestroyCallback.onRemove(this);
                     return;
                 }
-                if (this.player.intersects(this)) {
-                    this.moving = false;
-                    this.player.damagePipe();
+                if (pipe.intersects(this)) {
+                    moving = false;
+                    pipe.setHealth(pipe.getHealth() - 10, world);
                 }
-            } else
-                this.player.damagePipe();
+            } else {
+                pipe.setHealth(pipe.getHealth() - 10, world);
+                if (pipe.getHealth() <= 0)
+                    moving = true;
+            }
         }
     }
 }

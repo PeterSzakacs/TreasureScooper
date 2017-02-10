@@ -33,29 +33,4 @@ public class ActorGameProxy extends PlayerGameProxy implements ActorGameInterfac
     public void unregisterActor(Actor actor) {
         actorManager.unregisterActor(actor);
     }
-
-    @Override
-    public Player getPlayer() {
-        return game.getPlayer();
-    }
-
-    @Override
-    public GameState getState() {
-        return game.getState();
-    }
-
-    @Override
-    public GameWorld getGameWorld() {
-        return game.getGameWorld();
-    }
-
-    @Override
-    public int getScore() {
-        return game.getScore();
-    }
-
-    @Override
-    public void setScore(int score) {
-        game.setScore(score);
-    }
 }

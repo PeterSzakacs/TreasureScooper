@@ -108,7 +108,7 @@ public class PlayerA implements Player {
     }
 
     private void handleEntertunnel() {
-        //pipe.fireBullet();
+        //pipe.fire();
         pipe.push(pipe.calculateNextSegment(currentDir));
         if (pipe.getHead().getCurrentPosition().getCellType() == TunnelCellType.EXIT) {
             currentDir = Direction.DOWN;
@@ -161,13 +161,13 @@ public class PlayerA implements Player {
     }
 
     private void handleClear() {
-        head.getWeapon().loadBullet(pipe.buyBullet());
+        head.getWeapon().loadBullet(world.getGameShop().buyBullet());
         pipe.push(pipe.calculateNextSegment(currentDir));
         if (pipe.isWall(currentDir)){
             TunnelCellType cellType = head.getCurrentPosition().getCellType();
             if (cellType != TunnelCellType.LEFT_EDGE
                     && cellType != TunnelCellType.RIGHT_EDGE)
-                head.getWeapon().fireBullet();
+                head.getWeapon().fire();
             else
                 this.state = State.RETURN;
         }

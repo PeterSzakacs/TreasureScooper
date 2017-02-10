@@ -27,7 +27,7 @@ public class Weapon {
             ammoQueue.enqueue(bullet);
     }
 
-    public void fireBullet(){
+    public void fire(){
         if (!ammoQueue.isEmpty()){
             Bullet fired = ammoQueue.dequeue();
             fired.launch(head.getCurrentPosition(), head.getDirection(), world);

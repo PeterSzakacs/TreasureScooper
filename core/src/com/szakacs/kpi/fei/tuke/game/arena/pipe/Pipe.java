@@ -53,18 +53,20 @@ public class Pipe {
         this.healthPoints = 100;
         this.moveAllowed = true;
         this.calculated = false;
-        //weapon.enqueue(new Bullet(this.world));
+        Weapon weapon = head.getWeapon();
+        int capacity = weapon.getAmmoQueue().getCapacity();
+        for (int i = 0; i < capacity; i++){
+            weapon.loadBullet(new Bullet(this.world));
+        }
     }
 
-    public void damagePipe(){
-        this.healthPoints -= 10;
+    public int getHealth(){
+        return this.healthPoints;
     }
 
-    public void repairPipe(int byHowMuch){
-        world.setScore(world.getScore() - byHowMuch * 5);
-        this.healthPoints += byHowMuch;
+    public void setHealth(int health, ActorGameInterface gameInterface){
+        this.healthPoints = health;
     }
-
 
     /*
      * begin segmentStack manipulation methods
@@ -148,10 +150,6 @@ public class Pipe {
             this.moveAllowed = true;
     }
 
-    public int getHealth(){
-        return this.healthPoints;
-    }
-
     /**
      * Checks if a given direction from the head contains a wall
      *
@@ -202,14 +200,6 @@ public class Pipe {
             this.calculated = true;
             return new PipeSegment(head.getCurrentPosition(), head.getDirection().getOpposite(), dir);
         }
-    }
-
-    public Bullet buyBullet(){
-        if (world.getScore() > 10){
-            world.setScore(world.getScore() - 10);
-            return new Bullet(world);
-        }
-        return null;
     }
 
     public boolean intersects(Actor actor){
