@@ -15,7 +15,7 @@ public class BackgroundRenderer extends AbstractGameRenderer {
 
     public BackgroundRenderer(SpriteBatch batch, GamePrivileged game) {
         super(batch, game);
-        this.bgSprite = new Sprite(new Texture(Gdx.files.internal("images/128/background.png")));
+        this.bgSprite = new Sprite(new Texture(Gdx.files.internal("images/background.png")));
     }
 
     @Override

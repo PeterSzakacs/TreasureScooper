@@ -11,6 +11,7 @@ import szakacs.kpi.fei.tuke.game.updaters.GameUpdaterEnemies;
 import szakacs.kpi.fei.tuke.game.updaters.GameUpdaterWalls;
 import szakacs.kpi.fei.tuke.game.updaters.GameUpdaterBasic;
 import org.xml.sax.SAXException;
+import szakacs.kpi.fei.tuke.player.PlayerA;
 
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
@@ -45,13 +46,14 @@ public class TreasureScooperBuilder {
                 updaters.add(new GameUpdaterEnemies(game));
                 break;
         }
-        try {
-            Class playerClass = Class.forName("PlayerA");
+        /*try {
+            Class playerClass = Class.forName("szakacs.kpi.fei.tuke.player.PlayerA");
             Player player = (Player) playerClass.newInstance();
             game.startNewGame(updaters, player);
         } catch (ClassNotFoundException | IllegalAccessException | InstantiationException e) {
             e.printStackTrace();
-        }
+        }*/
+        game.startNewGame(updaters, new PlayerA());
         return game;
     }
 

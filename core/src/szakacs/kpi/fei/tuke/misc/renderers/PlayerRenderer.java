@@ -35,7 +35,7 @@ public class PlayerRenderer extends AbstractGameRenderer {
         this.textures = new ArrayList<>(Direction.values().length);
         for (Direction dir : Direction.values()){
             TextureAtlas ta = new TextureAtlas(Gdx.files.internal(
-                    "images/128/PipeHead/sprites/" + dir.name() + ".atlas"));
+                    "images/Pipe/PipeHead/" + dir.name() + ".atlas"));
             this.pipeHeadSprites.put(dir, new Animation(1/10f,
                     ta.getRegions()));
             this.textures.add(ta);
@@ -44,7 +44,7 @@ public class PlayerRenderer extends AbstractGameRenderer {
         this.pipeSegmentSprites = new EnumMap<>(PipeSegmentType.class);
         for(PipeSegmentType pst : PipeSegmentType.values()){
             this.pipeSegmentSprites.put(pst, new Sprite(new Texture(
-                    Gdx.files.internal("images/128/PipeSegment/" + pst.name() + ".png")
+                    Gdx.files.internal("images/Pipe/PipeSegment/" + pst.name() + ".png")
             )));
         }
     }

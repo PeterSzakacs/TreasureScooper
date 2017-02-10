@@ -26,9 +26,9 @@ public class PlayerInfoRenderer extends AbstractGameRenderer {
         this.score = new BitmapFont();
         this.score.setColor(Color.YELLOW);
         this.score.getData().setScale(5);
-        this.bulletSprite = new Sprite(new Texture(Gdx.files.internal("images/128/Objects/bullet.png")));
+        this.bulletSprite = new Sprite(new Texture(Gdx.files.internal("images/Weapon/BULLET.png")));
         this.queue = new Sprite(new Texture(
-                Gdx.files.internal("images/128/Objects/queue.png")
+                Gdx.files.internal("images/Weapon/QUEUE.png")
         ));
         this.queue.setPosition(3712, 1792);
     }

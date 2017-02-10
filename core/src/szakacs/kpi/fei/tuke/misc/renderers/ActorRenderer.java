@@ -31,7 +31,7 @@ public class ActorRenderer extends AbstractGameRenderer {
             for (Direction dir : mappings.get(at))
                 directionsToSpritesMap.put(dir,
                         new Sprite(
-                                new Texture("images/128/Actors/"
+                                new Texture("images/Actors/"
                                         + at.name() + "_" + dir.name() + ".png")
                         )
                 );

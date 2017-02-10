@@ -26,13 +26,13 @@ public class TunnelsRenderer extends AbstractGameRenderer {
 
     public TunnelsRenderer(SpriteBatch batch, GamePrivileged game) {
         super(batch, game);
-        this.nuggetSprite = new Sprite(new Texture(Gdx.files.internal("images/128/Objects/nugget.png")));
+        this.nuggetSprite = new Sprite(new Texture(Gdx.files.internal("images/Tunnels/NUGGET.png")));
         this.tunnelCellSprites = new EnumMap<>(TunnelCellType.class);
         for (TunnelCellType tcType : TunnelCellType.values()) {
             this.tunnelCellSprites.put(
                     tcType,
                     new Sprite(
-                            new Texture(Gdx.files.internal("images/128/Tunnels/" + tcType.name() + ".png"))
+                            new Texture(Gdx.files.internal("images/Tunnels/Cells/" + tcType.name() + ".png"))
                     )
             );
         }
