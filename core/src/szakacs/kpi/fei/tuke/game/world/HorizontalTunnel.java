@@ -28,8 +28,8 @@ public class HorizontalTunnel {
      */
 
     public HorizontalTunnel(DummyTunnel dt, GameWorld world, OnNuggetCollectedCallback worldCallback){
-        this.x = dt.getXIndex()*world.getOffsetX();
-        this.y = dt.getYIndex()*world.getOffsetY();
+        this.x = dt.getX();
+        this.y = dt.getY();
         this.world = world;
         this.buildTunnel(dt.getNumCells());
         this.nuggetCount = dt.getNumCells();
@@ -128,10 +128,6 @@ public class HorizontalTunnel {
 
     public int getNumCells() {
         return cells.size();
-    }
-
-    public int getWidth(){
-        return cells.size()*world.getOffsetX();
     }
 
     public List<TunnelCell> getCells() {

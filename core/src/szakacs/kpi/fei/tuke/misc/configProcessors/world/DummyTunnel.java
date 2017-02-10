@@ -12,16 +12,16 @@ import java.util.Map;
  */
 public class DummyTunnel {
 
-    int xIndex;
-    int yIndex;
+    int x;
+    int y;
     int numCells;
     String id;
     Map<Integer, DummyTunnel> connectedTunnelsBelow;
 
-    DummyTunnel(int xIndex, int yIndex, int numCells, String id) {
+    DummyTunnel(int x, int y, int numCells, String id) {
         this();
-        this.xIndex = xIndex;
-        this.yIndex = yIndex;
+        this.x = x;
+        this.y = y;
         this.numCells = numCells;
         this.id = id;
     }
@@ -30,12 +30,12 @@ public class DummyTunnel {
         this.connectedTunnelsBelow = new HashMap<>();
     }
 
-    public int getXIndex() {
-        return xIndex;
+    public int getX() {
+        return x;
     }
 
-    public int getYIndex() {
-        return yIndex;
+    public int getY() {
+        return y;
     }
 
     public int getNumCells() {

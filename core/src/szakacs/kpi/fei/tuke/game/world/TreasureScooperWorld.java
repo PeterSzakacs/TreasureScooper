@@ -34,8 +34,8 @@ public class TreasureScooperWorld implements GameWorld {
         this.tunnels = new ArrayList<>(worldPrototype.getDummyTunnels().size());
         this.offsetX = worldPrototype.getOffsetX();
         this.offsetY = worldPrototype.getOffsetY();
-        this.width = worldPrototype.getWidth() * this.offsetX;
-        this.height = worldPrototype.getHeight() * this.offsetY;
+        this.width = worldPrototype.getWidth();
+        this.height = worldPrototype.getHeight();
         this.buildTunnelGraph(worldPrototype);
         for (HorizontalTunnel ht : this.tunnels)
             this.nuggetCount += ht.getNuggetCount();
@@ -82,8 +82,8 @@ public class TreasureScooperWorld implements GameWorld {
         this.entrances = new ArrayList<>(worldPrototype.getDummyEntrances().size());
         for (DummyEntrance de : worldPrototype.getDummyEntrances()){
             TunnelCell entrance = new TunnelCell(
-                    de.getXIndex() * offsetX,
-                    de.getYIndex() * offsetY,
+                    de.getX(),
+                    de.getY(),
                     TunnelCellType.INTERCONNECT,
                     null,
                     this

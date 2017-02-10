@@ -31,8 +31,8 @@ public class GameWorldConfigProcessor extends DefaultHandler {
                 this.world = new DummyWorld();
                 world.offsetX = Integer.parseInt(attributes.getValue("offsetX"));
                 world.offsetY = Integer.parseInt(attributes.getValue("offsetY"));
-                world.width = Integer.parseInt(attributes.getValue("width"));
-                world.height = Integer.parseInt(attributes.getValue("height"));
+                world.width = world.offsetX * Integer.parseInt(attributes.getValue("width"));
+                world.height = world.offsetY * Integer.parseInt(attributes.getValue("height"));
                 this.state = GameWorldConfigProcessor.ProcessingState.TUNNELS;
                 break;
             case TUNNELS:
@@ -40,8 +40,8 @@ public class GameWorldConfigProcessor extends DefaultHandler {
                     String id = attributes.getValue("id");
                     DummyTunnel dt = new DummyTunnel();
                     dt.id = id;
-                    dt.xIndex = Integer.parseInt(attributes.getValue("x"));
-                    dt.yIndex = Integer.parseInt(attributes.getValue("y"));
+                    dt.x = world.offsetX * Integer.parseInt(attributes.getValue("x"));
+                    dt.y = world.offsetY * Integer.parseInt(attributes.getValue("y"));
                     dt.numCells = Integer.parseInt(attributes.getValue("width"));
                     world.dummyTunnels.put(id , dt);
                 }
@@ -60,8 +60,8 @@ public class GameWorldConfigProcessor extends DefaultHandler {
                 if (qName.equalsIgnoreCase("entrance")){
                     List<DummyEntrance> dummyEntrances = world.dummyEntrances;
                     DummyEntrance de = new DummyEntrance();
-                    de.xIndex = Integer.parseInt(attributes.getValue("x"));
-                    de.yIndex = Integer.parseInt(attributes.getValue("y"));
+                    de.x = world.offsetX * Integer.parseInt(attributes.getValue("x"));
+                    de.y = world.offsetY * Integer.parseInt(attributes.getValue("y"));
                     de.tunnel = world.dummyTunnels.get(attributes.getValue("to"));
                     dummyEntrances.add(de);
                 }

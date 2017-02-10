@@ -5,25 +5,25 @@ package szakacs.kpi.fei.tuke.misc.configProcessors.world;
  */
 public class DummyEntrance {
 
-    int xIndex;
-    int yIndex;
+    int x;
+    int y;
     DummyTunnel tunnel;
 
-    DummyEntrance(int xIndex, int yIndex, DummyTunnel tunnel){
-        this.xIndex = xIndex;
-        this.yIndex = yIndex;
+    DummyEntrance(int x, int y, DummyTunnel tunnel){
+        this.x = x;
+        this.y = y;
         this.tunnel = tunnel;
     }
 
     DummyEntrance(){
     }
 
-    public int getXIndex() {
-        return xIndex;
+    public int getX() {
+        return x;
     }
 
-    public int getYIndex() {
-        return yIndex;
+    public int getY() {
+        return y;
     }
 
     public DummyTunnel getTunnel() {
