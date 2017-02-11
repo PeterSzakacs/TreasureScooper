@@ -1,4 +1,4 @@
-package szakacs.kpi.fei.tuke.misc.configProcessors.levels;
+package szakacs.kpi.fei.tuke.misc.configProcessors.gameValueObjects;
 
 import szakacs.kpi.fei.tuke.enums.GameType;
 import szakacs.kpi.fei.tuke.intrfc.misc.GameWorldPrototype;
@@ -8,10 +8,12 @@ import szakacs.kpi.fei.tuke.intrfc.misc.GameWorldPrototype;
  */
 public class DummyLevel {
 
-    GameType gameType;
-    GameWorldPrototype world;
+    private GameType gameType;
+    private GameWorldPrototype world;
 
-    DummyLevel() {
+    public DummyLevel(GameWorldPrototype world, GameType gameType) {
+        this.gameType = gameType;
+        this.world = world;
     }
 
     public GameType getGameType() {

@@ -1,4 +1,4 @@
-package szakacs.kpi.fei.tuke.misc.configProcessors.world;
+package szakacs.kpi.fei.tuke.misc.configProcessors.gameValueObjects;
 
 import szakacs.kpi.fei.tuke.intrfc.misc.GameWorldPrototype;
 
@@ -12,16 +12,20 @@ import java.util.Map;
  */
 public class DummyWorld implements GameWorldPrototype {
 
-    Map<String, DummyTunnel> dummyTunnels;
-    List<DummyEntrance> dummyEntrances;
-    int width;
-    int height;
-    int offsetX;
-    int offsetY;
+    private Map<String, DummyTunnel> dummyTunnels;
+    private List<DummyEntrance> dummyEntrances;
+    private int width;
+    private int height;
+    private int offsetX;
+    private int offsetY;
 
-    DummyWorld(){
+    public DummyWorld(int width, int height, int offsetX, int offsetY){
         this.dummyTunnels = new HashMap<>();
         this.dummyEntrances = new ArrayList<>();
+        this.width = width;
+        this.height = height;
+        this.offsetX = offsetX;
+        this.offsetY = offsetY;
     }
 
     @Override

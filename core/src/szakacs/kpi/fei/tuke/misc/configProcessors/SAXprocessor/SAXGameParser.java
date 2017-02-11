@@ -1,10 +1,10 @@
-package szakacs.kpi.fei.tuke.misc.configProcessors.levels;
+package szakacs.kpi.fei.tuke.misc.configProcessors.SAXprocessor;
 
 import szakacs.kpi.fei.tuke.enums.Direction;
 import szakacs.kpi.fei.tuke.enums.ActorType;
 import szakacs.kpi.fei.tuke.enums.GameType;
-import szakacs.kpi.fei.tuke.intrfc.misc.GameInitializer;
-import szakacs.kpi.fei.tuke.misc.configProcessors.world.GameWorldConfigProcessor;
+import szakacs.kpi.fei.tuke.intrfc.misc.GameConfig;
+import szakacs.kpi.fei.tuke.misc.configProcessors.gameValueObjects.DummyLevel;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
@@ -19,7 +19,7 @@ import java.util.*;
 /**
  * Created by developer on 2.2.2017.
  */
-public class CoreConfigProcessor extends DefaultHandler implements GameInitializer {
+public class SAXGameParser extends DefaultHandler implements GameConfig {
 
     private enum ProcessingState{
         LEVELS, ACTORS
@@ -27,17 +27,17 @@ public class CoreConfigProcessor extends DefaultHandler implements GameInitializ
 
     private List<DummyLevel> levels;
     private Map<ActorType, Set<Direction>> actorToDirectionsMap;
-    private CoreConfigProcessor.ProcessingState state;
+    private SAXGameParser.ProcessingState state;
     private SAXParser parser;
-    private GameWorldConfigProcessor worldConfigProcessor;
+    private SAXWorldParser worldConfigProcessor;
 
 
-    public CoreConfigProcessor(){
+    public SAXGameParser(){
         super();
         this.actorToDirectionsMap = new EnumMap<>(ActorType.class);
-        this.state = CoreConfigProcessor.ProcessingState.LEVELS;
+        this.state = SAXGameParser.ProcessingState.LEVELS;
         this.levels = new ArrayList<>();
-        this.worldConfigProcessor = new GameWorldConfigProcessor();
+        this.worldConfigProcessor = new SAXWorldParser();
         try {
             this.parser = SAXParserFactory.newInstance().newSAXParser();
         } catch (SAXException | ParserConfigurationException e) {
@@ -57,9 +57,10 @@ public class CoreConfigProcessor extends DefaultHandler implements GameInitializ
                         System.err.println("Could not initialize level config file: " + path);
                         e.printStackTrace();
                     }
-                    DummyLevel level = new DummyLevel();
-                    level.world = worldConfigProcessor.getWorld();
-                    level.gameType = GameType.valueOf(attributes.getValue("gameType").toUpperCase());
+                    DummyLevel level = new DummyLevel(
+                            worldConfigProcessor.getWorld(),
+                            GameType.valueOf(attributes.getValue("gameType").toUpperCase())
+                    );
                     levels.add(level);
                     worldConfigProcessor.reset();
                 }
@@ -81,17 +82,23 @@ public class CoreConfigProcessor extends DefaultHandler implements GameInitializ
     @Override
     public void endElement(String uri, String localName, String qName) throws SAXException {
         if (qName.equalsIgnoreCase("levels"))
-            this.state = CoreConfigProcessor.ProcessingState.ACTORS;
+            this.state = SAXGameParser.ProcessingState.ACTORS;
     }
 
     @Override
     public void characters(char[] ch, int start, int length) throws SAXException {
     }
 
+    /*
+     * ConfigProcessorMethods
+     */
+
+    @Override
     public List<DummyLevel> getLevels(){
         return levels;
     }
 
+    @Override
     public Map<ActorType, Set<Direction>> getActorToDirectionsMap() {
         return actorToDirectionsMap;
     }

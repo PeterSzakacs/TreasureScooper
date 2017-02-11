@@ -1,7 +1,7 @@
 package szakacs.kpi.fei.tuke.intrfc.misc;
 
-import szakacs.kpi.fei.tuke.misc.configProcessors.world.DummyEntrance;
-import szakacs.kpi.fei.tuke.misc.configProcessors.world.DummyTunnel;
+import szakacs.kpi.fei.tuke.misc.configProcessors.gameValueObjects.DummyEntrance;
+import szakacs.kpi.fei.tuke.misc.configProcessors.gameValueObjects.DummyTunnel;
 
 import java.util.List;
 import java.util.Map;

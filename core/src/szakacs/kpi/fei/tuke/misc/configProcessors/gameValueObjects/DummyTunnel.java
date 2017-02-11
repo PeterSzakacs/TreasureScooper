@@ -1,4 +1,4 @@
-package szakacs.kpi.fei.tuke.misc.configProcessors.world;
+package szakacs.kpi.fei.tuke.misc.configProcessors.gameValueObjects;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -12,22 +12,18 @@ import java.util.Map;
  */
 public class DummyTunnel {
 
-    int x;
-    int y;
-    int numCells;
-    String id;
-    Map<Integer, DummyTunnel> connectedTunnelsBelow;
+    private int x;
+    private int y;
+    private int numCells;
+    private String id;
+    private Map<Integer, DummyTunnel> connectedTunnelsBelow;
 
-    DummyTunnel(int x, int y, int numCells, String id) {
-        this();
+    public DummyTunnel(int x, int y, int numCells, String id) {
+        this.connectedTunnelsBelow = new HashMap<>();
         this.x = x;
         this.y = y;
         this.numCells = numCells;
         this.id = id;
-    }
-
-    DummyTunnel() {
-        this.connectedTunnelsBelow = new HashMap<>();
     }
 
     public int getX() {

@@ -7,17 +7,13 @@ import com.badlogic.gdx.graphics.g2d.*;
 import szakacs.kpi.fei.tuke.enums.GameState;
 import szakacs.kpi.fei.tuke.game.GameManager;
 import szakacs.kpi.fei.tuke.intrfc.game.GamePrivileged;
+import szakacs.kpi.fei.tuke.intrfc.misc.GameConfig;
+import szakacs.kpi.fei.tuke.intrfc.misc.GameConfigProcessor;
 import szakacs.kpi.fei.tuke.intrfc.misc.GameRenderer;
 import szakacs.kpi.fei.tuke.intrfc.game.GameWorld;
-import szakacs.kpi.fei.tuke.misc.configProcessors.levels.CoreConfigProcessor;
-import org.xml.sax.SAXException;
+import szakacs.kpi.fei.tuke.misc.configProcessors.SAXprocessor.SAXConfigProcessor;
 import szakacs.kpi.fei.tuke.misc.renderers.*;
 
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.parsers.SAXParser;
-import javax.xml.parsers.SAXParserFactory;
-import java.io.File;
-import java.io.IOException;
 import java.util.*;
 
 /**
@@ -27,21 +23,17 @@ public class CoreGameRenderer implements ApplicationListener {
 
     private GamePrivileged game;
     private GameManager manager;
-    private CoreConfigProcessor configProcessor;
-    private List<GameRenderer> renderers;
+    private GameConfig config;
 
+    private List<GameRenderer> renderers;
     private SpriteBatch batch;
     private int counter = 0;
 
     public CoreGameRenderer(String configFilename){
-        this.configProcessor = new CoreConfigProcessor();
-        try {
-            SAXParser parser = SAXParserFactory.newInstance().newSAXParser();
-            parser.parse(new File(configFilename), configProcessor);
-        } catch (SAXException | IOException | ParserConfigurationException e) {
-            e.printStackTrace();
-        }
-        this.manager = new GameManager(this.configProcessor);
+        GameConfigProcessor configProcessor = new SAXConfigProcessor();
+        configProcessor.processGameConfig();
+        this.config = configProcessor.getGameConfig();
+        this.manager = new GameManager(config);
         this.game = manager.getNextGameLevel();
     }
 
@@ -51,11 +43,9 @@ public class CoreGameRenderer implements ApplicationListener {
         this.renderers = new ArrayList<>();
         this.renderers.add(new BackgroundRenderer(batch, game));
         this.renderers.add(new TunnelsRenderer(batch, game));
-        this.renderers.add(new ActorRenderer(batch, game, configProcessor.getActorToDirectionsMap()));
+        this.renderers.add(new ActorRenderer(batch, game, config.getActorToDirectionsMap()));
         this.renderers.add(new PlayerRenderer(batch, game));
         this.renderers.add(new PlayerInfoRenderer(batch, game));
-        //let the garbage collector now do its job on the config processor
-        this.configProcessor = null;
     }
 
     @Override

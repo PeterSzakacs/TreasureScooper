@@ -5,8 +5,8 @@ import szakacs.kpi.fei.tuke.enums.TunnelCellType;
 import szakacs.kpi.fei.tuke.intrfc.arena.callbacks.OnNuggetCollectedCallback;
 import szakacs.kpi.fei.tuke.intrfc.game.GameWorld;
 import szakacs.kpi.fei.tuke.intrfc.misc.GameWorldPrototype;
-import szakacs.kpi.fei.tuke.misc.configProcessors.world.DummyEntrance;
-import szakacs.kpi.fei.tuke.misc.configProcessors.world.DummyTunnel;
+import szakacs.kpi.fei.tuke.misc.configProcessors.gameValueObjects.DummyEntrance;
+import szakacs.kpi.fei.tuke.misc.configProcessors.gameValueObjects.DummyTunnel;
 
 import java.util.*;
 
