@@ -8,6 +8,16 @@ import java.util.Map;
 
 /**
  * Created by developer on 29.1.2017.
+ *
+ * The interface of the value object used for holding data
+ * that is used for instantiating a game world.
+ *
+ * Not sure if this interface has much practical value,
+ * since only one class implements it and furthermore
+ * there are no interfaces for value objects for tunnels,
+ * entrances, or game levels.
+ *
+ * Keeping it for now, though without method documentation.
  */
 public interface GameWorldPrototype {
 

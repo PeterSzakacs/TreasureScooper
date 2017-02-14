@@ -14,7 +14,7 @@ import java.util.List;
 /**
  * Created by developer on 5.11.2016.
  *
- * Game API quality at current stage is still NOT guaranteed. :P
+ * GameLevel API quality at current stage is still NOT guaranteed. :P
  */
 public class PlayerA implements Player {
 
@@ -42,7 +42,7 @@ public class PlayerA implements Player {
      * again, this is a method called on each iteration of the game loop
      * (at each turn in the game) that the student has to implement.
      *
-     * This is just an example solution of act() implemented as a state machine.
+     * This is just an example solution of update() implemented as a state machine.
      * states are student defined in this case
      */
 

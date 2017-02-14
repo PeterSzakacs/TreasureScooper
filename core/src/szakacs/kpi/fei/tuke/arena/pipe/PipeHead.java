@@ -4,7 +4,7 @@ import szakacs.kpi.fei.tuke.arena.actors.AbstractMoveableActor;
 import szakacs.kpi.fei.tuke.arena.weapon.Weapon;
 import szakacs.kpi.fei.tuke.enums.ActorType;
 import szakacs.kpi.fei.tuke.enums.Direction;
-import szakacs.kpi.fei.tuke.intrfc.arena.GoldCollector;
+import szakacs.kpi.fei.tuke.intrfc.arena.actors.GoldCollector;
 import szakacs.kpi.fei.tuke.intrfc.misc.proxies.ActorGameInterface;
 
 /**

@@ -8,7 +8,7 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import szakacs.kpi.fei.tuke.arena.actors.Bullet;
 import szakacs.kpi.fei.tuke.arena.weapon.AmmoQueue;
-import szakacs.kpi.fei.tuke.intrfc.game.GamePrivileged;
+import szakacs.kpi.fei.tuke.intrfc.game.GameLevelPrivileged;
 
 import java.util.List;
 
@@ -21,7 +21,7 @@ public class PlayerInfoRenderer extends AbstractGameRenderer {
     private Sprite bulletSprite;
     private Sprite queue;
 
-    public PlayerInfoRenderer(SpriteBatch batch, GamePrivileged game) {
+    public PlayerInfoRenderer(SpriteBatch batch, GameLevelPrivileged game) {
         super(batch, game);
         this.score = new BitmapFont();
         this.score.setColor(Color.YELLOW);
@@ -43,7 +43,7 @@ public class PlayerInfoRenderer extends AbstractGameRenderer {
                 displayMsg += "\nYou won the game!";
                 break;
             case LOST:
-                displayMsg += "\nGame over!";
+                displayMsg += "\nGameLevel over!";
                 break;
             default:
                 throw new IllegalStateException("Illegal game state: " + game.getState());

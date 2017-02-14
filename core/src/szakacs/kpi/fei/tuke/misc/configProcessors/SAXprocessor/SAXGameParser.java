@@ -32,7 +32,7 @@ public class SAXGameParser extends DefaultHandler implements GameConfig {
     private SAXWorldParser worldConfigProcessor;
 
 
-    public SAXGameParser(){
+    SAXGameParser(){
         super();
         this.actorToDirectionsMap = new EnumMap<>(ActorType.class);
         this.state = SAXGameParser.ProcessingState.LEVELS;
@@ -54,8 +54,8 @@ public class SAXGameParser extends DefaultHandler implements GameConfig {
                     try {
                         parser.parse(new File(path), worldConfigProcessor);
                     } catch (IOException e) {
-                        System.err.println("Could not initialize level config file: " + path);
                         e.printStackTrace();
+                        throw new SAXException("Could not initialize level config file: " + path);
                     }
                     DummyLevel level = new DummyLevel(
                             worldConfigProcessor.getWorld(),

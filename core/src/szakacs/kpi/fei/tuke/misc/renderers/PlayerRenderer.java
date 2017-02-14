@@ -8,7 +8,7 @@ import szakacs.kpi.fei.tuke.arena.pipe.PipeSegment;
 import szakacs.kpi.fei.tuke.enums.Direction;
 import szakacs.kpi.fei.tuke.arena.pipe.PipeHead;
 import szakacs.kpi.fei.tuke.enums.PipeSegmentType;
-import szakacs.kpi.fei.tuke.intrfc.game.GamePrivileged;
+import szakacs.kpi.fei.tuke.intrfc.game.GameLevelPrivileged;
 
 import java.util.ArrayList;
 import java.util.EnumMap;
@@ -25,7 +25,7 @@ public class PlayerRenderer extends AbstractGameRenderer {
     private Map<PipeSegmentType, Sprite> pipeSegmentSprites;
     private float elapsedTime;
 
-    public PlayerRenderer(SpriteBatch batch, GamePrivileged game) {
+    public PlayerRenderer(SpriteBatch batch, GameLevelPrivileged game) {
         super(batch, game);
         this.initializeSprites();
     }

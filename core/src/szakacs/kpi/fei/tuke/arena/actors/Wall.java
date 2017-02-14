@@ -3,8 +3,7 @@ package szakacs.kpi.fei.tuke.arena.actors;
 import szakacs.kpi.fei.tuke.game.world.TunnelCell;
 import szakacs.kpi.fei.tuke.enums.ActorType;
 import szakacs.kpi.fei.tuke.enums.Direction;
-import szakacs.kpi.fei.tuke.intrfc.arena.Actor;
-import szakacs.kpi.fei.tuke.intrfc.arena.callbacks.OnActorRemovedCallback;
+import szakacs.kpi.fei.tuke.intrfc.arena.actors.Actor;
 import szakacs.kpi.fei.tuke.intrfc.misc.proxies.ActorGameInterface;
 
 import java.util.List;
@@ -14,13 +13,11 @@ import java.util.List;
  */
 public class Wall extends AbstractActor {
     private TunnelCell neighbouringCell;
-    private OnActorRemovedCallback onDestroyCallback;
 
-    public Wall(TunnelCell cell, ActorGameInterface world, OnActorRemovedCallback onDestroyCallback) {
+    public Wall(TunnelCell cell, ActorGameInterface world) {
         super(ActorType.WALL, world);
         super.initialize(Direction.LEFT, cell);
         this.neighbouringCell = cell.getCellAtDirection(Direction.RIGHT);
-        this.onDestroyCallback = onDestroyCallback;
         this.disconnectCells(cell);
         System.out.println("Wall<init>()");
     }
@@ -33,9 +30,10 @@ public class Wall extends AbstractActor {
                             && this.intersects(actor));
             if (!intersecting.isEmpty()) {
                 super.world.unregisterActor(this);
+                for (Actor actor : intersecting)
+                    super.world.unregisterActor(actor);
             }
         }
-        //System.out.println("Wall.act()");
     }
 
     @Override
@@ -47,14 +45,12 @@ public class Wall extends AbstractActor {
     private void disconnectCells(TunnelCell currentPosition){
         this.neighbouringCell.setAtDirection(Direction.LEFT, null, super.world.getGameWorld());
         currentPosition.setAtDirection(Direction.RIGHT, null, super.world.getGameWorld());
-        world.setOnDestroy(this, this::reconnectCells);
     }
 
-    private void reconnectCells(){
+    public void reconnectCells(){
         System.out.println("Wall.reconnectCells()");
         TunnelCell cell = super.getCurrentPosition();
         cell.setAtDirection(Direction.RIGHT, this.neighbouringCell, super.world.getGameWorld());
         this.neighbouringCell.setAtDirection(Direction.LEFT, cell, super.world.getGameWorld());
-        this.onDestroyCallback.onRemove(this);
     }
 }

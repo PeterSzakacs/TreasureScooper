@@ -5,7 +5,7 @@ import szakacs.kpi.fei.tuke.arena.weapon.Weapon;
 import szakacs.kpi.fei.tuke.enums.ActorType;
 import szakacs.kpi.fei.tuke.enums.Direction;
 import szakacs.kpi.fei.tuke.enums.PipeSegmentType;
-import szakacs.kpi.fei.tuke.intrfc.arena.Actor;
+import szakacs.kpi.fei.tuke.intrfc.arena.actors.Actor;
 import szakacs.kpi.fei.tuke.intrfc.misc.proxies.ActorGameInterface;
 import szakacs.kpi.fei.tuke.intrfc.game.GameWorld;
 

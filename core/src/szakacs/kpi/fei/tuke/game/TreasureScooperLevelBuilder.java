@@ -1,6 +1,6 @@
 package szakacs.kpi.fei.tuke.game;
 
-import szakacs.kpi.fei.tuke.intrfc.game.GamePrivileged;
+import szakacs.kpi.fei.tuke.intrfc.game.GameLevelPrivileged;
 import szakacs.kpi.fei.tuke.intrfc.game.GameUpdater;
 import szakacs.kpi.fei.tuke.misc.configProcessors.gameValueObjects.DummyLevel;
 import szakacs.kpi.fei.tuke.game.updaters.GameUpdaterEnemies;
@@ -18,7 +18,7 @@ public class TreasureScooperLevelBuilder {
     public TreasureScooperLevelBuilder() {
     }
 
-    public GamePrivileged buildGameLevel(DummyLevel level) {
+    public GameLevelPrivileged buildGameLevel(DummyLevel level) {
         TreasureScooper game = new TreasureScooper(level.getGameWorldPrototype());
         Set<GameUpdater> updaters = new HashSet<>(3);
         updaters.add(new GameUpdaterBasic(game));

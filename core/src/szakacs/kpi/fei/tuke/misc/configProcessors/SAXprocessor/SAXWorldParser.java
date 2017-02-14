@@ -22,7 +22,7 @@ public class SAXWorldParser extends DefaultHandler {
     private DummyWorld world;
     private SAXWorldParser.ProcessingState state;
 
-    public SAXWorldParser(){
+    SAXWorldParser(){
         super();
         this.state = SAXWorldParser.ProcessingState.INITIALIZING;
     }

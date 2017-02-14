@@ -1,7 +1,7 @@
 package szakacs.kpi.fei.tuke.game.updaters;
 
-import szakacs.kpi.fei.tuke.intrfc.game.actormanager.ActorManagerPrivileged;
-import szakacs.kpi.fei.tuke.intrfc.game.GamePrivileged;
+import szakacs.kpi.fei.tuke.intrfc.game.GameLevelPrivileged;
+import szakacs.kpi.fei.tuke.intrfc.game.actorManager.ActorManagerPrivileged;
 import szakacs.kpi.fei.tuke.intrfc.game.GameUpdater;
 import szakacs.kpi.fei.tuke.intrfc.game.GameWorld;
 
@@ -10,11 +10,11 @@ import szakacs.kpi.fei.tuke.intrfc.game.GameWorld;
  */
 public abstract class AbstractGameUpdater implements GameUpdater {
 
-    protected GamePrivileged game;
+    protected GameLevelPrivileged game;
     protected GameWorld gameWorld;
     protected ActorManagerPrivileged actorManager;
 
-    protected AbstractGameUpdater(GamePrivileged game){
+    protected AbstractGameUpdater(GameLevelPrivileged game){
         this.game = game;
         this.gameWorld = game.getGameWorld();
         this.actorManager = game.getActorManager();

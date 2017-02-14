@@ -8,7 +8,7 @@ import szakacs.kpi.fei.tuke.game.world.HorizontalTunnel;
 import szakacs.kpi.fei.tuke.game.world.TunnelCell;
 import szakacs.kpi.fei.tuke.enums.Direction;
 import szakacs.kpi.fei.tuke.enums.TunnelCellType;
-import szakacs.kpi.fei.tuke.intrfc.game.GamePrivileged;
+import szakacs.kpi.fei.tuke.intrfc.game.GameLevelPrivileged;
 
 import java.util.ArrayList;
 import java.util.EnumMap;
@@ -24,7 +24,7 @@ public class TunnelsRenderer extends AbstractGameRenderer {
     private Map<TunnelCellType, Sprite> tunnelCellSprites;
     private List<TunnelCell> interconnections;
 
-    public TunnelsRenderer(SpriteBatch batch, GamePrivileged game) {
+    public TunnelsRenderer(SpriteBatch batch, GameLevelPrivileged game) {
         super(batch, game);
         this.nuggetSprite = new Sprite(new Texture(Gdx.files.internal("images/Tunnels/NUGGET.png")));
         this.tunnelCellSprites = new EnumMap<>(TunnelCellType.class);
@@ -65,7 +65,7 @@ public class TunnelsRenderer extends AbstractGameRenderer {
     }
 
     @Override
-    public void reset(GamePrivileged game){
+    public void reset(GameLevelPrivileged game){
         super.reset(game);
         this.initializeInterconnections();
     }

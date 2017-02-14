@@ -5,8 +5,8 @@ import szakacs.kpi.fei.tuke.enums.GameState;
 import szakacs.kpi.fei.tuke.intrfc.arena.callbacks.OnItemBoughtCallback;
 import szakacs.kpi.fei.tuke.intrfc.arena.callbacks.OnNuggetCollectedCallback;
 import szakacs.kpi.fei.tuke.intrfc.Player;
-import szakacs.kpi.fei.tuke.intrfc.game.actormanager.ActorManagerPrivileged;
-import szakacs.kpi.fei.tuke.intrfc.game.GamePrivileged;
+import szakacs.kpi.fei.tuke.intrfc.game.GameLevelPrivileged;
+import szakacs.kpi.fei.tuke.intrfc.game.actorManager.ActorManagerPrivileged;
 import szakacs.kpi.fei.tuke.intrfc.misc.GameWorldPrototype;
 import szakacs.kpi.fei.tuke.intrfc.game.GameUpdater;
 import szakacs.kpi.fei.tuke.misc.proxies.PlayerGameProxy;
@@ -17,7 +17,7 @@ import java.util.Set;
 /**
  * Created by developer on 25.1.2017.
  */
-public class TreasureScooper implements GamePrivileged {
+public class TreasureScooper implements GameLevelPrivileged {
 
     private OnNuggetCollectedCallback gameCallback = new OnNuggetCollectedCallback() {
         @Override
@@ -47,7 +47,7 @@ public class TreasureScooper implements GamePrivileged {
 
     TreasureScooper(GameWorldPrototype initializer){
         this.gameWorld = new TreasureScooperWorld(initializer, this.gameCallback);
-        this.actorManager = new ActorManagerImpl(this);
+        this.actorManager = new ActorManager(this);
         this.score = 0;
         this.gameShop = new GameShop(actorManager.getActorGameProxy(), scoreChangeCallback);
     }

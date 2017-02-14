@@ -6,9 +6,9 @@ import szakacs.kpi.fei.tuke.enums.GameState;
 import szakacs.kpi.fei.tuke.game.GameShop;
 import szakacs.kpi.fei.tuke.game.world.TunnelCell;
 import szakacs.kpi.fei.tuke.intrfc.Player;
-import szakacs.kpi.fei.tuke.intrfc.arena.Actor;
-import szakacs.kpi.fei.tuke.intrfc.game.actormanager.ActorManagerPrivileged;
-import szakacs.kpi.fei.tuke.intrfc.game.GamePrivileged;
+import szakacs.kpi.fei.tuke.intrfc.arena.actors.Actor;
+import szakacs.kpi.fei.tuke.intrfc.game.GameLevelPrivileged;
+import szakacs.kpi.fei.tuke.intrfc.game.actorManager.ActorManagerPrivileged;
 import szakacs.kpi.fei.tuke.intrfc.misc.proxies.PlayerGameInterface;
 import szakacs.kpi.fei.tuke.intrfc.game.GameWorld;
 
@@ -27,11 +27,11 @@ import java.util.function.Predicate;
  */
 public class PlayerGameProxy implements PlayerGameInterface {
 
-    protected GamePrivileged game;
+    protected GameLevelPrivileged game;
     protected GameWorld gameWorld;
     protected ActorManagerPrivileged actorManager;
 
-    public PlayerGameProxy(GamePrivileged game){
+    public PlayerGameProxy(GameLevelPrivileged game){
         this.game = game;
         this.gameWorld = game.getGameWorld();
         this.actorManager = game.getActorManager();

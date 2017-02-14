@@ -1,8 +1,8 @@
 package szakacs.kpi.fei.tuke.misc.proxies;
 
-import szakacs.kpi.fei.tuke.intrfc.arena.Actor;
-import szakacs.kpi.fei.tuke.intrfc.game.actormanager.ActorManagerPrivileged;
-import szakacs.kpi.fei.tuke.intrfc.game.GamePrivileged;
+import szakacs.kpi.fei.tuke.intrfc.arena.actors.Actor;
+import szakacs.kpi.fei.tuke.intrfc.game.actorManager.ActorManagerPrivileged;
+import szakacs.kpi.fei.tuke.intrfc.game.GameLevelPrivileged;
 import szakacs.kpi.fei.tuke.intrfc.misc.proxies.ActorGameInterface;
 
 /**
@@ -10,7 +10,7 @@ import szakacs.kpi.fei.tuke.intrfc.misc.proxies.ActorGameInterface;
  */
 public class ActorGameProxy extends PlayerGameProxy implements ActorGameInterface {
 
-    public ActorGameProxy(GamePrivileged game, ActorManagerPrivileged actorManager){
+    public ActorGameProxy(GameLevelPrivileged game, ActorManagerPrivileged actorManager){
         super(game);
         super.actorManager = actorManager;
     }

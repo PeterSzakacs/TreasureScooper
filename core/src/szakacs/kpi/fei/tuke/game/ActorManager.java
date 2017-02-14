@@ -1,11 +1,11 @@
 package szakacs.kpi.fei.tuke.game;
 
 import szakacs.kpi.fei.tuke.arena.pipe.Pipe;
-import szakacs.kpi.fei.tuke.intrfc.arena.Actor;
-import szakacs.kpi.fei.tuke.intrfc.game.actormanager.ActorManagerPrivileged;
+import szakacs.kpi.fei.tuke.intrfc.arena.actors.Actor;
+import szakacs.kpi.fei.tuke.intrfc.game.actorManager.ActorManagerPrivileged;
 import szakacs.kpi.fei.tuke.intrfc.misc.proxies.ActorGameInterface;
 import szakacs.kpi.fei.tuke.misc.proxies.ActorGameProxy;
-import szakacs.kpi.fei.tuke.intrfc.game.GamePrivileged;
+import szakacs.kpi.fei.tuke.intrfc.game.GameLevelPrivileged;
 
 import java.util.*;
 import java.util.function.Predicate;
@@ -13,7 +13,7 @@ import java.util.function.Predicate;
 /**
  * Created by developer on 25.1.2017.
  */
-public class ActorManagerImpl implements ActorManagerPrivileged {
+public class ActorManager implements ActorManagerPrivileged {
     private List<Actor> actors;
     private List<Actor> searchResults;
     private Map<Actor, Runnable> onDestroyActions;
@@ -21,7 +21,7 @@ public class ActorManagerImpl implements ActorManagerPrivileged {
     private Pipe pipe;
     private ActorGameProxy actorGameProxy;
 
-    public ActorManagerImpl(GamePrivileged game){
+    ActorManager(GameLevelPrivileged game) {
         this.actors = new ArrayList<>();
         this.searchResults = new ArrayList<>();
         this.unregisteredActors = new HashMap<>();
@@ -30,27 +30,19 @@ public class ActorManagerImpl implements ActorManagerPrivileged {
         this.pipe = new Pipe(actorGameProxy);
     }
 
+    // ActorManagerBasic methods (only queries)
+
+    @Override
     public Pipe getPipe(){
         return this.pipe;
     }
 
+    @Override
     public List<Actor> getActors(){
         return this.actors;
     }
 
-    public Map<Actor, Integer> getUnregisteredActors(){
-        return this.unregisteredActors;
-    }
-
-    public Map<Actor, Runnable> getOnDestroyActions(){
-        return this.onDestroyActions;
-    }
-
     @Override
-    public ActorGameInterface getActorGameProxy() {
-        return this.actorGameProxy;
-    }
-
     public List<Actor> getActorsBySearchCriteria(Predicate<Actor> predicate){
         this.searchResults.clear();
         for (Actor actor : this.actors){
@@ -60,26 +52,14 @@ public class ActorManagerImpl implements ActorManagerPrivileged {
         return this.searchResults;
     }
 
-    /**
-     * Sets a method (an action) that is to be called (performed) when
-     * the actor specified is unregistered, that is, removed from the
-     * game world.
-     *
-     * @param actor: The actor
-     * @param action: The action to be performed when the actor is unregistered,
-     *              must be a method returning void and taking no arguments
-     */
+    // ActorManagerUpdatable methods (adding and removing actors)
+
+    @Override
     public void setOnDestroy(Actor actor, Runnable action) {
         this.onDestroyActions.put(actor, action);
     }
 
-
-    /**
-     * Registers an actor, thereby adding the actor to the game world
-     *
-     * @param actor Not Null: The actor to add to the game world
-     *
-     */
+    @Override
     public void registerActor(Actor actor) {
         if (actor != null) {
             System.out.println("Registering: " + actor.toString());
@@ -87,15 +67,7 @@ public class ActorManagerImpl implements ActorManagerPrivileged {
         }
     }
 
-    /**
-     * Unregisters an actor for later removal from the list of arena,
-     * (late removal to prevent ConcurrentModificationException) thereby
-     * removing the actor from the game world. Optionally also executes
-     * a method that is to be called when the actor is destroyed (removed)
-     * if such a method has been set, otherwise it does nothing.
-     *
-     * @param actor Not Null: The actor to remove
-     */
+    @Override
     public void unregisterActor(Actor actor) {
         if (actor != null) {
             System.out.println("Unregistering: " + actor.toString());
@@ -106,5 +78,36 @@ public class ActorManagerImpl implements ActorManagerPrivileged {
                 this.onDestroyActions.remove(actor, action);
             }
         }
+    }
+
+    // ActorManagerPrivileged methods (updating all actors)
+
+    @Override
+    public void update() {
+        for (Actor actor : this.actors) {
+            actor.act(actorGameProxy);
+        }
+        for (Iterator<Actor> actorIt = this.unregisteredActors.keySet().iterator(); actorIt.hasNext(); ) {
+            Actor unregistered = actorIt.next();
+            Integer counter = this.unregisteredActors.get(unregistered);
+            if (counter == 0) {
+                this.actors.remove(unregistered);
+                this.unregisteredActors.put(unregistered, ++counter);
+            } else if (counter > 3) {
+                actorIt.remove();
+            } else {
+                this.unregisteredActors.put(unregistered, ++counter);
+            }
+        }
+    }
+
+    @Override
+    public Map<Actor, Integer> getUnregisteredActors(){
+        return this.unregisteredActors;
+    }
+
+    @Override
+    public ActorGameInterface getActorGameProxy() {
+        return this.actorGameProxy;
     }
 }

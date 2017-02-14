@@ -4,7 +4,6 @@ import szakacs.kpi.fei.tuke.arena.pipe.Pipe;
 import szakacs.kpi.fei.tuke.game.world.TunnelCell;
 import szakacs.kpi.fei.tuke.enums.ActorType;
 import szakacs.kpi.fei.tuke.enums.Direction;
-import szakacs.kpi.fei.tuke.intrfc.arena.callbacks.OnActorRemovedCallback;
 import szakacs.kpi.fei.tuke.intrfc.misc.proxies.ActorGameInterface;
 
 /**
@@ -17,16 +16,13 @@ public class Enemy extends AbstractMoveableActor {
     private int xDelta;
     private int yDelta;
     private boolean moving;
-    private OnActorRemovedCallback onDestroyCallback;
 
-    public Enemy(Direction direction, TunnelCell currentPosition, OnActorRemovedCallback onDestroyCallback,
-                 ActorGameInterface world){
+    public Enemy(Direction direction, TunnelCell currentPosition, ActorGameInterface world){
         super(currentPosition, ActorType.MOLE, direction, world);
         this.xDelta = world.getOffsetX()/4;
         this.yDelta = world.getOffsetY()/4;
         this.pipe = world.getPipe();
         this.moving = true;
-        this.onDestroyCallback = onDestroyCallback;
     }
 
     public void act(ActorGameInterface world){
@@ -35,7 +31,6 @@ public class Enemy extends AbstractMoveableActor {
                 this.move(xDelta, yDelta, super.getDirection());
                 if (boundReached()) {
                     world.unregisterActor(this);
-                    onDestroyCallback.onRemove(this);
                     return;
                 }
                 if (pipe.intersects(this)) {

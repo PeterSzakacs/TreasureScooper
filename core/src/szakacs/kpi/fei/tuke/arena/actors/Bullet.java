@@ -3,7 +3,7 @@ package szakacs.kpi.fei.tuke.arena.actors;
 import szakacs.kpi.fei.tuke.game.world.TunnelCell;
 import szakacs.kpi.fei.tuke.enums.ActorType;
 import szakacs.kpi.fei.tuke.enums.Direction;
-import szakacs.kpi.fei.tuke.intrfc.arena.Actor;
+import szakacs.kpi.fei.tuke.intrfc.arena.actors.Actor;
 import szakacs.kpi.fei.tuke.intrfc.misc.proxies.ActorGameInterface;
 
 import java.util.List;
@@ -24,31 +24,24 @@ public class Bullet extends AbstractMoveableActor {
             this.move(xDelta, yDelta, super.getDirection());
             if (boundReached()) {
                 super.world.unregisterActor(this);
-            } else {
+            } /*else {
                 List<Actor> intersecting = super.world.getActorsBySearchCriteria(
                         (Actor a) ->
-                                (a.getType() != ActorType.BULLET && a.getType() != ActorType.PIPEHEAD)
-                                && a.intersects(this));
+                                (a.getType() != ActorType.BULLET
+                                        && a.getType() != ActorType.PIPEHEAD)
+                                        && a.intersects(this));
                 if (!intersecting.isEmpty()) {
-                    super.world.unregisterActor(intersecting.get(0));
+                    for (Actor actor : intersecting)
+                        super.world.unregisterActor(actor);
                     super.world.unregisterActor(this);
                 }
-            }
+            }*/
         }
     }
 
     public void launch(TunnelCell position, Direction dir, ActorGameInterface world){
         System.out.println("launching Bullet");
         if (world != null && world.equals(this.world)) {
-            /*TunnelCell current = position.getCellAtDirection(dir);
-            if (current == null)
-                return;
-            Collection<HorizontalTunnel> world = world.getTunnels();
-            for (HorizontalTunnel ht : world) {
-                if (ht.getCells().contains(current)) {
-                    break;
-                }
-            }*/
             this.initialize(dir, position);
             this.xDelta = world.getOffsetX() * 2;
             this.yDelta = world.getOffsetY() * 2;

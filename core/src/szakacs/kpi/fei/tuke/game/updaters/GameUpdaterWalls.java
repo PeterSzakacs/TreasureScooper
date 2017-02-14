@@ -5,8 +5,8 @@ import szakacs.kpi.fei.tuke.arena.pipe.PipeSegment;
 import szakacs.kpi.fei.tuke.game.world.HorizontalTunnel;
 import szakacs.kpi.fei.tuke.enums.TunnelCellType;
 import szakacs.kpi.fei.tuke.game.world.TunnelCell;
-import szakacs.kpi.fei.tuke.intrfc.arena.Actor;
-import szakacs.kpi.fei.tuke.intrfc.game.GamePrivileged;
+import szakacs.kpi.fei.tuke.intrfc.arena.actors.Actor;
+import szakacs.kpi.fei.tuke.intrfc.game.GameLevelPrivileged;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,7 +43,7 @@ public class GameUpdaterWalls extends AbstractGameUpdater {
 
 
 
-    public GameUpdaterWalls(GamePrivileged game) {
+    public GameUpdaterWalls(GameLevelPrivileged game) {
         super(game);
         this.initialize();
         Random rand = new Random();
@@ -52,7 +52,7 @@ public class GameUpdaterWalls extends AbstractGameUpdater {
         } while (this.turnBound < 20);
     }
 
-    public GameUpdaterWalls(GamePrivileged game, int turnBound) {
+    public GameUpdaterWalls(GameLevelPrivileged game, int turnBound) {
         super(game);
         this.initialize();
         this.turnBound = turnBound;
@@ -116,15 +116,18 @@ public class GameUpdaterWalls extends AbstractGameUpdater {
         previousPositions.add(cell);
 
         // register the wall actor
-        actorManager.registerActor(
-                new Wall(cell, super.actorManager.getActorGameProxy(), this::removeWall)
-        );
+        Wall wall = new Wall(cell, super.actorManager.getActorGameProxy());
+        actorManager.registerActor(wall);
+        actorManager.setOnDestroy(wall, () -> {
+            removeWall(wall);
+            wall.reconnectCells();
+        });
         this.createdWallsCount++;
     }
 
     /**
-     * Callback function that the wall shall call when
-     * it removes itself from the game.
+     * Callback function that the shall be called when
+     * the wall is removed from the game.
      *
      * @param wall the wall to remove (the caller basically)
      */

@@ -5,8 +5,7 @@ import szakacs.kpi.fei.tuke.game.world.TunnelCell;
 import szakacs.kpi.fei.tuke.enums.Direction;
 import szakacs.kpi.fei.tuke.enums.TunnelCellType;
 import szakacs.kpi.fei.tuke.arena.actors.Enemy;
-import szakacs.kpi.fei.tuke.intrfc.arena.Actor;
-import szakacs.kpi.fei.tuke.intrfc.game.GamePrivileged;
+import szakacs.kpi.fei.tuke.intrfc.game.GameLevelPrivileged;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,7 +42,7 @@ public class GameUpdaterEnemies extends AbstractGameUpdater {
 
 
 
-    public GameUpdaterEnemies(GamePrivileged game){
+    public GameUpdaterEnemies(GameLevelPrivileged game){
         super(game);
         this.initialize();
         Random rand = new Random();
@@ -52,7 +51,7 @@ public class GameUpdaterEnemies extends AbstractGameUpdater {
         } while (this.turnBound < 20);
     }
 
-    public GameUpdaterEnemies(GamePrivileged game, int turnBound){
+    public GameUpdaterEnemies(GameLevelPrivileged game, int turnBound){
         super(game);
         this.initialize();
         this.turnBound = turnBound;
@@ -117,19 +116,9 @@ public class GameUpdaterEnemies extends AbstractGameUpdater {
         }
 
         // register the actor
-        actorManager.registerActor(
-                new Enemy(dir, cell, this::removeEnemy, super.actorManager.getActorGameProxy())
-        );
+        Enemy enemy = new Enemy(dir, cell, actorManager.getActorGameProxy());
+        actorManager.registerActor(enemy);
+        actorManager.setOnDestroy(enemy, () -> this.createdEnemiesCount-- );
         this.createdEnemiesCount++;
-    }
-
-    /**
-     * Callback function that the enemy shall call when
-     * it removes itself from the game.
-     *
-     * @param enemy the enemy to remove (the caller basically)
-     */
-    private void removeEnemy(Actor enemy){
-        this.createdEnemiesCount--;
     }
 }

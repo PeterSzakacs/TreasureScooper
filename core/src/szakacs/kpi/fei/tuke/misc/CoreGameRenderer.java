@@ -6,7 +6,7 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.*;
 import szakacs.kpi.fei.tuke.enums.GameState;
 import szakacs.kpi.fei.tuke.game.GameManager;
-import szakacs.kpi.fei.tuke.intrfc.game.GamePrivileged;
+import szakacs.kpi.fei.tuke.intrfc.game.GameLevelPrivileged;
 import szakacs.kpi.fei.tuke.intrfc.misc.GameConfig;
 import szakacs.kpi.fei.tuke.intrfc.misc.GameConfigProcessor;
 import szakacs.kpi.fei.tuke.intrfc.misc.GameRenderer;
@@ -21,7 +21,7 @@ import java.util.*;
  */
 public class CoreGameRenderer implements ApplicationListener {
 
-    private GamePrivileged game;
+    private GameLevelPrivileged game;
     private GameManager manager;
     private GameConfig config;
 
@@ -72,7 +72,7 @@ public class CoreGameRenderer implements ApplicationListener {
             counter++;
             if (counter > 30) {
                 counter = 0;
-                GamePrivileged game = manager.getNextGameLevel();
+                GameLevelPrivileged game = manager.getNextGameLevel();
                 if (game == null) {
                     Gdx.app.exit();
                 } else {

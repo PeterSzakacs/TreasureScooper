@@ -1,7 +1,7 @@
 package szakacs.kpi.fei.tuke.game;
 
 import szakacs.kpi.fei.tuke.intrfc.misc.GameConfig;
-import szakacs.kpi.fei.tuke.intrfc.game.GamePrivileged;
+import szakacs.kpi.fei.tuke.intrfc.game.GameLevelPrivileged;
 import szakacs.kpi.fei.tuke.misc.configProcessors.gameValueObjects.DummyLevel;
 
 import java.util.List;
@@ -13,7 +13,7 @@ public class GameManager {
 
     private final List<DummyLevel> dummyLevels;
     private final TreasureScooperLevelBuilder gameLevelBuilder;
-    private GamePrivileged currentGameLevel;
+    private GameLevelPrivileged currentGameLevel;
     private int nextLevelIndex;
 
     public GameManager(GameConfig config) {
@@ -22,7 +22,7 @@ public class GameManager {
         this.nextLevelIndex = 0;
     }
 
-    public GamePrivileged getNextGameLevel() {
+    public GameLevelPrivileged getNextGameLevel() {
         if (nextLevelIndex < dummyLevels.size()) {
             DummyLevel level = dummyLevels.get(nextLevelIndex);
             this.currentGameLevel = gameLevelBuilder.buildGameLevel(level);
@@ -33,7 +33,7 @@ public class GameManager {
         return currentGameLevel;
     }
 
-    public GamePrivileged getCurrentGameLevel() {
+    public GameLevelPrivileged getCurrentGameLevel() {
         return currentGameLevel;
     }
 }

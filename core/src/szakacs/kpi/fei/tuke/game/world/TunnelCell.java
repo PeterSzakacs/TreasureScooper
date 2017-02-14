@@ -2,7 +2,7 @@ package szakacs.kpi.fei.tuke.game.world;
 
 import szakacs.kpi.fei.tuke.enums.Direction;
 import szakacs.kpi.fei.tuke.enums.TunnelCellType;
-import szakacs.kpi.fei.tuke.intrfc.arena.GoldCollector;
+import szakacs.kpi.fei.tuke.intrfc.arena.actors.GoldCollector;
 import szakacs.kpi.fei.tuke.intrfc.game.GameWorld;
 
 import java.util.EnumMap;
