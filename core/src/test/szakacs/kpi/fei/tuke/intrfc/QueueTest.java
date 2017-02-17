@@ -1,4 +1,4 @@
-package szakacs.kpi.fei.tuke.test;
+package szakacs.kpi.fei.tuke.intrfc;
 
 import org.junit.Assert;
 import org.junit.Test;
