@@ -7,10 +7,9 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import szakacs.kpi.fei.tuke.arena.actors.Bullet;
-import szakacs.kpi.fei.tuke.arena.weapon.AmmoQueue;
+import szakacs.kpi.fei.tuke.arena.pipe.Weapon;
 import szakacs.kpi.fei.tuke.intrfc.game.GameLevelPrivileged;
-
-import java.util.List;
+import szakacs.kpi.fei.tuke.intrfc.misc.Queue;
 
 /**
  * Created by developer on 24.1.2017.
@@ -43,28 +42,31 @@ public class PlayerInfoRenderer extends AbstractGameRenderer {
                 displayMsg += "\nYou won the game!";
                 break;
             case LOST:
-                displayMsg += "\nGameLevel over!";
+                displayMsg += "\nGame over!";
                 break;
             default:
                 throw new IllegalStateException("Illegal game state: " + game.getState());
         }
         score.draw(batch, displayMsg, 128, 2000);
         queue.draw(batch);
-        AmmoQueue ammoQueue = actorManager.getPipe().getHead().getWeapon().getAmmoQueue();
-        List<Bullet> bullets = ammoQueue.getBullets();
-        if (!ammoQueue.isEmpty()) {
-            for (int i = 0; i < ammoQueue.getCapacity(); i++) {
-                if (bullets.get(i) != null) {
-                    bulletSprite.setPosition(3744 + i * 32, 1824);
-                    bulletSprite.draw(batch);
-                }
+        Weapon weapon = actorManager.getPipe().getHead().getWeapon();
+        Queue<Bullet> bulletQueue = weapon.getBulletQueue();
+        if ( ! bulletQueue.isEmpty() ) {
+
+            int front = weapon.getFrontIndex();
+            int rear = weapon.getRearIndex();
+            int numBullets = bulletQueue.getNumElements();
+            for (int idx = front, counter = 0; counter < numBullets; idx++, counter++) {
+                bulletSprite.setPosition(3744 + (idx % bulletQueue.getCapacity()) * 32, 1824);
+                bulletSprite.draw(batch);
             }
+
             Color original = bulletSprite.getColor();
             bulletSprite.setColor(Color.CORAL);
-            bulletSprite.setPosition(3744 + ammoQueue.getFrontIndex() * 32, 1824);
+            bulletSprite.setPosition(3744 + front * 32, 1824);
             bulletSprite.draw(batch);
             bulletSprite.setColor(Color.GREEN);
-            bulletSprite.setPosition(3744 + ammoQueue.getRearIndex() * 32, 1824);
+            bulletSprite.setPosition(3744 + rear * 32, 1824);
             bulletSprite.draw(batch);
             bulletSprite.setColor(original);
         }

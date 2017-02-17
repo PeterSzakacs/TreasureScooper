@@ -2,10 +2,12 @@ package szakacs.kpi.fei.tuke.player;
 
 import szakacs.kpi.fei.tuke.arena.pipe.Pipe;
 import szakacs.kpi.fei.tuke.arena.pipe.PipeHead;
+import szakacs.kpi.fei.tuke.arena.pipe.PipeSegment;
 import szakacs.kpi.fei.tuke.game.world.HorizontalTunnel;
 import szakacs.kpi.fei.tuke.game.world.TunnelCell;
 import szakacs.kpi.fei.tuke.enums.Direction;
 import szakacs.kpi.fei.tuke.enums.TunnelCellType;
+import szakacs.kpi.fei.tuke.intrfc.misc.Stack;
 import szakacs.kpi.fei.tuke.intrfc.misc.proxies.PlayerGameInterface;
 import szakacs.kpi.fei.tuke.intrfc.Player;
 
@@ -34,6 +36,7 @@ public class PlayerA implements Player {
     private HorizontalTunnel currentTunnel;
     private TunnelCell entrance;
     private PlayerGameInterface world;
+    private Stack<PipeSegment> segmentStack;
 
     public PlayerA() {
     }
@@ -84,8 +87,8 @@ public class PlayerA implements Player {
                 this.handleEntertunnel();
                 break;
             case FINISH:
-                if (!pipe.isEmpty())
-                    pipe.pop();
+                if (!segmentStack.isEmpty())
+                    segmentStack.pop();
                 break;
         }
     }
@@ -100,6 +103,7 @@ public class PlayerA implements Player {
         this.currentPosition = pipe.getHead().getCurrentPosition();
         this.currentTunnel = null;
         this.entrance = null;
+        this.segmentStack = pipe.getSegmentStack();
     }
 
     @Override
@@ -109,7 +113,7 @@ public class PlayerA implements Player {
 
     private void handleEntertunnel() {
         //pipe.fire();
-        pipe.push(pipe.calculateNextSegment(currentDir));
+        segmentStack.push(pipe.calculateNextSegment(currentDir));
         if (pipe.getHead().getCurrentPosition().getCellType() == TunnelCellType.EXIT) {
             currentDir = Direction.DOWN;
             this.state = State.BEGIN;
@@ -131,7 +135,7 @@ public class PlayerA implements Player {
     }
 
     private void handleBegin() {
-        pipe.push(pipe.calculateNextSegment(currentDir));
+        segmentStack.push(pipe.calculateNextSegment(currentDir));
         currentPosition = head.getCurrentPosition();
         if (currentPosition.getCellType() == TunnelCellType.ENTRANCE) {
             this.entrance = currentPosition;
@@ -142,7 +146,7 @@ public class PlayerA implements Player {
     }
 
     private void handleReturn() {
-        pipe.pop();
+        segmentStack.pop();
         if (pipe.getHead().getCurrentPosition().equals(this.entrance)) {
             if (currentTunnel.getNuggetCount() == 0) {
                 this.state = State.ENTERTUNNEL;
@@ -161,13 +165,13 @@ public class PlayerA implements Player {
     }
 
     private void handleClear() {
-        head.getWeapon().loadBullet(world.getGameShop().buyBullet());
-        pipe.push(pipe.calculateNextSegment(currentDir));
+        head.getWeapon().getBulletQueue().enqueue(world.getGameShop().buyBullet());
+        segmentStack.push(pipe.calculateNextSegment(currentDir));
         if (pipe.isWall(currentDir)){
             TunnelCellType cellType = head.getCurrentPosition().getCellType();
             if (cellType != TunnelCellType.LEFT_EDGE
                     && cellType != TunnelCellType.RIGHT_EDGE)
-                head.getWeapon().fire();
+                head.getWeapon().getBulletQueue().dequeue();
             else
                 this.state = State.RETURN;
         }
