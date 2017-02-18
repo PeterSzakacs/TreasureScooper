@@ -1,5 +1,5 @@
 #include<stdlib.h>
-#include"../nativeHeaders/classSignatures.h"
+#include"../headers/classSignatures.h"
 
 static jDirection jLeft;
 static jDirection jRight;

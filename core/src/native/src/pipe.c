@@ -1,6 +1,6 @@
 #include<stdio.h>
 #include<unistd.h>
-#include"../nativeHeaders/classSignatures.h"
+#include"../headers/classSignatures.h"
 
 static JNIEnv *JavaEnv;
 

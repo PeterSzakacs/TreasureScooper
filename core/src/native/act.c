@@ -1,6 +1,6 @@
 #include<jni.h>
 #include"playerNativeA.h"
-#include"nativeHeaders/classSignatures.h"
+#include"headers/classSignatures.h"
 
 static Pipe pipe;
 static int turn = 0;
