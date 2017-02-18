@@ -54,7 +54,7 @@ public class PlayerB implements Player {
     // what has changed:
     // the underground tunnel maze is now represented as a graph of cells,
     // enabling reduction of background code complexity and allowing more
-    // options for tunnel network design, such as world that do not stretch
+    // options for tunnel network design, such as gameInterface that do not stretch
     // from one end of the screen to the next (not tested yet)
     //
     // also it should make the programming API easier for students to use
@@ -66,7 +66,7 @@ public class PlayerB implements Player {
     public void act() {
         // TODO: Investigate ways to prevent access to private member variables
         /*try {
-            Field f = Pipe.class.getDeclaredField("world");
+            Field f = Pipe.class.getDeclaredField("gameInterface");
             f.setAccessible(true); //Very important, this allows the setting to work.
             ActorGameInterface value = (ActorGameInterface) f.get(pipe);
             System.out.println(value);

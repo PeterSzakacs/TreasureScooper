@@ -30,7 +30,7 @@ public class GameUpdaterWalls extends AbstractGameUpdater {
     // max. number of walls that can exist at the same time in the game
     private int wallCountMax;
 
-    // current number of walls in the game world
+    // current number of walls in the game gameInterface
     private int createdWallsCount;
 
     // list of all previous positions where a wall actor was put,
@@ -39,7 +39,7 @@ public class GameUpdaterWalls extends AbstractGameUpdater {
 
     // list of all positions where to put a wall Actor,
     // basically all TUNNEL type positions of all tunnels
-    // in the game world,
+    // in the game gameInterface,
     private List<TunnelCell> eligiblePositions;
 
 

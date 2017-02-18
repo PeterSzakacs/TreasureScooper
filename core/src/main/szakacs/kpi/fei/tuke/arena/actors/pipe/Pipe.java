@@ -8,6 +8,7 @@ import szakacs.kpi.fei.tuke.arena.game.world.TunnelCell;
 import szakacs.kpi.fei.tuke.intrfc.Player;
 import szakacs.kpi.fei.tuke.intrfc.arena.actors.Actor;
 import szakacs.kpi.fei.tuke.intrfc.arena.callbacks.OnStackUpdatedCallback;
+import szakacs.kpi.fei.tuke.intrfc.arena.game.world.GameWorld;
 import szakacs.kpi.fei.tuke.intrfc.misc.Queue;
 import szakacs.kpi.fei.tuke.intrfc.misc.Stack;
 import szakacs.kpi.fei.tuke.intrfc.arena.proxies.ActorGameInterface;
@@ -27,18 +28,19 @@ public class Pipe {
          */
         @Override
         public void onPush() {
+            GameWorld world = gameInterface.getGameWorld();
             head.move(world.getOffsetX(), world.getOffsetY(), dir);
-            head.getCurrentPosition().collectNugget(world.getGameWorld(), head);
+            head.getCurrentPosition().collectNugget(world, head);
             /*PipeSegment pushed = segmentStack.top();
             if (pushed.getSegmentType() != PipeSegmentType.HORIZONTAL
                     && pushed.getSegmentType() != PipeSegmentType.VERTICAL) {
                 edges.add(pushed);
             }*/
-            List<Actor> enemies = world.getActorsBySearchCriteria(actor ->
+            List<Actor> enemies = gameInterface.getActorsBySearchCriteria(actor ->
                     actor.getType() == ActorType.MOLE && actor.intersects(head)
             );
             for (Actor actor : enemies){
-                world.unregisterActor(actor);
+                gameInterface.unregisterActor(actor);
             }
         }
 
@@ -79,14 +81,14 @@ public class Pipe {
      */
     private Player controller;
     private Direction dir;
-    private ActorGameInterface world;
+    private ActorGameInterface gameInterface;
     private int healthPoints;
 
-    public Pipe(ActorGameInterface world, TunnelCell startPosition, Player controller) {
-        this.head = new PipeHead(Direction.DOWN, world, startPosition);
+    public Pipe(ActorGameInterface gameInterface, TunnelCell startPosition, Player controller) {
+        this.head = new PipeHead(Direction.DOWN, gameInterface, startPosition);
         this.controller = controller;
         this.dir = Direction.DOWN;
-        this.world = world;
+        this.gameInterface = gameInterface;
         this.healthPoints = 100;
         this.segmentStack = new PipeSegmentStack(
                 10,
@@ -98,7 +100,7 @@ public class Pipe {
         Queue<Bullet> weaponQueue = head.getWeapon().getBulletQueue();
         int capacity = weaponQueue.getCapacity();
         for (int i = 0; i < capacity; i++) {
-            weaponQueue.enqueue(new Bullet(this.world));
+            weaponQueue.enqueue(new Bullet(this.gameInterface));
         }
     }
 
@@ -131,13 +133,13 @@ public class Pipe {
     }
 
     public void allowMovement(ActorGameInterface gameInterface) {
-        if (gameInterface != null && world.equals(gameInterface)) {
+        if (gameInterface != null && this.gameInterface.equals(gameInterface)) {
             segmentStack.unlock();
         }
     }
 
     public void setHealth(int health, ActorGameInterface gameInterface) {
-        if (gameInterface != null && world.equals(gameInterface)) {
+        if (gameInterface != null && this.gameInterface.equals(gameInterface)) {
             healthPoints = health;
             if (healthPoints < 0) {
                 healthPoints = 0;
@@ -185,6 +187,7 @@ public class Pipe {
     }
 
     public boolean intersects(Actor actor){
+        GameWorld world = gameInterface.getGameWorld();
         for (PipeSegment seg : segmentStack){
             if (Math.abs(seg.getX() - actor.getX()) <= world.getOffsetX() &&
                     Math.abs(seg.getY() - actor.getY()) <= world.getOffsetY())

@@ -29,7 +29,7 @@ public class GameUpdaterEnemies extends AbstractGameUpdater {
     // max. number of enemies that can exist at the same time in the game
     private int enemyCountMax;
 
-    // current number of enemies in the game world
+    // current number of enemies in the game gameInterface
     private int createdEnemiesCount;
 
     // list of all previous positions where an enemy actor was put,
@@ -38,7 +38,7 @@ public class GameUpdaterEnemies extends AbstractGameUpdater {
 
     // list of all positions where to put an enemy Actor,
     // basically all LEFT_EDGE and RIGHT_EDGE positions
-    // of all tunnels in the game world,
+    // of all tunnels in the game gameInterface,
     private List<TunnelCell> eligiblePositions;
 
 

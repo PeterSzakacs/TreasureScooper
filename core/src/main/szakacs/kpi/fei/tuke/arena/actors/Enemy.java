@@ -23,36 +23,36 @@ public class Enemy extends AbstractMoveableActor {
     private int yDelta;
     private boolean moving;
 
-    public Enemy(Direction direction, TunnelCell currentPosition, ActorGameInterface world){
-        super(currentPosition, ActorType.MOLE, direction, world);
-        this.xDelta = world.getOffsetX()/4;
-        this.yDelta = world.getOffsetY()/4;
-        List<Player> players = world.getPlayers();
+    public Enemy(Direction direction, TunnelCell currentPosition, ActorGameInterface gameInterface){
+        super(currentPosition, ActorType.MOLE, direction, gameInterface);
+        this.xDelta = gameInterface.getGameWorld().getOffsetX()/4;
+        this.yDelta = gameInterface.getGameWorld().getOffsetY()/4;
+        List<Player> players = gameInterface.getPlayers();
         this.pipes = new ArrayList<>(players.size());
         for (Player player : players) {
-            this.pipes.add(world.getPipeOfPlayer(player));
+            this.pipes.add(gameInterface.getPipeOfPlayer(player));
         }
         this.moving = true;
     }
 
-    public void act(ActorGameInterface world){
-        if (world != null && world.equals(super.world)) {
+    public void act(ActorGameInterface gameInterface){
+        if (gameInterface != null && gameInterface.equals(super.gameInterface)) {
             if (moving) {
-                this.move(xDelta, yDelta, super.getDirection());
+                this.move(xDelta, yDelta, getDirection());
                 if (boundReached()) {
-                    world.unregisterActor(this);
+                    gameInterface.unregisterActor(this);
                     return;
                 }
                 for (Pipe pipe : pipes) {
                     if (pipe.intersects(this)) {
                         this.intersectingPipe = pipe;
                         moving = false;
-                        pipe.setHealth(pipe.getHealth() - 10, world);
+                        pipe.setHealth(pipe.getHealth() - 10, gameInterface);
                         break;
                     }
                 }
             } else {
-                intersectingPipe.setHealth(intersectingPipe.getHealth() - 10, world);
+                intersectingPipe.setHealth(intersectingPipe.getHealth() - 10, gameInterface);
                 if (intersectingPipe.getHealth() <= 0)
                     moving = true;
             }

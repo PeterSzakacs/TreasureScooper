@@ -23,9 +23,9 @@ public interface ActorManagerUpdatable extends ActorManagerQueryable {
     void setOnDestroy(Actor actor, Runnable action);
 
     /**
-     * Registers an actor, thereby adding the actor to the game world
+     * Registers an actor, thereby adding the actor to the game gameInterface
      *
-     * @param actor Not Null: The actor to add to the game world
+     * @param actor Not Null: The actor to add to the game gameInterface
      *
      */
     void registerActor(Actor actor);

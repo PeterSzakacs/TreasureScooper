@@ -20,5 +20,5 @@ import szakacs.kpi.fei.tuke.intrfc.arena.game.world.GameWorld;
  * the latter can be theoretically bypassed using
  * reflection.
  */
-public interface PlayerGameInterface extends GameWorld, GameLevel, ActorManagerQueryable {
+public interface PlayerGameInterface extends GameLevel, ActorManagerQueryable {
 }

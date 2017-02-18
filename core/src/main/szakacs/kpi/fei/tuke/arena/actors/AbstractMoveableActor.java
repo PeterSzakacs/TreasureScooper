@@ -12,12 +12,12 @@ public abstract class AbstractMoveableActor extends AbstractActor {
 
     private boolean boundReached;
 
-    protected AbstractMoveableActor(ActorType at, ActorGameInterface world) {
-        super(at, world);
+    protected AbstractMoveableActor(ActorType at, ActorGameInterface gameInterface) {
+        super(at, gameInterface);
     }
 
-    protected AbstractMoveableActor(TunnelCell currentPosition, ActorType type, Direction dir, ActorGameInterface world) {
-        super(currentPosition, type, dir, world);
+    protected AbstractMoveableActor(TunnelCell currentPosition, ActorType type, Direction dir, ActorGameInterface gameInterface) {
+        super(currentPosition, type, dir, gameInterface);
     }
 
     protected void setDirection(Direction direction){

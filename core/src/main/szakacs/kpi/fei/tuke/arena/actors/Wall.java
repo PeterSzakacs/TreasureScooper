@@ -14,8 +14,8 @@ import java.util.List;
 public class Wall extends AbstractActor {
     private TunnelCell neighbouringCell;
 
-    public Wall(TunnelCell cell, ActorGameInterface world) {
-        super(ActorType.WALL, world);
+    public Wall(TunnelCell cell, ActorGameInterface gameInterface) {
+        super(ActorType.WALL, gameInterface);
         super.initialize(Direction.LEFT, cell);
         this.neighbouringCell = cell.getCellAtDirection(Direction.RIGHT);
         this.disconnectCells(cell);
@@ -23,15 +23,15 @@ public class Wall extends AbstractActor {
     }
 
     @Override
-    public void act(ActorGameInterface world) {
-        if (world != null && world.equals(super.world)) {
-            List<Actor> intersecting = super.world.getActorsBySearchCriteria(actor ->
+    public void act(ActorGameInterface gameInterface) {
+        if (gameInterface != null && gameInterface.equals(super.gameInterface)) {
+            List<Actor> intersecting = super.gameInterface.getActorsBySearchCriteria(actor ->
                     actor.getType() == ActorType.BULLET
                             && this.intersects(actor));
             if (!intersecting.isEmpty()) {
-                super.world.unregisterActor(this);
+                super.gameInterface.unregisterActor(this);
                 for (Actor actor : intersecting)
-                    super.world.unregisterActor(actor);
+                    super.gameInterface.unregisterActor(actor);
             }
         }
     }
@@ -43,14 +43,14 @@ public class Wall extends AbstractActor {
     }
 
     private void disconnectCells(TunnelCell currentPosition){
-        this.neighbouringCell.setAtDirection(Direction.LEFT, null, super.world.getGameWorld());
-        currentPosition.setAtDirection(Direction.RIGHT, null, super.world.getGameWorld());
+        this.neighbouringCell.setAtDirection(Direction.LEFT, null, super.gameInterface.getGameWorld());
+        currentPosition.setAtDirection(Direction.RIGHT, null, super.gameInterface.getGameWorld());
     }
 
     public void reconnectCells(){
         System.out.println("Wall.reconnectCells()");
         TunnelCell cell = super.getCurrentPosition();
-        cell.setAtDirection(Direction.RIGHT, this.neighbouringCell, super.world.getGameWorld());
-        this.neighbouringCell.setAtDirection(Direction.LEFT, cell, super.world.getGameWorld());
+        cell.setAtDirection(Direction.RIGHT, this.neighbouringCell, super.gameInterface.getGameWorld());
+        this.neighbouringCell.setAtDirection(Direction.LEFT, cell, super.gameInterface.getGameWorld());
     }
 }

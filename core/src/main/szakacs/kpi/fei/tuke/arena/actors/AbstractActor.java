@@ -4,6 +4,7 @@ import szakacs.kpi.fei.tuke.arena.game.world.TunnelCell;
 import szakacs.kpi.fei.tuke.enums.Direction;
 import szakacs.kpi.fei.tuke.enums.ActorType;
 import szakacs.kpi.fei.tuke.intrfc.arena.actors.Actor;
+import szakacs.kpi.fei.tuke.intrfc.arena.game.world.GameWorld;
 import szakacs.kpi.fei.tuke.intrfc.arena.proxies.ActorGameInterface;
 
 /**
@@ -16,18 +17,21 @@ public abstract class AbstractActor implements Actor {
     private TunnelCell currentPosition;
     private Direction dir;
     protected ActorType actorType;
-    protected ActorGameInterface world;
+    protected ActorGameInterface gameInterface;
+    protected GameWorld world;
 
-    protected AbstractActor(ActorType at, ActorGameInterface world){
-        if (world == null)
-            throw new IllegalArgumentException("No game world passed");
-        this.world = world;
+    protected AbstractActor(ActorType at, ActorGameInterface gameInterface){
+        if (gameInterface == null)
+            throw new IllegalArgumentException("No valid game interface passed");
+        this.gameInterface = gameInterface;
+        this.world = gameInterface.getGameWorld();
         this.actorType = at;
     }
 
-    protected AbstractActor(TunnelCell currentPosition, ActorType type, Direction dir, ActorGameInterface world){
+    protected AbstractActor(TunnelCell currentPosition, ActorType type, Direction dir, ActorGameInterface gameInterface){
         this.actorType = type;
-        this.world = world;
+        this.gameInterface = gameInterface;
+        this.world = gameInterface.getGameWorld();
         this.initialize(dir, currentPosition);
     }
 
