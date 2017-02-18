@@ -29,7 +29,7 @@ public interface GameWorldPrototype {
 
     int getOffsetY();
 
-    List<DummyEntrance> getDummyEntrances();
+    Map<String, DummyEntrance> getDummyEntrances();
 
     Map<String, DummyTunnel> getDummyTunnels();
 }

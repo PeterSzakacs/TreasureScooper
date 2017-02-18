@@ -3,6 +3,9 @@ package szakacs.kpi.fei.tuke.intrfc.game;
 import szakacs.kpi.fei.tuke.enums.GameState;
 import szakacs.kpi.fei.tuke.game.GameShop;
 import szakacs.kpi.fei.tuke.intrfc.Player;
+import szakacs.kpi.fei.tuke.intrfc.game.world.GameWorld;
+
+import java.util.List;
 
 /**
  * Created by developer on 25.1.2017.
@@ -18,9 +21,9 @@ public interface GameLevel {
     /**
      * Gets the player controlling the pipe in the game.
      *
-     * @return the current player controlling the pipe in the game.
+     * @return a list of all current players in the game.
      */
-    Player getPlayer();
+    List<Player> getPlayers();
 
     /**
      * Gets the state of this level (currently playing, won, lost).

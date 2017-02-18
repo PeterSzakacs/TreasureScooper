@@ -31,7 +31,7 @@ public class ArrayStack<T> implements Stack<T> {
             else
                 throw new NoSuchElementException();
         }
-    };
+    }
 
 
 

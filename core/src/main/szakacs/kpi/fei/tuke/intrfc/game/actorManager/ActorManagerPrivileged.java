@@ -1,5 +1,7 @@
 package szakacs.kpi.fei.tuke.intrfc.game.actorManager;
 
+import szakacs.kpi.fei.tuke.arena.pipe.Pipe;
+import szakacs.kpi.fei.tuke.intrfc.Player;
 import szakacs.kpi.fei.tuke.intrfc.arena.actors.Actor;
 import szakacs.kpi.fei.tuke.intrfc.game.GameUpdater;
 import szakacs.kpi.fei.tuke.intrfc.misc.proxies.ActorGameInterface;
@@ -38,4 +40,6 @@ public interface ActorManagerPrivileged extends ActorManagerUpdatable, GameUpdat
      * @see interface intrfc/misc/proxies/ActorGameProxy
      */
     ActorGameInterface getActorGameProxy();
+
+    Map<Player, Pipe> getPlayerToPipeMap();
 }

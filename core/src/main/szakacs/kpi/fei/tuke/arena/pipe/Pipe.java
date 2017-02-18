@@ -4,6 +4,8 @@ import szakacs.kpi.fei.tuke.arena.actors.Bullet;
 import szakacs.kpi.fei.tuke.enums.ActorType;
 import szakacs.kpi.fei.tuke.enums.Direction;
 import szakacs.kpi.fei.tuke.enums.PipeSegmentType;
+import szakacs.kpi.fei.tuke.game.world.TunnelCell;
+import szakacs.kpi.fei.tuke.intrfc.Player;
 import szakacs.kpi.fei.tuke.intrfc.arena.actors.Actor;
 import szakacs.kpi.fei.tuke.intrfc.arena.callbacks.OnStackUpdatedCallback;
 import szakacs.kpi.fei.tuke.intrfc.misc.Queue;
@@ -75,12 +77,14 @@ public class Pipe {
      * to move in when the player calls push(), to make updating the
      * head later easier.
      */
+    private Player controller;
     private Direction dir;
     private ActorGameInterface world;
     private int healthPoints;
 
-    public Pipe(ActorGameInterface world) {
-        this.head = new PipeHead(Direction.DOWN, world);
+    public Pipe(ActorGameInterface world, TunnelCell startPosition, Player controller) {
+        this.head = new PipeHead(Direction.DOWN, world, startPosition);
+        this.controller = controller;
         this.dir = Direction.DOWN;
         this.world = world;
         this.healthPoints = 100;
@@ -120,6 +124,12 @@ public class Pipe {
      * begin helper methods
      */
 
+    public void setPlayer(Player controller) {
+        if (this.controller == null) {
+            this.controller = controller;
+        }
+    }
+
     public void allowMovement(ActorGameInterface gameInterface) {
         if (gameInterface != null && world.equals(gameInterface)) {
             segmentStack.unlock();
@@ -128,7 +138,10 @@ public class Pipe {
 
     public void setHealth(int health, ActorGameInterface gameInterface) {
         if (gameInterface != null && world.equals(gameInterface)) {
-            this.healthPoints = health;
+            healthPoints = health;
+            if (healthPoints < 0) {
+                healthPoints = 0;
+            }
         }
     }
 

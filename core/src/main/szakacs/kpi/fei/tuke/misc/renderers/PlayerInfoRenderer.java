@@ -49,7 +49,7 @@ public class PlayerInfoRenderer extends AbstractGameRenderer {
         }
         score.draw(batch, displayMsg, 128, 2000);
         queue.draw(batch);
-        Weapon weapon = actorManager.getPipe().getHead().getWeapon();
+/*        Weapon weapon = actorManager.getPipe().getHead().getWeapon();
         Queue<Bullet> bulletQueue = weapon.getBulletQueue();
         if ( ! bulletQueue.isEmpty() ) {
 
@@ -69,7 +69,7 @@ public class PlayerInfoRenderer extends AbstractGameRenderer {
             bulletSprite.setPosition(3744 + rear * 32, 1824);
             bulletSprite.draw(batch);
             bulletSprite.setColor(original);
-        }
+        }*/
     }
 
     @Override

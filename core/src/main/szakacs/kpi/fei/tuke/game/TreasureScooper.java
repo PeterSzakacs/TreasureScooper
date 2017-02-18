@@ -1,5 +1,6 @@
 package szakacs.kpi.fei.tuke.game;
 
+import szakacs.kpi.fei.tuke.arena.pipe.Pipe;
 import szakacs.kpi.fei.tuke.game.world.TreasureScooperWorld;
 import szakacs.kpi.fei.tuke.enums.GameState;
 import szakacs.kpi.fei.tuke.intrfc.arena.callbacks.OnItemBoughtCallback;
@@ -9,9 +10,11 @@ import szakacs.kpi.fei.tuke.intrfc.game.GameLevelPrivileged;
 import szakacs.kpi.fei.tuke.intrfc.game.actorManager.ActorManagerPrivileged;
 import szakacs.kpi.fei.tuke.intrfc.misc.GameWorldPrototype;
 import szakacs.kpi.fei.tuke.intrfc.game.GameUpdater;
+import szakacs.kpi.fei.tuke.intrfc.misc.proxies.PlayerGameInterface;
 import szakacs.kpi.fei.tuke.misc.proxies.PlayerGameProxy;
-import szakacs.kpi.fei.tuke.intrfc.game.GameWorld;
+import szakacs.kpi.fei.tuke.intrfc.game.world.GameWorld;
 
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -41,7 +44,7 @@ public class TreasureScooper implements GameLevelPrivileged {
     private GameShop gameShop;
 
     private Set<GameUpdater> gameUpdaters;
-    private Player player;
+    private List<Player> players;
     private GameState state;
     private int score;
 
@@ -53,8 +56,8 @@ public class TreasureScooper implements GameLevelPrivileged {
     }
 
     @Override
-    public Player getPlayer() {
-        return this.player;
+    public List<Player> getPlayers() {
+        return players;
     }
 
     @Override
@@ -87,17 +90,26 @@ public class TreasureScooper implements GameLevelPrivileged {
         for (GameUpdater updater : this.gameUpdaters)
             updater.update();
         if (gameWorld.getNuggetCount() == 0)
-            this.state = GameState.WON;
-        if (actorManager.getPipe().getHealth() <= 0) {
-            this.state = GameState.LOST;
-            this.player.deallocate();
+            state = GameState.WON;
+        int healthCount = 0;
+        for (Pipe pipe : actorManager.getPlayerToPipeMap().values()) {
+            healthCount += pipe.getHealth();
+        }
+        if (healthCount <= 0) {
+            state = GameState.LOST;
+            for (Player player : players){
+                player.deallocate();
+            }
         }
     }
 
     @Override
-    public void startNewGame(Set<GameUpdater> updaters, Player player){
-        this.player = player;
-        this.player.initialize(new PlayerGameProxy(this));
+    public void startNewGame(Set<GameUpdater> updaters, List<Player> players){
+        this.players = players;
+        PlayerGameInterface playerInterface = new PlayerGameProxy(this);
+        for (Player player : players) {
+            player.initialize(playerInterface);
+        }
         this.state = GameState.PLAYING;
         this.gameUpdaters = updaters;
     }

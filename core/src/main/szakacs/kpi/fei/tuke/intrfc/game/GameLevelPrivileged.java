@@ -3,6 +3,7 @@ package szakacs.kpi.fei.tuke.intrfc.game;
 import szakacs.kpi.fei.tuke.intrfc.Player;
 import szakacs.kpi.fei.tuke.intrfc.game.actorManager.ActorManagerPrivileged;
 
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -30,7 +31,7 @@ public interface GameLevelPrivileged extends GameLevel {
      *
      * @param updaters a set of {@link GameUpdater} objects responsible for updating
      *                 all logic of the game level.
-     * @param player the player playing the current game level.
+     * @param players the players playing the current game level.
      */
-    void startNewGame(Set<GameUpdater> updaters, Player player);
+    void startNewGame(Set<GameUpdater> updaters, List<Player> players);
 }

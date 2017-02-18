@@ -1,6 +1,7 @@
 package szakacs.kpi.fei.tuke.game.updaters;
 
 import szakacs.kpi.fei.tuke.arena.actors.Wall;
+import szakacs.kpi.fei.tuke.arena.pipe.Pipe;
 import szakacs.kpi.fei.tuke.arena.pipe.PipeSegment;
 import szakacs.kpi.fei.tuke.game.world.HorizontalTunnel;
 import szakacs.kpi.fei.tuke.enums.TunnelCellType;
@@ -40,7 +41,6 @@ public class GameUpdaterWalls extends AbstractGameUpdater {
     // basically all TUNNEL type positions of all tunnels
     // in the game world,
     private List<TunnelCell> eligiblePositions;
-
 
 
     public GameUpdaterWalls(GameLevelPrivileged game) {
@@ -99,13 +99,14 @@ public class GameUpdaterWalls extends AbstractGameUpdater {
      */
     private void addWall() {
         // get all positions, where the pipe is located, including the head
-        List<PipeSegment> segmentStack = actorManager.getPipe().getSegmentStack().getElementsByCriteria(null);
-        List<TunnelCell> positions = new ArrayList<>(segmentStack.size());
-        for (PipeSegment seg : segmentStack){
-            positions.add(seg.getCurrentPosition());
+        List<TunnelCell> positions = new ArrayList<>();
+        for (Pipe pipe : actorManager.getPlayerToPipeMap().values()) {
+            List<PipeSegment> segmentStack = pipe.getSegmentStack().getElementsByCriteria(null);
+            for (PipeSegment seg : segmentStack) {
+                positions.add(seg.getCurrentPosition());
+            }
+            positions.add(pipe.getHead().getCurrentPosition());
         }
-        positions.add(actorManager.getPipe().getHead().getCurrentPosition());
-
         // pick a random TunnelCell where to put the new wall actor
         TunnelCell cell; Random rand = new Random();
         if (previousPositions.size() == wallCountMax)

@@ -3,7 +3,7 @@ package szakacs.kpi.fei.tuke.game.world;
 import szakacs.kpi.fei.tuke.enums.Direction;
 import szakacs.kpi.fei.tuke.enums.TunnelCellType;
 import szakacs.kpi.fei.tuke.intrfc.arena.callbacks.OnNuggetCollectedCallback;
-import szakacs.kpi.fei.tuke.intrfc.game.GameWorld;
+import szakacs.kpi.fei.tuke.intrfc.game.world.GameWorld;
 import szakacs.kpi.fei.tuke.intrfc.misc.GameWorldPrototype;
 import szakacs.kpi.fei.tuke.misc.configProcessors.gameValueObjects.DummyEntrance;
 import szakacs.kpi.fei.tuke.misc.configProcessors.gameValueObjects.DummyTunnel;
@@ -17,7 +17,7 @@ public class TreasureScooperWorld implements GameWorld {
     private final int offsetX;
     private final int offsetY;
 
-    private List<TunnelCell> entrances;
+    private Map<String, TunnelCell> entrances;
     private List<HorizontalTunnel> tunnels;
     private int nuggetCount;
 
@@ -79,8 +79,10 @@ public class TreasureScooperWorld implements GameWorld {
         }
 
         // Set the entrances to the tunnel network
-        this.entrances = new ArrayList<>(worldPrototype.getDummyEntrances().size());
-        for (DummyEntrance de : worldPrototype.getDummyEntrances()){
+        Map<String, DummyEntrance> dummyEntrances = worldPrototype.getDummyEntrances();
+        this.entrances = new HashMap<>(dummyEntrances.size());
+        for (String id : dummyEntrances.keySet()){
+            DummyEntrance de = dummyEntrances.get(id);
             TunnelCell entrance = new TunnelCell(
                     de.getX(),
                     de.getY(),
@@ -88,7 +90,7 @@ public class TreasureScooperWorld implements GameWorld {
                     null,
                     this
             );
-            this.entrances.add(entrance);
+            this.entrances.put(id, entrance);
             HorizontalTunnel rootTunnel = tunnelMap.get(de.getTunnel().getId());
             TunnelCell newCell, prevCell = entrance;
             for (int y = entrance.getY() - offsetY; y > rootTunnel.getY(); y -= offsetY) {
@@ -121,11 +123,11 @@ public class TreasureScooperWorld implements GameWorld {
         return nuggetCount;
     }
 
-    public TunnelCell getRootCell() {
-        return this.entrances.get(0);
+    public Map<String, TunnelCell> getEntrances() {
+        return Collections.unmodifiableMap(entrances);
     }
 
     public List<HorizontalTunnel> getTunnels(){
-        return Collections.unmodifiableList(this.tunnels);
+        return Collections.unmodifiableList(tunnels);
     }
 }

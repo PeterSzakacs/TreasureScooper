@@ -23,5 +23,6 @@
     </interconnections>
     <entrances>
         <entrance x="10" y="13" to="x0y1408" id="center"/>
+        <entrance x="2" y="13" to="x0y896" id="left"/>
     </entrances>
 </world>

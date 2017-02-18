@@ -3,13 +3,13 @@ package szakacs.kpi.fei.tuke.player;
 import szakacs.kpi.fei.tuke.arena.pipe.Pipe;
 import szakacs.kpi.fei.tuke.arena.pipe.PipeHead;
 import szakacs.kpi.fei.tuke.arena.pipe.PipeSegment;
-import szakacs.kpi.fei.tuke.game.world.HorizontalTunnel;
-import szakacs.kpi.fei.tuke.game.world.TunnelCell;
 import szakacs.kpi.fei.tuke.enums.Direction;
 import szakacs.kpi.fei.tuke.enums.TunnelCellType;
+import szakacs.kpi.fei.tuke.game.world.HorizontalTunnel;
+import szakacs.kpi.fei.tuke.game.world.TunnelCell;
+import szakacs.kpi.fei.tuke.intrfc.Player;
 import szakacs.kpi.fei.tuke.intrfc.misc.Stack;
 import szakacs.kpi.fei.tuke.intrfc.misc.proxies.PlayerGameInterface;
-import szakacs.kpi.fei.tuke.intrfc.Player;
 
 import java.util.List;
 
@@ -18,7 +18,7 @@ import java.util.List;
  *
  * GameLevel API quality at current stage is still NOT guaranteed. :P
  */
-public class PlayerA implements Player {
+public class PlayerC implements Player {
 
     private PipeHead head;
     // again, this is all code the student can implement
@@ -38,7 +38,7 @@ public class PlayerA implements Player {
     private PlayerGameInterface world;
     private Stack<PipeSegment> segmentStack;
 
-    public PlayerA() {
+    public PlayerC() {
     }
 
     /**

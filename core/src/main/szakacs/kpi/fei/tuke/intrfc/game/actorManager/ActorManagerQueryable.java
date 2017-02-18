@@ -1,8 +1,10 @@
 package szakacs.kpi.fei.tuke.intrfc.game.actorManager;
 
 import szakacs.kpi.fei.tuke.arena.pipe.Pipe;
+import szakacs.kpi.fei.tuke.intrfc.Player;
 import szakacs.kpi.fei.tuke.intrfc.arena.actors.Actor;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.function.Predicate;
 
@@ -24,7 +26,7 @@ public interface ActorManagerQueryable {
      *
      * @return the pipe used by the player in the game
      */
-    Pipe getPipe();
+    Pipe getPipeOfPlayer(Player player);
 
     /**
      * Gets all currently active game actors

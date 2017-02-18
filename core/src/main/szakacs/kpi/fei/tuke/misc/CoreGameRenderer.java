@@ -10,7 +10,7 @@ import szakacs.kpi.fei.tuke.intrfc.game.GameLevelPrivileged;
 import szakacs.kpi.fei.tuke.intrfc.misc.GameConfig;
 import szakacs.kpi.fei.tuke.intrfc.misc.GameConfigProcessor;
 import szakacs.kpi.fei.tuke.intrfc.misc.GameRenderer;
-import szakacs.kpi.fei.tuke.intrfc.game.GameWorld;
+import szakacs.kpi.fei.tuke.intrfc.game.world.GameWorld;
 import szakacs.kpi.fei.tuke.misc.configProcessors.SAXprocessor.SAXConfigProcessor;
 import szakacs.kpi.fei.tuke.misc.renderers.*;
 
@@ -29,7 +29,7 @@ public class CoreGameRenderer implements ApplicationListener {
     private SpriteBatch batch;
     private int counter = 0;
 
-    public CoreGameRenderer(String configFilename){
+    public CoreGameRenderer(String configFilename) throws ConfigProcessingException {
         GameConfigProcessor configProcessor = new SAXConfigProcessor();
         configProcessor.processGameConfig();
         this.config = configProcessor.getGameConfig();

@@ -4,7 +4,12 @@ import szakacs.kpi.fei.tuke.arena.pipe.Pipe;
 import szakacs.kpi.fei.tuke.game.world.TunnelCell;
 import szakacs.kpi.fei.tuke.enums.ActorType;
 import szakacs.kpi.fei.tuke.enums.Direction;
+import szakacs.kpi.fei.tuke.intrfc.Player;
 import szakacs.kpi.fei.tuke.intrfc.misc.proxies.ActorGameInterface;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 /**
  * Created by developer on 5.11.2016.
@@ -12,7 +17,8 @@ import szakacs.kpi.fei.tuke.intrfc.misc.proxies.ActorGameInterface;
 public class Enemy extends AbstractMoveableActor {
 
     // The Y coordinates are already in the HorizontalTunnel object.
-    private Pipe pipe;
+    private Collection<Pipe> pipes;
+    private Pipe intersectingPipe;
     private int xDelta;
     private int yDelta;
     private boolean moving;
@@ -21,7 +27,11 @@ public class Enemy extends AbstractMoveableActor {
         super(currentPosition, ActorType.MOLE, direction, world);
         this.xDelta = world.getOffsetX()/4;
         this.yDelta = world.getOffsetY()/4;
-        this.pipe = world.getPipe();
+        List<Player> players = world.getPlayers();
+        this.pipes = new ArrayList<>(players.size());
+        for (Player player : players) {
+            this.pipes.add(world.getPipeOfPlayer(player));
+        }
         this.moving = true;
     }
 
@@ -33,13 +43,17 @@ public class Enemy extends AbstractMoveableActor {
                     world.unregisterActor(this);
                     return;
                 }
-                if (pipe.intersects(this)) {
-                    moving = false;
-                    pipe.setHealth(pipe.getHealth() - 10, world);
+                for (Pipe pipe : pipes) {
+                    if (pipe.intersects(this)) {
+                        this.intersectingPipe = pipe;
+                        moving = false;
+                        pipe.setHealth(pipe.getHealth() - 10, world);
+                        break;
+                    }
                 }
             } else {
-                pipe.setHealth(pipe.getHealth() - 10, world);
-                if (pipe.getHealth() <= 0)
+                intersectingPipe.setHealth(intersectingPipe.getHealth() - 10, world);
+                if (intersectingPipe.getHealth() <= 0)
                     moving = true;
             }
         }

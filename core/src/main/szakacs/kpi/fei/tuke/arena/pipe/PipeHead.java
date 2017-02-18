@@ -3,6 +3,7 @@ package szakacs.kpi.fei.tuke.arena.pipe;
 import szakacs.kpi.fei.tuke.arena.actors.AbstractMoveableActor;
 import szakacs.kpi.fei.tuke.enums.ActorType;
 import szakacs.kpi.fei.tuke.enums.Direction;
+import szakacs.kpi.fei.tuke.game.world.TunnelCell;
 import szakacs.kpi.fei.tuke.intrfc.arena.actors.GoldCollector;
 import szakacs.kpi.fei.tuke.intrfc.misc.proxies.ActorGameInterface;
 
@@ -13,8 +14,8 @@ public class PipeHead extends AbstractMoveableActor implements GoldCollector {
 
     private Weapon weapon;
 
-    PipeHead(Direction direction, ActorGameInterface world) {
-        super(world.getRootCell(), ActorType.PIPEHEAD, direction, world);
+    PipeHead(Direction direction, ActorGameInterface world, TunnelCell startPosition) {
+        super(startPosition, ActorType.PIPEHEAD, direction, world);
         this.weapon = new Weapon(10, this, world);
     }
 

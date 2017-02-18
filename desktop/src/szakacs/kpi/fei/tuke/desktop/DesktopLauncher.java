@@ -2,6 +2,7 @@ package szakacs.kpi.fei.tuke.desktop;
 
 import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
+import szakacs.kpi.fei.tuke.misc.ConfigProcessingException;
 import szakacs.kpi.fei.tuke.misc.CoreGameRenderer;
 
 public class DesktopLauncher {
@@ -36,7 +37,13 @@ public class DesktopLauncher {
 
     public static void main (String[] arg) {
         LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
-        CoreGameRenderer game = new CoreGameRenderer("config.xml");
+        CoreGameRenderer game = null;
+        try {
+            game = new CoreGameRenderer("config.xml");
+        } catch (ConfigProcessingException e) {
+            e.printStackTrace();
+            System.exit(1);
+        }
         config.width = game.getWorld().getWidth();
         config.height = game.getWorld().getHeight();
         config.title = "TreasureScooperWorld";

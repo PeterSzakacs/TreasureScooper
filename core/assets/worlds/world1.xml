@@ -22,6 +22,6 @@
         <ic x="25" from="x0y384" to="x0y128" />
     </interconnections>
     <entrances>
-        <entrance x="15" y="13" to="x0y1408"/>
+        <entrance x="15" y="13" to="x0y1408" id="center"/>
     </entrances>
 </world>

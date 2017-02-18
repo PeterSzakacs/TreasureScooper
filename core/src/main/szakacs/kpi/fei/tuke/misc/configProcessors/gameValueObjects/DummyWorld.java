@@ -13,7 +13,7 @@ import java.util.Map;
 public class DummyWorld implements GameWorldPrototype {
 
     private Map<String, DummyTunnel> dummyTunnels;
-    private List<DummyEntrance> dummyEntrances;
+    private Map<String, DummyEntrance> dummyEntrances;
     private int width;
     private int height;
     private int offsetX;
@@ -21,7 +21,7 @@ public class DummyWorld implements GameWorldPrototype {
 
     public DummyWorld(int width, int height, int offsetX, int offsetY){
         this.dummyTunnels = new HashMap<>();
-        this.dummyEntrances = new ArrayList<>();
+        this.dummyEntrances = new HashMap<>();
         this.width = width;
         this.height = height;
         this.offsetX = offsetX;
@@ -49,7 +49,7 @@ public class DummyWorld implements GameWorldPrototype {
     }
 
     @Override
-    public List<DummyEntrance> getDummyEntrances() {
+    public Map<String, DummyEntrance> getDummyEntrances() {
         return this.dummyEntrances;
     }
 

@@ -3,7 +3,7 @@ package szakacs.kpi.fei.tuke.game.world;
 import szakacs.kpi.fei.tuke.enums.Direction;
 import szakacs.kpi.fei.tuke.enums.TunnelCellType;
 import szakacs.kpi.fei.tuke.intrfc.arena.callbacks.OnNuggetCollectedCallback;
-import szakacs.kpi.fei.tuke.intrfc.game.GameWorld;
+import szakacs.kpi.fei.tuke.intrfc.game.world.GameWorld;
 import szakacs.kpi.fei.tuke.misc.configProcessors.gameValueObjects.DummyTunnel;
 
 import java.util.*;

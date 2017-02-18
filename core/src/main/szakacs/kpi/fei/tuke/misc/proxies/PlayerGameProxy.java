@@ -10,10 +10,11 @@ import szakacs.kpi.fei.tuke.intrfc.arena.actors.Actor;
 import szakacs.kpi.fei.tuke.intrfc.game.GameLevelPrivileged;
 import szakacs.kpi.fei.tuke.intrfc.game.actorManager.ActorManagerPrivileged;
 import szakacs.kpi.fei.tuke.intrfc.misc.proxies.PlayerGameInterface;
-import szakacs.kpi.fei.tuke.intrfc.game.GameWorld;
+import szakacs.kpi.fei.tuke.intrfc.game.world.GameWorld;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.function.Predicate;
 
 /**
@@ -48,13 +49,13 @@ public class PlayerGameProxy implements PlayerGameInterface {
     }
 
     @Override
-    public Pipe getPipe() {
-        return actorManager.getPipe();
+    public Pipe getPipeOfPlayer(Player player) {
+        return actorManager.getPipeOfPlayer(player);
     }
 
     @Override
-    public TunnelCell getRootCell() {
-        return gameWorld.getRootCell();
+    public Map<String, TunnelCell> getEntrances() {
+        return gameWorld.getEntrances();
     }
 
     @Override
@@ -88,8 +89,8 @@ public class PlayerGameProxy implements PlayerGameInterface {
     }
 
     @Override
-    public Player getPlayer() {
-        return game.getPlayer();
+    public List<Player> getPlayers() {
+        return game.getPlayers();
     }
 
     @Override

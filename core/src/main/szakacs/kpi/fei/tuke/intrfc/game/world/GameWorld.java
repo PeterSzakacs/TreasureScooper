@@ -1,9 +1,10 @@
-package szakacs.kpi.fei.tuke.intrfc.game;
+package szakacs.kpi.fei.tuke.intrfc.game.world;
 
 import szakacs.kpi.fei.tuke.game.world.HorizontalTunnel;
 import szakacs.kpi.fei.tuke.game.world.TunnelCell;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by developer on 25.1.2017.
@@ -61,7 +62,7 @@ public interface GameWorld {
      *
      * @return the entrance into the underground tunnel maze
      */
-    TunnelCell getRootCell();
+    Map<String, TunnelCell> getEntrances();
 
     /**
      * Gets a collection of all horizontal tunnels in the game world (no sorting order).

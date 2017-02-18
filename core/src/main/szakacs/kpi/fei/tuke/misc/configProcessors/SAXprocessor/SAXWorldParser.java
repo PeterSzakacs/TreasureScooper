@@ -65,13 +65,15 @@ public class SAXWorldParser extends DefaultHandler {
                 break;
             case ENTRANCES:
                 if (qName.equalsIgnoreCase("entrance")){
-                    List<DummyEntrance> dummyEntrances = world.getDummyEntrances();
+                    Map<String, DummyEntrance> dummyEntrances = world.getDummyEntrances();
+                    String id = attributes.getValue("id");
                     DummyEntrance de = new DummyEntrance(
                             world.getOffsetX() * Integer.parseInt(attributes.getValue("x")),
                             world.getOffsetY() * Integer.parseInt(attributes.getValue("y")),
-                            world.getDummyTunnels().get(attributes.getValue("to"))
+                            world.getDummyTunnels().get(attributes.getValue("to")),
+                            id
                     );
-                    dummyEntrances.add(de);
+                    dummyEntrances.put(id, de);
                 }
         }
     }
@@ -92,7 +94,7 @@ public class SAXWorldParser extends DefaultHandler {
         return this.world;
     }
 
-    public void reset(){
+    void reset() {
         this.state = ProcessingState.INITIALIZING;
         this.world = null;
     }

@@ -1,6 +1,7 @@
 package szakacs.kpi.fei.tuke.game;
 
 import szakacs.kpi.fei.tuke.arena.pipe.Pipe;
+import szakacs.kpi.fei.tuke.intrfc.Player;
 import szakacs.kpi.fei.tuke.intrfc.arena.actors.Actor;
 import szakacs.kpi.fei.tuke.intrfc.game.actorManager.ActorManagerPrivileged;
 import szakacs.kpi.fei.tuke.intrfc.misc.proxies.ActorGameInterface;
@@ -18,7 +19,7 @@ public class ActorManager implements ActorManagerPrivileged {
     private List<Actor> searchResults;
     private Map<Actor, Runnable> onDestroyActions;
     private Map<Actor, Integer> unregisteredActors;
-    private Pipe pipe;
+    private Map<Player, Pipe> pipes;
     private ActorGameProxy actorGameProxy;
 
     ActorManager(GameLevelPrivileged game) {
@@ -27,43 +28,43 @@ public class ActorManager implements ActorManagerPrivileged {
         this.unregisteredActors = new HashMap<>();
         this.onDestroyActions = new HashMap<>(20);
         this.actorGameProxy = new ActorGameProxy(game, this);
-        this.pipe = new Pipe(actorGameProxy);
+        this.pipes = new HashMap<>(3);
     }
 
     // ActorManagerBasic methods (only queries)
 
     @Override
-    public Pipe getPipe(){
-        return this.pipe;
+    public Pipe getPipeOfPlayer(Player player){
+        return pipes.get(player);
     }
 
     @Override
     public List<Actor> getActors(){
-        return this.actors;
+        return actors;
     }
 
     @Override
     public List<Actor> getActorsBySearchCriteria(Predicate<Actor> predicate){
-        this.searchResults.clear();
-        for (Actor actor : this.actors){
+        searchResults.clear();
+        for (Actor actor : actors){
             if (predicate.test(actor))
                 searchResults.add(actor);
         }
-        return this.searchResults;
+        return searchResults;
     }
 
     // ActorManagerUpdatable methods (adding and removing actors)
 
     @Override
     public void setOnDestroy(Actor actor, Runnable action) {
-        this.onDestroyActions.put(actor, action);
+        onDestroyActions.put(actor, action);
     }
 
     @Override
     public void registerActor(Actor actor) {
         if (actor != null) {
             System.out.println("Registering: " + actor.toString());
-            this.actors.add(actor);
+            actors.add(actor);
         }
     }
 
@@ -72,10 +73,10 @@ public class ActorManager implements ActorManagerPrivileged {
         if (actor != null) {
             System.out.println("Unregistering: " + actor.toString());
             this.unregisteredActors.put(actor, 0);
-            Runnable action = this.onDestroyActions.get(actor);
+            Runnable action = onDestroyActions.get(actor);
             if (action != null) {
                 action.run();
-                this.onDestroyActions.remove(actor, action);
+                onDestroyActions.remove(actor, action);
             }
         }
     }
@@ -84,30 +85,38 @@ public class ActorManager implements ActorManagerPrivileged {
 
     @Override
     public void update() {
-        for (Actor actor : this.actors) {
+        for (Pipe pipe : pipes.values()){
+            pipe.allowMovement(actorGameProxy);
+        }
+        for (Actor actor : actors) {
             actor.act(actorGameProxy);
         }
-        for (Iterator<Actor> actorIt = this.unregisteredActors.keySet().iterator(); actorIt.hasNext(); ) {
+        for (Iterator<Actor> actorIt = unregisteredActors.keySet().iterator(); actorIt.hasNext(); ) {
             Actor unregistered = actorIt.next();
-            Integer counter = this.unregisteredActors.get(unregistered);
+            Integer counter = unregisteredActors.get(unregistered);
             if (counter == 0) {
-                this.actors.remove(unregistered);
-                this.unregisteredActors.put(unregistered, ++counter);
+                actors.remove(unregistered);
+                unregisteredActors.put(unregistered, ++counter);
             } else if (counter > 3) {
                 actorIt.remove();
             } else {
-                this.unregisteredActors.put(unregistered, ++counter);
+                unregisteredActors.put(unregistered, ++counter);
             }
         }
     }
 
     @Override
     public Map<Actor, Integer> getUnregisteredActors(){
-        return this.unregisteredActors;
+        return unregisteredActors;
     }
 
     @Override
     public ActorGameInterface getActorGameProxy() {
-        return this.actorGameProxy;
+        return actorGameProxy;
+    }
+
+    @Override
+    public Map<Player, Pipe> getPlayerToPipeMap() {
+        return pipes;
     }
 }

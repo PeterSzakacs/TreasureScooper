@@ -1,5 +1,7 @@
 package szakacs.kpi.fei.tuke.intrfc.misc;
 
+import szakacs.kpi.fei.tuke.misc.ConfigProcessingException;
+
 /**
  * Created by developer on 3.2.2017.
  *
@@ -12,8 +14,11 @@ public interface GameConfigProcessor {
     /**
      * Upon calling starts retrieving data from external storage and
      * transforms it into a GameConfig object for later retrieval.
+     *
+     * @throws ConfigProcessingException if there was some error
+     * retrieving or processing the game configuration.
      */
-    void processGameConfig();
+    void processGameConfig() throws ConfigProcessingException;
 
     /**
      * Gets the GameConfig value object.

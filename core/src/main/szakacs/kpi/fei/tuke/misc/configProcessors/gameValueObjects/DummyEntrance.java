@@ -8,11 +8,13 @@ public class DummyEntrance {
     private int x;
     private int y;
     private DummyTunnel tunnel;
+    String id;
 
-    public DummyEntrance(int x, int y, DummyTunnel tunnel){
+    public DummyEntrance(int x, int y, DummyTunnel tunnel, String id) {
         this.x = x;
         this.y = y;
         this.tunnel = tunnel;
+        this.id = id;
     }
 
     public int getX() {
@@ -25,5 +27,9 @@ public class DummyEntrance {
 
     public DummyTunnel getTunnel() {
         return tunnel;
+    }
+
+    public String getId() {
+        return id;
     }
 }

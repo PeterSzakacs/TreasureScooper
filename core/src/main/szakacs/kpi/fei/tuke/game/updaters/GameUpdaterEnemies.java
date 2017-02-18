@@ -1,5 +1,6 @@
 package szakacs.kpi.fei.tuke.game.updaters;
 
+import szakacs.kpi.fei.tuke.arena.pipe.Pipe;
 import szakacs.kpi.fei.tuke.game.world.HorizontalTunnel;
 import szakacs.kpi.fei.tuke.game.world.TunnelCell;
 import szakacs.kpi.fei.tuke.enums.Direction;
@@ -99,12 +100,16 @@ public class GameUpdaterEnemies extends AbstractGameUpdater {
      */
     private void createNewEnemy() {
         // pick a random position that was not selected before
+        List<TunnelCell> pipeHeadPositions = new ArrayList<>(actorManager.getPlayerToPipeMap().size());
+        for (Pipe pipe : actorManager.getPlayerToPipeMap().values()) {
+            pipeHeadPositions.add(pipe.getHead().getCurrentPosition());
+        }
         TunnelCell cell; Random rand = new Random();
         if (previousPositions.size() == enemyCountMax)
             previousPositions.clear();
         do {
             cell = eligiblePositions.get(rand.nextInt(eligiblePositions.size()));
-        } while (previousPositions.contains(cell) || cell.equals(actorManager.getPipe().getHead().getCurrentPosition()));
+        } while (previousPositions.contains(cell) || pipeHeadPositions.contains(cell));
         previousPositions.add(cell);
 
         // select direction for enemy to move in based on the picked tunnel cell

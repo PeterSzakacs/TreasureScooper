@@ -51,31 +51,32 @@ public class PlayerRenderer extends AbstractGameRenderer {
 
     @Override
     public void render() {
-        elapsedTime += Gdx.graphics.getDeltaTime();
-        Pipe pipe = actorManager.getPipe();
-        PipeHead head = pipe.getHead();
-        for (PipeSegment seg : pipe.getSegmentStack()){
-            pipeSegmentSprites.get(seg.getSegmentType()).setPosition(seg.getX(), seg.getY());
-            pipeSegmentSprites.get(seg.getSegmentType()).draw(batch);
+        for (Pipe pipe : actorManager.getPlayerToPipeMap().values()) {
+            elapsedTime += Gdx.graphics.getDeltaTime();
+            PipeHead head = pipe.getHead();
+            for (PipeSegment seg : pipe.getSegmentStack()) {
+                pipeSegmentSprites.get(seg.getSegmentType()).setPosition(seg.getX(), seg.getY());
+                pipeSegmentSprites.get(seg.getSegmentType()).draw(batch);
+            }
+            Animation anim = this.pipeHeadSprites.get(Direction.RIGHT);
+            int rotation = 0;
+            switch (head.getDirection()) {
+                case UP:
+                    rotation = 90;
+                    break;
+                case LEFT:
+                    rotation = 180;
+                    break;
+                case DOWN:
+                    rotation = -90;
+                    break;
+            }
+            TextureRegion keyFrame = anim.getKeyFrame(elapsedTime, true);
+            batch.draw(keyFrame, head.getX(), head.getY(),
+                    keyFrame.getRegionWidth() / 2.0f, keyFrame.getRegionHeight() / 2.0f,
+                    keyFrame.getRegionWidth(), keyFrame.getRegionHeight(),
+                    1, 1, rotation);
         }
-        Animation anim = this.pipeHeadSprites.get(Direction.RIGHT);
-        int rotation = 0;
-        switch (head.getDirection()){
-            case UP:
-                rotation = 90;
-                break;
-            case LEFT:
-                rotation = 180;
-                break;
-            case DOWN:
-                rotation = -90;
-                break;
-        }
-        TextureRegion keyFrame = anim.getKeyFrame(elapsedTime, true);
-        batch.draw(keyFrame, head.getX(), head.getY(),
-                keyFrame.getRegionWidth()/2.0f, keyFrame.getRegionHeight()/2.0f,
-                keyFrame.getRegionWidth(), keyFrame.getRegionHeight(),
-                1,1, rotation);
     }
 
     @Override

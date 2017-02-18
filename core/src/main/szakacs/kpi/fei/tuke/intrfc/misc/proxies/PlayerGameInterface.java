@@ -2,7 +2,7 @@ package szakacs.kpi.fei.tuke.intrfc.misc.proxies;
 
 import szakacs.kpi.fei.tuke.intrfc.game.actorManager.ActorManagerQueryable;
 import szakacs.kpi.fei.tuke.intrfc.game.GameLevel;
-import szakacs.kpi.fei.tuke.intrfc.game.GameWorld;
+import szakacs.kpi.fei.tuke.intrfc.game.world.GameWorld;
 
 /**
  * Created by developer on 1.12.2016.

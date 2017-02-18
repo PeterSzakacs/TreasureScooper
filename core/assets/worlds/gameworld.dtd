@@ -25,3 +25,4 @@
         <!ATTLIST entrance x CDATA #REQUIRED >
         <!ATTLIST entrance y CDATA #REQUIRED >
         <!ATTLIST entrance to IDREF #REQUIRED >
+        <!ATTLIST entrance id ID #REQUIRED >

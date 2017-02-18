@@ -1,6 +1,7 @@
 package szakacs.kpi.fei.tuke.game.updaters;
 
 import szakacs.kpi.fei.tuke.enums.GameState;
+import szakacs.kpi.fei.tuke.intrfc.Player;
 import szakacs.kpi.fei.tuke.intrfc.game.GameLevelPrivileged;
 
 /**
@@ -20,9 +21,10 @@ public class GameUpdaterBasic extends AbstractGameUpdater {
 
     @Override
     public void update() {
-        if (game.getState() == GameState.PLAYING) {
-            game.getPlayer().act();
-            actorManager.getPipe().allowMovement(actorManager.getActorGameProxy());
+        for (Player player : game.getPlayers()) {
+            if (actorManager.getPipeOfPlayer(player).getHealth() > 0) {
+                player.act();
+            }
         }
         actorManager.update();
     }
