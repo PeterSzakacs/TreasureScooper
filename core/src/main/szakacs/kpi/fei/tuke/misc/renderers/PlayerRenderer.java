@@ -3,12 +3,12 @@ package szakacs.kpi.fei.tuke.misc.renderers;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.*;
-import szakacs.kpi.fei.tuke.arena.pipe.Pipe;
-import szakacs.kpi.fei.tuke.arena.pipe.PipeSegment;
+import szakacs.kpi.fei.tuke.arena.actors.pipe.Pipe;
+import szakacs.kpi.fei.tuke.arena.actors.pipe.PipeSegment;
 import szakacs.kpi.fei.tuke.enums.Direction;
-import szakacs.kpi.fei.tuke.arena.pipe.PipeHead;
+import szakacs.kpi.fei.tuke.arena.actors.pipe.PipeHead;
 import szakacs.kpi.fei.tuke.enums.PipeSegmentType;
-import szakacs.kpi.fei.tuke.intrfc.game.GameLevelPrivileged;
+import szakacs.kpi.fei.tuke.intrfc.arena.game.GameLevelPrivileged;
 
 import java.util.ArrayList;
 import java.util.EnumMap;

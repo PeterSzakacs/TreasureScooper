@@ -5,12 +5,12 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.*;
 import szakacs.kpi.fei.tuke.enums.GameState;
-import szakacs.kpi.fei.tuke.game.GameManager;
-import szakacs.kpi.fei.tuke.intrfc.game.GameLevelPrivileged;
+import szakacs.kpi.fei.tuke.arena.GameManager;
+import szakacs.kpi.fei.tuke.intrfc.arena.game.GameLevelPrivileged;
 import szakacs.kpi.fei.tuke.intrfc.misc.GameConfig;
 import szakacs.kpi.fei.tuke.intrfc.misc.GameConfigProcessor;
 import szakacs.kpi.fei.tuke.intrfc.misc.GameRenderer;
-import szakacs.kpi.fei.tuke.intrfc.game.world.GameWorld;
+import szakacs.kpi.fei.tuke.intrfc.arena.game.world.GameWorld;
 import szakacs.kpi.fei.tuke.misc.configProcessors.SAXprocessor.SAXConfigProcessor;
 import szakacs.kpi.fei.tuke.misc.renderers.*;
 

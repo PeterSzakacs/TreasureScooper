@@ -1,6 +1,6 @@
 package szakacs.kpi.fei.tuke.intrfc;
 
-import szakacs.kpi.fei.tuke.intrfc.misc.proxies.PlayerGameInterface;
+import szakacs.kpi.fei.tuke.intrfc.arena.proxies.PlayerGameInterface;
 
 /**
  * Created by developer on 2.12.2016.

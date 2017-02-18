@@ -1,10 +1,10 @@
 package szakacs.kpi.fei.tuke.misc.renderers;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import szakacs.kpi.fei.tuke.intrfc.game.GameLevelPrivileged;
-import szakacs.kpi.fei.tuke.intrfc.game.actorManager.ActorManagerPrivileged;
+import szakacs.kpi.fei.tuke.intrfc.arena.game.GameLevelPrivileged;
+import szakacs.kpi.fei.tuke.intrfc.arena.game.actorManager.ActorManagerPrivileged;
 import szakacs.kpi.fei.tuke.intrfc.misc.GameRenderer;
-import szakacs.kpi.fei.tuke.intrfc.game.world.GameWorld;
+import szakacs.kpi.fei.tuke.intrfc.arena.game.world.GameWorld;
 
 /**
  * Created by developer on 24.1.2017.

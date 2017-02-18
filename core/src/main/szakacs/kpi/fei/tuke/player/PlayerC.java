@@ -1,15 +1,15 @@
 package szakacs.kpi.fei.tuke.player;
 
-import szakacs.kpi.fei.tuke.arena.pipe.Pipe;
-import szakacs.kpi.fei.tuke.arena.pipe.PipeHead;
-import szakacs.kpi.fei.tuke.arena.pipe.PipeSegment;
+import szakacs.kpi.fei.tuke.arena.actors.pipe.Pipe;
+import szakacs.kpi.fei.tuke.arena.actors.pipe.PipeHead;
+import szakacs.kpi.fei.tuke.arena.actors.pipe.PipeSegment;
 import szakacs.kpi.fei.tuke.enums.Direction;
 import szakacs.kpi.fei.tuke.enums.TunnelCellType;
-import szakacs.kpi.fei.tuke.game.world.HorizontalTunnel;
-import szakacs.kpi.fei.tuke.game.world.TunnelCell;
+import szakacs.kpi.fei.tuke.arena.game.world.HorizontalTunnel;
+import szakacs.kpi.fei.tuke.arena.game.world.TunnelCell;
 import szakacs.kpi.fei.tuke.intrfc.Player;
 import szakacs.kpi.fei.tuke.intrfc.misc.Stack;
-import szakacs.kpi.fei.tuke.intrfc.misc.proxies.PlayerGameInterface;
+import szakacs.kpi.fei.tuke.intrfc.arena.proxies.PlayerGameInterface;
 
 import java.util.List;
 

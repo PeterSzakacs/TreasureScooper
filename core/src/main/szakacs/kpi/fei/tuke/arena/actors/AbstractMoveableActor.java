@@ -1,9 +1,9 @@
 package szakacs.kpi.fei.tuke.arena.actors;
 
-import szakacs.kpi.fei.tuke.game.world.TunnelCell;
+import szakacs.kpi.fei.tuke.arena.game.world.TunnelCell;
 import szakacs.kpi.fei.tuke.enums.ActorType;
 import szakacs.kpi.fei.tuke.enums.Direction;
-import szakacs.kpi.fei.tuke.intrfc.misc.proxies.ActorGameInterface;
+import szakacs.kpi.fei.tuke.intrfc.arena.proxies.ActorGameInterface;
 
 /**
  * Created by developer on 31.12.2016.
