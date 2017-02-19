@@ -15,7 +15,7 @@ public class PipeHead extends AbstractMoveableActor implements GoldCollector {
     private Weapon weapon;
 
     PipeHead(Direction direction, ActorGameInterface gameInterface, TunnelCell startPosition) {
-        super(startPosition, ActorType.PIPEHEAD, direction, gameInterface);
+        super(startPosition, ActorType.PIPE, direction, gameInterface);
         this.weapon = new Weapon(10, this, gameInterface);
     }
 

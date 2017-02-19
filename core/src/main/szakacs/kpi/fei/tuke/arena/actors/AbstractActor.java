@@ -32,7 +32,8 @@ public abstract class AbstractActor implements Actor {
         this.actorType = type;
         this.gameInterface = gameInterface;
         this.world = gameInterface.getGameWorld();
-        this.initialize(dir, currentPosition);
+        this.dir = dir;
+        this.setCurrentPosition(currentPosition);
     }
 
     @Override
@@ -71,20 +72,15 @@ public abstract class AbstractActor implements Actor {
 
     protected void setCurrentPosition(TunnelCell currentPosition){
         this.currentPosition = currentPosition;
-    }
-
-    protected void setX(int x){
-        this.x = x;
-    }
-
-    protected void setY(int y){
-        this.y = y;
-    }
-
-    protected void initialize(Direction dir, TunnelCell currentPosition){
-        this.dir = dir;
-        this.currentPosition = currentPosition;
         this.x = currentPosition.getX();
         this.y = currentPosition.getY();
+    }
+
+    protected void setCurrentPosition(TunnelCell currentPosition, int x, int y){
+        if (currentPosition.isWithinCell(x, y)){
+            this.currentPosition = currentPosition;
+            this.x = x;
+            this.y = y;
+        }
     }
 }

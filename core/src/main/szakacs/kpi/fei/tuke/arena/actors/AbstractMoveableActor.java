@@ -20,6 +20,7 @@ public abstract class AbstractMoveableActor extends AbstractActor {
         super(currentPosition, type, dir, gameInterface);
     }
 
+    @Override
     protected void setDirection(Direction direction){
         super.setDirection(direction);
         this.boundReached = false;
@@ -35,23 +36,17 @@ public abstract class AbstractMoveableActor extends AbstractActor {
         TunnelCell prev, next;
         prev = next = getCurrentPosition();
         do {
-            if (Math.abs(next.getX() - x) < world.getOffsetX()
-                    && Math.abs(next.getY() - y) < world.getOffsetY()) {
-                setCurrentPosition(next);
+            if (next.isWithinCell(x, y)) {
+                // successfully found the new position
+                setCurrentPosition(next, x, y);
                 break;
             }
             prev = next;
             next = next.getCellAtDirection(dir);
         } while ( next != null );
-        if (next != null){
-            // successfully found the new position
-            setX(x);
-            setY(y);
-        } else {
+        if (next == null) {
             //reached the end of a tunnel in a given direction
-            setX(prev.getX());
-            setY(prev.getY());
-            setCurrentPosition(prev);
+            super.setCurrentPosition(prev);
             this.boundReached = true;
         }
     }

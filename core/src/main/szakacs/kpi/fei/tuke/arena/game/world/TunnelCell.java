@@ -33,6 +33,12 @@ public class TunnelCell {
         this.fourDirections = new EnumMap<>(Direction.class);
     }
 
+    @Override
+    public String toString(){
+        return super.toString() + ": " + tcType.name()
+                + "\nX: " + this.x + " Y: " + this.y;
+    }
+
     public int getX() {
         return x;
     }
@@ -41,15 +47,11 @@ public class TunnelCell {
         return y;
     }
 
-    public TunnelCellType getTcType() {
-        return tcType;
-    }
-
     public HorizontalTunnel getTunnel(){
         return this.tunnel;
     }
 
-    public void setAtDirection(Direction dir, TunnelCell pos, GameWorld world){
+    public void setAtDirection(Direction dir, TunnelCell pos, GameWorld world) {
         if (world != null && world.equals(this.world)) {
             fourDirections.put(dir, pos);
         }
@@ -67,23 +69,25 @@ public class TunnelCell {
         return this.NuggetValue != 0;
     }
 
-    public int collectNugget(GameWorld world, GoldCollector collector){
-        if (world != null && world.equals(this.world)){
-            if (collector.getX() == this.x && collector.getY() == this.y) {
-                int nuggetVal = this.NuggetValue;
-                this.NuggetValue = 0;
-                if (this.tunnel != null && nuggetVal != 0)
-                    this.tunnel.onNuggetCollected(nuggetVal);
-                return nuggetVal;
-            }
+    public int collectNugget(GoldCollector collector) {
+        if (collector.getCurrentPosition().equals(this)){
+            int nuggetVal = this.NuggetValue;
+            this.NuggetValue = 0;
+            if (this.tunnel != null && nuggetVal != 0)
+                this.tunnel.onNuggetCollected(nuggetVal);
+            return nuggetVal;
         }
         return 0;
     }
 
-    @Override
-    public String toString(){
-        return super.toString() + ": " + tcType.name()
-                + "\nX: " + this.x + " y: " + this.y;
+    public boolean isWithinCell(int x, int y) {
+        int absDx = Math.abs(x - this.x);
+        int absDy = Math.abs(y - this.y);
+        if (absDx >= world.getOffsetX() || absDy >= world.getOffsetY())
+            return false;
+        else
+            return x + absDx * Direction.LEFT.getXStep() == this.x
+                    && y + absDy * Direction.DOWN.getYStep() == this.y;
     }
 
     void setNuggetValue(int value){

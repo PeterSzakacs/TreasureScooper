@@ -15,8 +15,7 @@ public class Wall extends AbstractActor {
     private TunnelCell neighbouringCell;
 
     public Wall(TunnelCell cell, ActorGameInterface gameInterface) {
-        super(ActorType.WALL, gameInterface);
-        super.initialize(Direction.LEFT, cell);
+        super(cell, ActorType.WALL, Direction.LEFT, gameInterface);
         this.neighbouringCell = cell.getCellAtDirection(Direction.RIGHT);
         this.disconnectCells(cell);
         System.out.println("Wall<init>()");

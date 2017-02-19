@@ -60,7 +60,7 @@ public class SAXGameParser extends DefaultHandler implements GameConfig {
                 break;
             case LEVELS:
                 if (qName.equalsIgnoreCase("level")){
-                    String path = attributes.getValue("gameInterface");
+                    String path = attributes.getValue("world");
                     try {
                         parser.parse(new File(path), worldConfigProcessor);
                     } catch (IOException e) {

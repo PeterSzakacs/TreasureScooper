@@ -29,8 +29,8 @@ public class Pipe {
         @Override
         public void onPush() {
             GameWorld world = gameInterface.getGameWorld();
-            head.move(world.getOffsetX(), world.getOffsetY(), dir);
-            head.getCurrentPosition().collectNugget(world, head);
+            head.move(world.getOffsetX(), world.getOffsetY(), segmentStack.top().getDirection());
+            head.getCurrentPosition().collectNugget(head);
             /*PipeSegment pushed = segmentStack.top();
             if (pushed.getSegmentType() != PipeSegmentType.HORIZONTAL
                     && pushed.getSegmentType() != PipeSegmentType.VERTICAL) {
@@ -60,10 +60,7 @@ public class Pipe {
                     || popped.getSegmentType() == PipeSegmentType.VERTICAL) {
                 head.setDirection(dir);
             } else {
-                PipeSegment top = segmentStack.top();
-                head.setDirection(Direction.getDirectionByDeltas(
-                        head.getX() - top.getX(), head.getY() - top.getY()
-                ));
+                head.setDirection(segmentStack.top().getOriginDirection().getOpposite());
             }
         }
     };
@@ -80,14 +77,12 @@ public class Pipe {
      * head later easier.
      */
     private Player controller;
-    private Direction dir;
     private ActorGameInterface gameInterface;
     private int healthPoints;
 
     public Pipe(ActorGameInterface gameInterface, TunnelCell startPosition, Player controller) {
         this.head = new PipeHead(Direction.DOWN, gameInterface, startPosition);
         this.controller = controller;
-        this.dir = Direction.DOWN;
         this.gameInterface = gameInterface;
         this.healthPoints = 100;
         this.segmentStack = new PipeSegmentStack(
@@ -172,8 +167,7 @@ public class Pipe {
         if (isWall(dir)) {
             return null;
         } else {
-            this.dir = dir;
-            return new PipeSegment(head.getCurrentPosition(), head.getDirection().getOpposite(), dir);
+            return new PipeSegment(head.getCurrentPosition(), head.getDirection().getOpposite(), dir, gameInterface);
         }
     }
 
