@@ -37,7 +37,7 @@ public class Pipe {
                 edges.add(pushed);
             }*/
             List<Actor> enemies = gameInterface.getActorsBySearchCriteria(actor ->
-                    actor.getType() == ActorType.MOLE && actor.intersects(head)
+                    actor.getType() == ActorType.ENEMY && actor.intersects(head)
             );
             for (Actor actor : enemies){
                 gameInterface.unregisterActor(actor);

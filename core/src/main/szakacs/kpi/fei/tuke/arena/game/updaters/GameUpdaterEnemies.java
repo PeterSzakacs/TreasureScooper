@@ -1,11 +1,11 @@
 package szakacs.kpi.fei.tuke.arena.game.updaters;
 
+import szakacs.kpi.fei.tuke.arena.actors.Mole;
 import szakacs.kpi.fei.tuke.arena.actors.pipe.Pipe;
 import szakacs.kpi.fei.tuke.arena.game.world.HorizontalTunnel;
 import szakacs.kpi.fei.tuke.arena.game.world.TunnelCell;
 import szakacs.kpi.fei.tuke.enums.Direction;
 import szakacs.kpi.fei.tuke.enums.TunnelCellType;
-import szakacs.kpi.fei.tuke.arena.actors.Enemy;
 import szakacs.kpi.fei.tuke.intrfc.arena.game.GameLevelPrivileged;
 
 import java.util.ArrayList;
@@ -121,7 +121,7 @@ public class GameUpdaterEnemies extends AbstractGameUpdater {
         }
 
         // register the actor
-        Enemy enemy = new Enemy(dir, cell, actorManager.getActorGameProxy());
+        Mole enemy = new Mole(dir, cell, actorManager.getActorGameProxy());
         actorManager.registerActor(enemy);
         actorManager.setOnDestroy(enemy, () -> this.createdEnemiesCount-- );
         this.createdEnemiesCount++;

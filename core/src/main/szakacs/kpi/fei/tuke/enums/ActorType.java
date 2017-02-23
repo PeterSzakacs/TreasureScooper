@@ -4,5 +4,5 @@ package szakacs.kpi.fei.tuke.enums;
  * Created by developer on 2.12.2016.
  */
 public enum ActorType {
-    MOLE, BULLET, PIPE, WALL
+    ENEMY, BULLET, PIPE, WALL
 }

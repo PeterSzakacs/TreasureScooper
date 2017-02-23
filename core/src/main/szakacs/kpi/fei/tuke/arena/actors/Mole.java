@@ -14,7 +14,7 @@ import java.util.List;
 /**
  * Created by developer on 5.11.2016.
  */
-public class Enemy extends AbstractMoveableActor {
+public class Mole extends AbstractMoveableActor {
 
     // The Y coordinates are already in the HorizontalTunnel object.
     private Collection<Pipe> pipes;
@@ -23,8 +23,8 @@ public class Enemy extends AbstractMoveableActor {
     private int yDelta;
     private boolean moving;
 
-    public Enemy(Direction direction, TunnelCell currentPosition, ActorGameInterface gameInterface){
-        super(currentPosition, ActorType.MOLE, direction, gameInterface);
+    public Mole(Direction direction, TunnelCell currentPosition, ActorGameInterface gameInterface){
+        super(currentPosition, ActorType.ENEMY, direction, gameInterface);
         this.xDelta = gameInterface.getGameWorld().getOffsetX()/4;
         this.yDelta = gameInterface.getGameWorld().getOffsetY()/4;
         List<Player> players = gameInterface.getPlayers();

@@ -28,7 +28,7 @@ public interface Actor {
 
     /**
      * Gets the type of the actor (note that this is not the actual class of the object,
-     * just an enum constant saying whether the actor is an Enemy (multiple kinds possible)
+     * just an enum constant saying whether the actor is an Mole (multiple kinds possible)
      * some kind of ammunition (multiple kinds possible) etc.
      */
     ActorType getType();

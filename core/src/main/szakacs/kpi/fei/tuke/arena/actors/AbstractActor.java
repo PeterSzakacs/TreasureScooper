@@ -16,9 +16,9 @@ public abstract class AbstractActor implements Actor {
     private int y;
     private TunnelCell currentPosition;
     private Direction dir;
-    protected ActorType actorType;
-    protected ActorGameInterface gameInterface;
-    protected GameWorld world;
+    protected final ActorType actorType;
+    protected final ActorGameInterface gameInterface;
+    protected final GameWorld world;
 
     protected AbstractActor(ActorType at, ActorGameInterface gameInterface){
         if (gameInterface == null)
@@ -29,9 +29,7 @@ public abstract class AbstractActor implements Actor {
     }
 
     protected AbstractActor(TunnelCell currentPosition, ActorType type, Direction dir, ActorGameInterface gameInterface){
-        this.actorType = type;
-        this.gameInterface = gameInterface;
-        this.world = gameInterface.getGameWorld();
+        this(type, gameInterface);
         this.dir = dir;
         this.setCurrentPosition(currentPosition);
     }
