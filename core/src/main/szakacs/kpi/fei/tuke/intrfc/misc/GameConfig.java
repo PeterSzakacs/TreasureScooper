@@ -2,6 +2,7 @@ package szakacs.kpi.fei.tuke.intrfc.misc;
 
 import szakacs.kpi.fei.tuke.enums.ActorType;
 import szakacs.kpi.fei.tuke.enums.Direction;
+import szakacs.kpi.fei.tuke.intrfc.arena.actors.Actor;
 import szakacs.kpi.fei.tuke.misc.configProcessors.gameValueObjects.DummyLevel;
 
 import java.util.List;
@@ -35,8 +36,8 @@ public interface GameConfig {
      * with that direction (probably will change to a more
      * elegant solution)
      *
-     * @return the mapping between actor types and the allowed
+     * @return the mapping between actors and the allowed
      *         directions they can be oriented at
      */
-    Map<ActorType, Set<Direction>> getActorToDirectionsMap();
+    Map<Class<? extends Actor>, Set<Direction>> getActorToDirectionsMap();
 }

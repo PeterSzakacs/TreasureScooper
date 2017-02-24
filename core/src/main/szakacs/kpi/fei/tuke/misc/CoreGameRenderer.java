@@ -43,7 +43,7 @@ public class CoreGameRenderer implements ApplicationListener {
         this.renderers = new ArrayList<>();
         this.renderers.add(new BackgroundRenderer(batch, game));
         this.renderers.add(new TunnelsRenderer(batch, game));
-        this.renderers.add(new ActorRenderer(batch, game, config.getActorToDirectionsMap()));
+        this.renderers.add(new ActorRenderer(batch, game, config));
         this.renderers.add(new PlayerRenderer(batch, game));
         this.renderers.add(new PlayerInfoRenderer(batch, game));
     }

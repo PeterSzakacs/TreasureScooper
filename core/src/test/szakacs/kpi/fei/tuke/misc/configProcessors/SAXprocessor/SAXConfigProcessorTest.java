@@ -5,6 +5,7 @@ import org.junit.Test;
 import szakacs.kpi.fei.tuke.enums.ActorType;
 import szakacs.kpi.fei.tuke.enums.Direction;
 import szakacs.kpi.fei.tuke.intrfc.Player;
+import szakacs.kpi.fei.tuke.intrfc.arena.actors.Actor;
 import szakacs.kpi.fei.tuke.intrfc.misc.GameConfig;
 import szakacs.kpi.fei.tuke.intrfc.misc.GameConfigProcessor;
 import szakacs.kpi.fei.tuke.intrfc.misc.GameWorldPrototype;
@@ -52,10 +53,10 @@ public class SAXConfigProcessorTest {
             System.out.print("\n\n\n");
             levelIdx++;
         }
-        Map<ActorType, Set<Direction>> map = config.getActorToDirectionsMap();
-        for (ActorType actorType : map.keySet()){
-            System.out.println("Actor of type " + actorType.name() + " can be oriented in the following directions:");
-            for (Direction direction: map.get(actorType))
+        Map<Class<? extends Actor>, Set<Direction>> map = config.getActorToDirectionsMap();
+        for (Class clazz : map.keySet()){
+            System.out.println("Actor of type " + clazz.getSimpleName() + " can be oriented in the following directions:");
+            for (Direction direction: map.get(clazz))
                 System.out.println(direction.name());
         }
     }

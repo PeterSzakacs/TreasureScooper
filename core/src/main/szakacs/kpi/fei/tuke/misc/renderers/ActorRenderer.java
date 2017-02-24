@@ -7,8 +7,10 @@ import szakacs.kpi.fei.tuke.enums.Direction;
 import szakacs.kpi.fei.tuke.enums.ActorType;
 import szakacs.kpi.fei.tuke.intrfc.arena.actors.Actor;
 import szakacs.kpi.fei.tuke.intrfc.arena.game.GameLevelPrivileged;
+import szakacs.kpi.fei.tuke.intrfc.misc.GameConfig;
 
 import java.util.EnumMap;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
@@ -17,32 +19,32 @@ import java.util.Set;
  */
 public class ActorRenderer extends AbstractGameRenderer {
 
-    private Map<ActorType, Map<Direction, Sprite>> actorSprites;
+    private Map<Class<? extends Actor>, Map<Direction, Sprite>> actorSprites;
 
-    public ActorRenderer(SpriteBatch batch, GameLevelPrivileged game, Map<ActorType, Set<Direction>> mappings) {
+    public ActorRenderer(SpriteBatch batch, GameLevelPrivileged game, GameConfig config) {
         super(batch, game);
-        this.initializeActorSprites(mappings);
+        this.initializeActorSprites(config.getActorToDirectionsMap());
     }
 
-    private void initializeActorSprites(Map<ActorType, Set<Direction>> mappings){
-        this.actorSprites = new EnumMap<>(ActorType.class);
-        for (ActorType at : mappings.keySet()){
+    private void initializeActorSprites(Map<Class<? extends Actor>, Set<Direction>> mappings){
+        this.actorSprites = new HashMap<>(mappings.size());
+        for (Class<? extends Actor> clazz : mappings.keySet()){
             Map<Direction, Sprite> directionsToSpritesMap = new EnumMap<>(Direction.class);
-            for (Direction dir : mappings.get(at))
+            for (Direction dir : mappings.get(clazz))
                 directionsToSpritesMap.put(dir,
                         new Sprite(
                                 new Texture("images/Actors/"
-                                        + at.name() + "_" + dir.name() + ".png")
+                                        + clazz.getSimpleName() + "_" + dir.name() + ".png")
                         )
                 );
-            this.actorSprites.put(at, directionsToSpritesMap);
+            this.actorSprites.put(clazz, directionsToSpritesMap);
         }
     }
 
     @Override
     public void render() {
         for (Actor actor : actorManager.getActors()){
-            Sprite actorSprite = actorSprites.get(actor.getType()).get(actor.getDirection());
+            Sprite actorSprite = actorSprites.get(actor.getClass()).get(actor.getDirection());
             actorSprite.setPosition(actor.getX(), actor.getY());
             actorSprite.draw(batch);
         }
@@ -50,7 +52,7 @@ public class ActorRenderer extends AbstractGameRenderer {
         // Every actor that has been removed shall slowly fade into the background after removal
         Map<Actor, Integer> unregisteredActors = actorManager.getUnregisteredActors();
         for (Actor actor : unregisteredActors.keySet()){
-            Sprite actorSprite = actorSprites.get(actor.getType()).get(actor.getDirection());
+            Sprite actorSprite = actorSprites.get(actor.getClass()).get(actor.getDirection());
             actorSprite.setPosition(actor.getX(), actor.getY());
             actorSprite.setAlpha((float)1/(float)unregisteredActors.get(actor));
             actorSprite.draw(batch);
@@ -60,8 +62,8 @@ public class ActorRenderer extends AbstractGameRenderer {
 
     @Override
     public void dispose() {
-        for (ActorType at : actorSprites.keySet()) {
-            for (Sprite spr : actorSprites.get(at).values()) {
+        for (Class clazz : actorSprites.keySet()) {
+            for (Sprite spr : actorSprites.get(clazz).values()) {
                 spr.getTexture().dispose();
             }
         }
