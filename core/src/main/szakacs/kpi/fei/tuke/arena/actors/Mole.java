@@ -16,7 +16,6 @@ import java.util.List;
  */
 public class Mole extends AbstractMoveableActor {
 
-    // The Y coordinates are already in the HorizontalTunnel object.
     private Collection<Pipe> pipes;
     private Pipe intersectingPipe;
     private int xDelta;

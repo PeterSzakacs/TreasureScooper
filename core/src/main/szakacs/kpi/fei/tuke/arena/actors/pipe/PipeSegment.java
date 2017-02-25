@@ -62,7 +62,7 @@ public class PipeSegment extends AbstractActor {
         }
     }
 
-    public Direction getOriginDirection() {
+    Direction getOriginDirection() {
         return from;
     }
 }

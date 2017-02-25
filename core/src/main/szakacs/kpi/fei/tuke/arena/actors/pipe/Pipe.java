@@ -71,11 +71,6 @@ public class Pipe {
      * and is not an element of the list (it is not the top of segmentStack).
      */
     private PipeHead head;
-    /**
-     * For convenience, we store the direction we expect the player
-     * to move in when the player calls push(), to make updating the
-     * head later easier.
-     */
     private Player controller;
     private ActorGameInterface gameInterface;
     private int healthPoints;
@@ -92,11 +87,6 @@ public class Pipe {
                 3,
                 segmentStackCallback
         );
-        Queue<Bullet> weaponQueue = head.getWeapon().getBulletQueue();
-        int capacity = weaponQueue.getCapacity();
-        for (int i = 0; i < capacity; i++) {
-            weaponQueue.enqueue(new Bullet(this.gameInterface));
-        }
     }
 
     /*
@@ -150,7 +140,7 @@ public class Pipe {
      * implement calculating the segment manually.
      *
      * @param dir the direction the player wishes to move the head to
-     * @return the pipe segment to push onto the ArrayStack
+     * @return the pipe segment required to move the pipe head in the specified direction
      * @throws IllegalArgumentException if null or an unknown Direction enum value passed as parameter
      */
     public PipeSegment calculateNextSegment(Direction dir) throws IllegalArgumentException {
