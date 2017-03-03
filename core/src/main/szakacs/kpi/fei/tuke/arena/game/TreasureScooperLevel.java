@@ -13,6 +13,7 @@ import szakacs.kpi.fei.tuke.intrfc.arena.game.GameUpdater;
 import szakacs.kpi.fei.tuke.intrfc.arena.proxies.PlayerGameInterface;
 import szakacs.kpi.fei.tuke.arena.PlayerGameProxy;
 import szakacs.kpi.fei.tuke.intrfc.arena.game.world.GameWorld;
+import szakacs.kpi.fei.tuke.misc.configProcessors.gameValueObjects.DummyLevel;
 
 import java.util.List;
 import java.util.Set;
@@ -48,8 +49,8 @@ public class TreasureScooperLevel implements GameLevelPrivileged {
     private GameState state;
     private int score;
 
-    TreasureScooperLevel(GameWorldPrototype initializer){
-        this.gameWorld = new TreasureScooperWorld(initializer, this.gameCallback);
+    TreasureScooperLevel(DummyLevel level){
+        this.gameWorld = new TreasureScooperWorld(level.getGameWorldPrototype(), this.gameCallback);
         this.actorManager = new ActorManager(this);
         this.score = 0;
         this.gameShop = new GameShop(actorManager.getActorGameProxy(), scoreChangeCallback);

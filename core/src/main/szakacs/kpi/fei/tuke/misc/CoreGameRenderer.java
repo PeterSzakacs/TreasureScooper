@@ -4,6 +4,7 @@ import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.*;
+import com.badlogic.gdx.utils.GdxRuntimeException;
 import szakacs.kpi.fei.tuke.enums.GameState;
 import szakacs.kpi.fei.tuke.arena.GameManager;
 import szakacs.kpi.fei.tuke.intrfc.arena.game.GameLevelPrivileged;
@@ -72,7 +73,12 @@ public class CoreGameRenderer implements ApplicationListener {
             counter++;
             if (counter > 30) {
                 counter = 0;
-                GameLevelPrivileged game = manager.getNextGameLevel();
+                GameLevelPrivileged game = null;
+                try {
+                    game = manager.getNextGameLevel();
+                } catch (ConfigProcessingException e) {
+                    throw new GdxRuntimeException("Failed to start new game level", e);
+                }
                 if (game == null) {
                     Gdx.app.exit();
                 } else {

@@ -6,11 +6,11 @@ import szakacs.kpi.fei.tuke.intrfc.arena.game.GameLevelPrivileged;
 import szakacs.kpi.fei.tuke.intrfc.arena.game.GameUpdater;
 import szakacs.kpi.fei.tuke.intrfc.arena.game.world.GameWorld;
 import szakacs.kpi.fei.tuke.intrfc.arena.game.actorManager.ActorManagerPrivileged;
+import szakacs.kpi.fei.tuke.misc.ConfigProcessingException;
 import szakacs.kpi.fei.tuke.misc.configProcessors.gameValueObjects.DummyEntrance;
 import szakacs.kpi.fei.tuke.misc.configProcessors.gameValueObjects.DummyLevel;
-import szakacs.kpi.fei.tuke.arena.game.updaters.GameUpdaterEnemies;
-import szakacs.kpi.fei.tuke.arena.game.updaters.GameUpdaterWalls;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.*;
 
 /**
@@ -21,22 +21,18 @@ public class TreasureScooperLevelBuilder {
     public TreasureScooperLevelBuilder() {
     }
 
-    public GameLevelPrivileged buildGameLevel(DummyLevel level) {
-        TreasureScooperLevel game = new TreasureScooperLevel(level.getGameWorldPrototype());
+    public GameLevelPrivileged buildGameLevel(DummyLevel level) throws ConfigProcessingException {
+        TreasureScooperLevel game = new TreasureScooperLevel(level);
         Set<GameUpdater> updaters = new HashSet<>(3);
-        switch (level.getGameType()) {
-            case STACK:
-                break;
-            case QUEUE:
-                updaters.add(new GameUpdaterWalls(game));
-                break;
-            case ENEMIES:
-                updaters.add(new GameUpdaterEnemies(game));
-                break;
-            case ULTIMATE:
-                updaters.add(new GameUpdaterWalls(game));
-                updaters.add(new GameUpdaterEnemies(game));
-                break;
+        for (Class<? extends GameUpdater> updaterCls : level.getGameUpdaterClasses()){
+            try {
+                updaters.add(updaterCls.getConstructor(GameLevelPrivileged.class).newInstance(game));
+            } catch (NoSuchMethodException
+                    | InvocationTargetException
+                    | InstantiationException
+                    | IllegalAccessException e) {
+                throw new ConfigProcessingException("Failed to initialize game", e);
+            }
         }
         Map<DummyEntrance, Class<? extends Player>> entranceToPlayerMap = level.getEntranceToPlayerMap();
         List<Player> players = new ArrayList<>(entranceToPlayerMap.size());

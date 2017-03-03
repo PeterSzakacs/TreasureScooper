@@ -26,32 +26,42 @@
                           to represent this actor when oriented in the specified direction.
 -->
 
-<config player-package="szakacs.kpi.fei.tuke.player">
+<config
+        player-package="szakacs.kpi.fei.tuke.player"
+        updater-package="szakacs.kpi.fei.tuke.arena.game.updaters"
+        actor-package="szakacs.kpi.fei.tuke.arena.actors" >
     <levels>
-        <level gameType="stack" world="worlds/world1multiplayer.xml">
+        <level world="worlds/world1multiplayer.xml">
             <player class="PlayerA" entrance="left" />
             <player class="PlayerB" entrance="center" />
             <player class="PlayerC" entrance="right" />
         </level>
-        <level gameType="queue" world="worlds/world2.xml">
+        <level world="worlds/world2.xml">
+            <updater class="GameUpdaterWalls" />
             <player class="PlayerA" entrance="left" />
         </level>
-        <level gameType="enemies" world="worlds/world3multiplayer.xml">
+        <level world="worlds/world3multiplayer.xml">
+            <updater class="GameUpdaterEnemies" />
             <player class="PlayerA" entrance="center" />
             <player class="PlayerA" entrance="left" />
         </level>
-        <level gameType="enemies" world="worlds/world1.xml">
+        <level world="worlds/world1.xml">
+            <updater class="GameUpdaterEnemies" />
             <player class="PlayerA" entrance="center" />
         </level>
-        <level gameType="ultimate" world="worlds/world2multiplayer.xml">
+        <level world="worlds/world2multiplayer.xml">
+            <updater class="GameUpdaterEnemies" />
+            <updater class="GameUpdaterWalls" />
             <player class="PlayerA" entrance="left" />
             <player class="PlayerB" entrance="right" />
         </level>
-        <level gameType="ultimate" world="worlds/world3.xml">
+        <level world="worlds/world3.xml">
+            <updater class="GameUpdaterEnemies" />
+            <updater class="GameUpdaterWalls" />
             <player class="PlayerA" entrance="center" />
         </level>
     </levels>
-    <actors actor-package="szakacs.kpi.fei.tuke.arena.actors">
+    <actors>
         <actor class="Mole" left="true" right="true" up="false" down="false" />
         <actor class="Bullet" left="true" right="true" up="true" down="true" />
         <actor class="Wall" left="true" right="false" up="false" down="false" />

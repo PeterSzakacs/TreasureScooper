@@ -3,6 +3,7 @@ package szakacs.kpi.fei.tuke.arena;
 import szakacs.kpi.fei.tuke.arena.game.TreasureScooperLevelBuilder;
 import szakacs.kpi.fei.tuke.intrfc.misc.GameConfig;
 import szakacs.kpi.fei.tuke.intrfc.arena.game.GameLevelPrivileged;
+import szakacs.kpi.fei.tuke.misc.ConfigProcessingException;
 import szakacs.kpi.fei.tuke.misc.configProcessors.gameValueObjects.DummyLevel;
 
 import java.util.List;
@@ -23,7 +24,7 @@ public class GameManager {
         this.nextLevelIndex = 0;
     }
 
-    public GameLevelPrivileged getNextGameLevel() {
+    public GameLevelPrivileged getNextGameLevel() throws ConfigProcessingException {
         if (nextLevelIndex < dummyLevels.size()) {
             DummyLevel level = dummyLevels.get(nextLevelIndex);
             this.currentGameLevel = gameLevelBuilder.buildGameLevel(level);

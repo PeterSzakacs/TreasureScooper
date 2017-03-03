@@ -1,29 +1,31 @@
 package szakacs.kpi.fei.tuke.misc.configProcessors.gameValueObjects;
 
-import szakacs.kpi.fei.tuke.enums.GameType;
 import szakacs.kpi.fei.tuke.intrfc.Player;
+import szakacs.kpi.fei.tuke.intrfc.arena.game.GameUpdater;
 import szakacs.kpi.fei.tuke.intrfc.misc.GameWorldPrototype;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * Created by developer on 2.2.2017.
  */
 public class DummyLevel {
 
-    private GameType gameType;
+    private Set<Class<? extends GameUpdater>> gameUpdaterClasses;
     private GameWorldPrototype world;
     private Map<DummyEntrance, Class<? extends Player>> entranceToPlayerMap;
 
-    public DummyLevel(GameWorldPrototype world, GameType gameType) {
-        this.gameType = gameType;
+    public DummyLevel(GameWorldPrototype world) {
+        this.gameUpdaterClasses = new HashSet<>(3);
         this.world = world;
         this.entranceToPlayerMap = new HashMap<>(3);
     }
 
-    public GameType getGameType() {
-        return gameType;
+    public Set<Class<? extends GameUpdater>> getGameUpdaterClasses() {
+        return gameUpdaterClasses;
     }
 
     public GameWorldPrototype getGameWorldPrototype() {
