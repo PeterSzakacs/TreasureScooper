@@ -42,7 +42,7 @@ public interface Actor {
      * Called on every iteration of the game loop (the gameInterface passed as argument is only
      * method caller authentication of sorts)
      */
-    void act(ActorGameInterface world);
+    void act(Object authToken);
 
     /**
      * Returns true if the actor intersects the actor passed as parameter to this method.

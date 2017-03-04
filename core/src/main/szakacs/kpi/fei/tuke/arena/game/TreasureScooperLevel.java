@@ -7,6 +7,7 @@ import szakacs.kpi.fei.tuke.intrfc.arena.callbacks.OnNuggetCollectedCallback;
 import szakacs.kpi.fei.tuke.intrfc.Player;
 import szakacs.kpi.fei.tuke.intrfc.arena.game.GameLevelPrivileged;
 import szakacs.kpi.fei.tuke.intrfc.arena.game.GameStateTester;
+import szakacs.kpi.fei.tuke.intrfc.arena.game.MethodCallAuthenticator;
 import szakacs.kpi.fei.tuke.intrfc.arena.game.actorManager.ActorManagerPrivileged;
 import szakacs.kpi.fei.tuke.intrfc.arena.game.GameUpdater;
 import szakacs.kpi.fei.tuke.intrfc.arena.game.world.GameWorld;
@@ -21,23 +22,6 @@ import java.util.*;
  */
 public class TreasureScooperLevel implements GameLevelPrivileged {
 
-    private OnNuggetCollectedCallback gameCallback = new OnNuggetCollectedCallback() {
-        @Override
-        public void onNuggetCollected(int nuggetValue) {
-            TreasureScooperLevel.this.score += nuggetValue;
-        }
-    };
-
-    private OnItemBoughtCallback scoreChangeCallback = new OnItemBoughtCallback() {
-        @Override
-        public void onItemBought(int price) {
-            TreasureScooperLevel.this.score -= price;
-            if (score < 0) {
-                score = 0;
-            }
-        }
-    };
-
     private GameWorld gameWorld;
     private ActorManagerPrivileged actorManager;
     private GameShop gameShop;
@@ -47,8 +31,23 @@ public class TreasureScooperLevel implements GameLevelPrivileged {
     private int score;
 
     public TreasureScooperLevel(DummyLevel level) throws ConfigProcessingException {
-        this.gameWorld = new TreasureScooperWorld(level.getGameWorldPrototype(), this.gameCallback);
-        this.actorManager = new ActorManager(this, level);
+
+        OnNuggetCollectedCallback gameCallback = nuggetValue -> TreasureScooperLevel.this.score += nuggetValue;
+        OnItemBoughtCallback scoreChangeCallback = price -> {
+            TreasureScooperLevel.this.score -= price;
+            if (score < 0) {
+                score = 0;
+            }
+        };
+        MethodCallAuthenticator authenticator = new MethodCallAuthenticator() {
+            @Override
+            public boolean authenticate(Object token) {
+                return token != null && token.equals(this);
+            }
+        };
+
+        this.gameWorld = new TreasureScooperWorld(level.getGameWorldPrototype(), gameCallback, authenticator);
+        this.actorManager = new ActorManager(this, level, authenticator);
         this.score = 0;
         this.gameShop = new GameShop(actorManager.getActorGameProxy(), scoreChangeCallback);
         this.setGameUpdaters(level);

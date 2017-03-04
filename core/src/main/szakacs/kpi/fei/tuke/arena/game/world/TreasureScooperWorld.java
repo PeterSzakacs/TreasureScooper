@@ -3,6 +3,7 @@ package szakacs.kpi.fei.tuke.arena.game.world;
 import szakacs.kpi.fei.tuke.enums.Direction;
 import szakacs.kpi.fei.tuke.enums.TunnelCellType;
 import szakacs.kpi.fei.tuke.intrfc.arena.callbacks.OnNuggetCollectedCallback;
+import szakacs.kpi.fei.tuke.intrfc.arena.game.MethodCallAuthenticator;
 import szakacs.kpi.fei.tuke.intrfc.arena.game.world.GameWorld;
 import szakacs.kpi.fei.tuke.intrfc.misc.GameWorldPrototype;
 import szakacs.kpi.fei.tuke.misc.configProcessors.gameValueObjects.DummyEntrance;
@@ -29,17 +30,21 @@ public class TreasureScooperWorld implements GameWorld {
         }
     };
     private OnNuggetCollectedCallback gameCallback;
+    private MethodCallAuthenticator authenticator;
 
-    public TreasureScooperWorld(GameWorldPrototype worldPrototype, OnNuggetCollectedCallback gameCallback) {
+    public TreasureScooperWorld(GameWorldPrototype worldPrototype,
+                                OnNuggetCollectedCallback gameCallback,
+                                MethodCallAuthenticator authenticator) {
         this.tunnels = new ArrayList<>(worldPrototype.getDummyTunnels().size());
         this.offsetX = worldPrototype.getOffsetX();
         this.offsetY = worldPrototype.getOffsetY();
         this.width = worldPrototype.getWidth();
         this.height = worldPrototype.getHeight();
+        this.gameCallback = gameCallback;
+        this.authenticator = authenticator;
         this.buildTunnelGraph(worldPrototype);
         for (HorizontalTunnel ht : this.tunnels)
             this.nuggetCount += ht.getNuggetCount();
-        this.gameCallback = gameCallback;
     }
 
 
@@ -57,7 +62,7 @@ public class TreasureScooperWorld implements GameWorld {
 
         // Create the tunnels from their DummyTunnel Prototypes
         for (DummyTunnel dt : dummyTunnels.values()) {
-            HorizontalTunnel ht = new HorizontalTunnel(dt, this, this.worldCallback);
+            HorizontalTunnel ht = new HorizontalTunnel(dt, this, worldCallback, authenticator);
             tunnelMap.put(dt.getId(), ht);
             // it is more efficient (in terms of time complexity) to add items to two lists simultaneously,
             // instead of calling new ArrayList<>(tunnelMap.values()) at the end of this method.
@@ -69,7 +74,7 @@ public class TreasureScooperWorld implements GameWorld {
             HorizontalTunnel ht = tunnelMap.get(dt.getId());
             Map<Integer, DummyTunnel> tunnelsBelowDt = dt.getConnectedTunnelsBelow();
             for (Integer xIndex : tunnelsBelowDt.keySet()) {
-                ht.addInterconnects(
+                ht.addInterconnect(
                         xIndex * this.offsetX,
                         tunnelMap.get(
                                 tunnelsBelowDt.get(xIndex).getId()
@@ -88,45 +93,53 @@ public class TreasureScooperWorld implements GameWorld {
                     de.getY(),
                     TunnelCellType.INTERCONNECT,
                     null,
-                    this
+                    this,
+                    authenticator
             );
             this.entrances.put(id, entrance);
             HorizontalTunnel rootTunnel = tunnelMap.get(de.getTunnel().getId());
             TunnelCell newCell, prevCell = entrance;
             for (int y = entrance.getY() - offsetY; y > rootTunnel.getY(); y -= offsetY) {
-                newCell = new TunnelCell(entrance.getX(), y, TunnelCellType.INTERCONNECT, null, this);
-                newCell.setAtDirection(Direction.UP, prevCell, this);
-                prevCell.setAtDirection(Direction.DOWN, newCell, this);
+                newCell = new TunnelCell(entrance.getX(), y, TunnelCellType.INTERCONNECT, null, this, authenticator);
+                newCell.setAtDirection(Direction.UP, prevCell, authenticator);
+                prevCell.setAtDirection(Direction.DOWN, newCell, authenticator);
                 prevCell = newCell;
             }
             rootTunnel.setEntrance(prevCell);
         }
     }
 
+    @Override
     public int getWidth() {
         return width;
     }
 
+    @Override
     public int getHeight() {
         return height;
     }
 
+    @Override
     public int getOffsetX() {
         return offsetX;
     }
 
+    @Override
     public int getOffsetY() {
         return offsetY;
     }
 
+    @Override
     public int getNuggetCount() {
         return nuggetCount;
     }
 
+    @Override
     public Map<String, TunnelCell> getEntrances() {
         return Collections.unmodifiableMap(entrances);
     }
 
+    @Override
     public List<HorizontalTunnel> getTunnels(){
         return Collections.unmodifiableList(tunnels);
     }

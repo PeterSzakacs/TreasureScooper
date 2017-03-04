@@ -27,7 +27,7 @@ public class PipeHead extends AbstractMoveableActor implements GoldCollector {
     }
 
     @Override
-    public void act(ActorGameInterface world) {
+    public void act(Object authToken) {
 
     }
 

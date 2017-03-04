@@ -22,15 +22,15 @@ public class Wall extends AbstractActor {
     }
 
     @Override
-    public void act(ActorGameInterface gameInterface) {
-        if (gameInterface != null && gameInterface.equals(super.gameInterface)) {
-            List<Actor> intersecting = super.gameInterface.getActorsBySearchCriteria(actor ->
+    public void act(Object authToken) {
+        if (gameInterface.getAuthenticator().authenticate(authToken)) {
+            List<Actor> intersecting = gameInterface.getActorsBySearchCriteria(actor ->
                     actor.getType() == ActorType.BULLET
                             && this.intersects(actor));
             if (!intersecting.isEmpty()) {
-                super.gameInterface.unregisterActor(this);
+                gameInterface.unregisterActor(this);
                 for (Actor actor : intersecting)
-                    super.gameInterface.unregisterActor(actor);
+                    gameInterface.unregisterActor(actor);
             }
         }
     }
@@ -42,14 +42,14 @@ public class Wall extends AbstractActor {
     }
 
     private void disconnectCells(TunnelCell currentPosition){
-        this.neighbouringCell.setAtDirection(Direction.LEFT, null, super.gameInterface.getGameWorld());
-        currentPosition.setAtDirection(Direction.RIGHT, null, super.gameInterface.getGameWorld());
+        this.neighbouringCell.setAtDirection(Direction.LEFT, null, gameInterface.getAuthenticator());
+        currentPosition.setAtDirection(Direction.RIGHT, null, gameInterface.getAuthenticator());
     }
 
     public void reconnectCells(){
         System.out.println("Wall.reconnectCells()");
         TunnelCell cell = super.getCurrentPosition();
-        cell.setAtDirection(Direction.RIGHT, this.neighbouringCell, super.gameInterface.getGameWorld());
-        this.neighbouringCell.setAtDirection(Direction.LEFT, cell, super.gameInterface.getGameWorld());
+        cell.setAtDirection(Direction.RIGHT, this.neighbouringCell, gameInterface.getAuthenticator());
+        this.neighbouringCell.setAtDirection(Direction.LEFT, cell, gameInterface.getAuthenticator());
     }
 }

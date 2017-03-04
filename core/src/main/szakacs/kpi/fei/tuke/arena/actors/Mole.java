@@ -30,8 +30,8 @@ public class Mole extends AbstractMoveableActor {
         this.moving = true;
     }
 
-    public void act(ActorGameInterface gameInterface){
-        if (gameInterface != null && gameInterface.equals(super.gameInterface)) {
+    public void act(Object authToken){
+        if (gameInterface.getAuthenticator().authenticate(authToken)) {
             if (moving) {
                 this.move(xDelta, yDelta, getDirection());
                 if (boundReached()) {
@@ -42,12 +42,12 @@ public class Mole extends AbstractMoveableActor {
                     if (pipe.intersects(this)) {
                         this.intersectingPipe = pipe;
                         moving = false;
-                        pipe.setHealth(pipe.getHealth() - 10, gameInterface);
+                        pipe.setHealth(pipe.getHealth() - 10, gameInterface.getAuthenticator());
                         break;
                     }
                 }
             } else {
-                intersectingPipe.setHealth(intersectingPipe.getHealth() - 10, gameInterface);
+                intersectingPipe.setHealth(intersectingPipe.getHealth() - 10, gameInterface.getAuthenticator());
                 if (intersectingPipe.getHealth() <= 0)
                     moving = true;
             }

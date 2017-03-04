@@ -117,14 +117,14 @@ public class Pipe {
         }
     }
 
-    public void allowMovement(ActorGameInterface gameInterface) {
-        if (gameInterface != null && this.gameInterface.equals(gameInterface)) {
+    public void allowMovement(Object authToken) {
+        if (gameInterface.getAuthenticator().authenticate(authToken)) {
             segmentStack.unlock();
         }
     }
 
-    public void setHealth(int health, ActorGameInterface gameInterface) {
-        if (gameInterface != null && this.gameInterface.equals(gameInterface)) {
+    public void setHealth(int health, Object authToken) {
+        if (gameInterface.getAuthenticator().authenticate(authToken)) {
             healthPoints = health;
             if (healthPoints < 0) {
                 healthPoints = 0;

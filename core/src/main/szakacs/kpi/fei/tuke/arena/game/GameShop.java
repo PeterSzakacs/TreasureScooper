@@ -24,7 +24,7 @@ public class GameShop {
     }
 
     public void repairPipe(Pipe pipe, int byHowMuch){
-        pipe.setHealth(pipe.getHealth() + byHowMuch, gameInterface);
+        pipe.setHealth(pipe.getHealth() + byHowMuch, gameInterface.getAuthenticator());
         callback.onItemBought(byHowMuch * 5);
     }
 }

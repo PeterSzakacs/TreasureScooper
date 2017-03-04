@@ -4,6 +4,7 @@ import szakacs.kpi.fei.tuke.arena.PlayerGameProxy;
 import szakacs.kpi.fei.tuke.arena.actors.pipe.Pipe;
 import szakacs.kpi.fei.tuke.intrfc.Player;
 import szakacs.kpi.fei.tuke.intrfc.arena.actors.Actor;
+import szakacs.kpi.fei.tuke.intrfc.arena.game.MethodCallAuthenticator;
 import szakacs.kpi.fei.tuke.intrfc.arena.game.actorManager.ActorManagerPrivileged;
 import szakacs.kpi.fei.tuke.intrfc.arena.game.world.GameWorld;
 import szakacs.kpi.fei.tuke.intrfc.arena.proxies.ActorGameInterface;
@@ -28,13 +29,15 @@ public class ActorManager implements ActorManagerPrivileged {
     private Map<Actor, Integer> unregisteredActors;
     private Map<Player, Pipe> pipes;
     private ActorGameProxy actorGameProxy;
+    private MethodCallAuthenticator authenticator;
 
-    ActorManager(GameLevelPrivileged game, DummyLevel level) throws ConfigProcessingException {
+    ActorManager(GameLevelPrivileged game, DummyLevel level, MethodCallAuthenticator authenticator) throws ConfigProcessingException {
         this.actors = new ArrayList<>();
         this.searchResults = new ArrayList<>();
         this.unregisteredActors = new HashMap<>();
         this.onDestroyActions = new HashMap<>(20);
         this.actorGameProxy = new ActorGameProxy(game, this);
+        this.authenticator = authenticator;
         this.setPipes(game, level);
     }
 
@@ -107,6 +110,11 @@ public class ActorManager implements ActorManagerPrivileged {
         }
     }
 
+    @Override
+    public MethodCallAuthenticator getAuthenticator() {
+        return authenticator;
+    }
+
     // ActorManagerPrivileged methods (updating all actors and access to internals)
 
     @Override
@@ -115,11 +123,11 @@ public class ActorManager implements ActorManagerPrivileged {
             Pipe pipe = pipes.get(player);
             if (pipe.getHealth() > 0) {
                 player.act();
-                pipe.allowMovement(actorGameProxy);
+                pipe.allowMovement(authenticator);
             }
         }
         for (Actor actor : actors) {
-            actor.act(actorGameProxy);
+            actor.act(authenticator);
         }
         for (Iterator<Actor> actorIt = unregisteredActors.keySet().iterator(); actorIt.hasNext(); ) {
             Actor unregistered = actorIt.next();

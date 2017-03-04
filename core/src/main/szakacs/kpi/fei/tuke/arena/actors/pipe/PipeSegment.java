@@ -21,7 +21,7 @@ public class PipeSegment extends AbstractActor {
     }
 
     @Override
-    public void act(ActorGameInterface world) {
+    public void act(Object authToken) {
 
     }
 

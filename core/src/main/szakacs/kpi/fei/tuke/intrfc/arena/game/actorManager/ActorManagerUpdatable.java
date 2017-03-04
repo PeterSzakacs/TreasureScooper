@@ -1,6 +1,7 @@
 package szakacs.kpi.fei.tuke.intrfc.arena.game.actorManager;
 
 import szakacs.kpi.fei.tuke.intrfc.arena.actors.Actor;
+import szakacs.kpi.fei.tuke.intrfc.arena.game.MethodCallAuthenticator;
 
 /**
  * Created by developer on 29.1.2017.
@@ -43,4 +44,6 @@ public interface ActorManagerUpdatable extends ActorManagerQueryable {
      * @param actor Not Null: The actor to remove
      */
     void unregisterActor(Actor actor);
+
+    MethodCallAuthenticator getAuthenticator();
 }

@@ -16,8 +16,8 @@ public class Bullet extends AbstractMoveableActor {
         super(ActorType.BULLET, gameInterface);
     }
 
-    public void act(ActorGameInterface gameInterface){
-        if (gameInterface != null && gameInterface.equals(super.gameInterface)) {
+    public void act(Object authToken){
+        if (gameInterface.getAuthenticator().authenticate(authToken)) {
             this.move(xDelta, yDelta, super.getDirection());
             if (boundReached()) {
                 super.gameInterface.unregisterActor(this);

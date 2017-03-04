@@ -3,6 +3,7 @@ package szakacs.kpi.fei.tuke.arena.game.world;
 import szakacs.kpi.fei.tuke.enums.Direction;
 import szakacs.kpi.fei.tuke.enums.TunnelCellType;
 import szakacs.kpi.fei.tuke.intrfc.arena.actors.GoldCollector;
+import szakacs.kpi.fei.tuke.intrfc.arena.game.MethodCallAuthenticator;
 import szakacs.kpi.fei.tuke.intrfc.arena.game.world.GameWorld;
 
 import java.util.EnumMap;
@@ -19,8 +20,9 @@ public class TunnelCell {
     private TunnelCellType tcType;
     private int NuggetValue;
     private Map<Direction, TunnelCell> fourDirections;
+    private MethodCallAuthenticator authenticator;
 
-    public TunnelCell(int x, int y, TunnelCellType tcType, HorizontalTunnel tunnel, GameWorld world) {
+    public TunnelCell(int x, int y, TunnelCellType tcType, HorizontalTunnel tunnel, GameWorld world, MethodCallAuthenticator authenticator) {
         this.x = x;
         this.y = y;
         this.tcType = tcType;
@@ -31,6 +33,7 @@ public class TunnelCell {
         else
             this.NuggetValue = 0;
         this.fourDirections = new EnumMap<>(Direction.class);
+        this.authenticator = authenticator;
     }
 
     @Override
@@ -51,8 +54,8 @@ public class TunnelCell {
         return this.tunnel;
     }
 
-    public void setAtDirection(Direction dir, TunnelCell pos, GameWorld world) {
-        if (world != null && world.equals(this.world)) {
+    public void setAtDirection(Direction dir, TunnelCell pos, Object authToken) {
+        if (authenticator.authenticate(authToken)) {
             fourDirections.put(dir, pos);
         }
     }
