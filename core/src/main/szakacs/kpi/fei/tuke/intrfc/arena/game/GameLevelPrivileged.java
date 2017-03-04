@@ -25,13 +25,4 @@ public interface GameLevelPrivileged extends GameLevel {
      * Updates the entire game
      */
     void update();
-
-    /**
-     * Starts a new game by setting a new set of updaters and a new player instance.
-     *
-     * @param updaters a set of {@link GameUpdater} objects responsible for updating
-     *                 all logic of the game level.
-     * @param players the players playing the current game level.
-     */
-    void startNewGame(Set<GameUpdater> updaters, List<Player> players);
 }

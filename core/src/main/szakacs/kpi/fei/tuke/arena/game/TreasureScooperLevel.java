@@ -13,10 +13,12 @@ import szakacs.kpi.fei.tuke.intrfc.arena.game.GameUpdater;
 import szakacs.kpi.fei.tuke.intrfc.arena.proxies.PlayerGameInterface;
 import szakacs.kpi.fei.tuke.arena.PlayerGameProxy;
 import szakacs.kpi.fei.tuke.intrfc.arena.game.world.GameWorld;
+import szakacs.kpi.fei.tuke.misc.ConfigProcessingException;
+import szakacs.kpi.fei.tuke.misc.configProcessors.gameValueObjects.DummyEntrance;
 import szakacs.kpi.fei.tuke.misc.configProcessors.gameValueObjects.DummyLevel;
 
-import java.util.List;
-import java.util.Set;
+import java.lang.reflect.InvocationTargetException;
+import java.util.*;
 
 /**
  * Created by developer on 25.1.2017.
@@ -49,11 +51,53 @@ public class TreasureScooperLevel implements GameLevelPrivileged {
     private GameState state;
     private int score;
 
-    TreasureScooperLevel(DummyLevel level){
+    public TreasureScooperLevel(DummyLevel level) throws ConfigProcessingException {
         this.gameWorld = new TreasureScooperWorld(level.getGameWorldPrototype(), this.gameCallback);
         this.actorManager = new ActorManager(this);
         this.score = 0;
         this.gameShop = new GameShop(actorManager.getActorGameProxy(), scoreChangeCallback);
+        this.setPlayers(level);
+        this.setGameUpdaters(level);
+        this.state = GameState.PLAYING;
+    }
+
+    private void setGameUpdaters(DummyLevel level) throws ConfigProcessingException {
+        this.gameUpdaters = new HashSet<>(3);
+        for (Class<? extends GameUpdater> updaterCls : level.getGameUpdaterClasses()){
+            try {
+                gameUpdaters.add(updaterCls.getConstructor(GameLevelPrivileged.class).newInstance(this));
+            } catch (NoSuchMethodException
+                    | InvocationTargetException
+                    | InstantiationException
+                    | IllegalAccessException e) {
+                throw new ConfigProcessingException("Failed to initialize game", e);
+            }
+        }
+    }
+
+    private void setPlayers(DummyLevel level) throws ConfigProcessingException {
+        Map<DummyEntrance, Class<? extends Player>> entranceToPlayerMap = level.getEntranceToPlayerMap();
+        this.players = new ArrayList<>(entranceToPlayerMap.size());
+        for (DummyEntrance de : entranceToPlayerMap.keySet()) {
+            try {
+                Player player = entranceToPlayerMap.get(de).newInstance();
+                players.add(player);
+                actorManager.getPlayerToPipeMap().put(
+                        player,
+                        new Pipe(
+                                actorManager.getActorGameProxy(),
+                                gameWorld.getEntrances().get(de.getId()),
+                                player
+                        )
+                );
+            } catch (IllegalAccessException | InstantiationException e) {
+                throw new ConfigProcessingException("Failed to initialize game", e);
+            }
+        }
+        PlayerGameInterface playerInterface = new PlayerGameProxy(this);
+        for (Player player : players) {
+            player.initialize(playerInterface);
+        }
     }
 
     @Override
@@ -108,16 +152,5 @@ public class TreasureScooperLevel implements GameLevelPrivileged {
                 player.deallocate();
             }
         }
-    }
-
-    @Override
-    public void startNewGame(Set<GameUpdater> updaters, List<Player> players){
-        this.players = players;
-        PlayerGameInterface playerInterface = new PlayerGameProxy(this);
-        for (Player player : players) {
-            player.initialize(playerInterface);
-        }
-        this.state = GameState.PLAYING;
-        this.gameUpdaters = updaters;
     }
 }
