@@ -16,7 +16,7 @@ import java.util.List;
 /**
  * Created by developer on 5.11.2016.
  *
- * GameLevel API quality at current stage is still NOT guaranteed. :P
+ * GameLevelQueryable API quality at current stage is still NOT guaranteed. :P
  */
 public class PlayerA implements Player {
 
@@ -96,7 +96,7 @@ public class PlayerA implements Player {
     @Override
     public void initialize(PlayerGameInterface world) {
         this.state = State.BEGIN;
-        this.pipe = world.getPipeOfPlayer(this);
+        this.pipe = world.getPlayerToPipeMap().get(this);
         this.head = pipe.getHead();
         this.currentDir = this.head.getDirection();
         this.world = world;

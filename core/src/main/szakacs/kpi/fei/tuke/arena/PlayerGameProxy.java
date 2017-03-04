@@ -31,9 +31,9 @@ public class PlayerGameProxy implements PlayerGameInterface {
     protected GameLevelPrivileged game;
     protected ActorManagerPrivileged actorManager;
 
-    public PlayerGameProxy(GameLevelPrivileged game){
+    public PlayerGameProxy(GameLevelPrivileged game, ActorManagerPrivileged actorManager){
         this.game = game;
-        this.actorManager = game.getActorManager();
+        this.actorManager = actorManager;
     }
 
     @Override
@@ -47,13 +47,8 @@ public class PlayerGameProxy implements PlayerGameInterface {
     }
 
     @Override
-    public Pipe getPipeOfPlayer(Player player) {
-        return actorManager.getPipeOfPlayer(player);
-    }
-
-    @Override
-    public List<Player> getPlayers() {
-        return game.getPlayers();
+    public Map<Player, Pipe> getPlayerToPipeMap() {
+        return actorManager.getPlayerToPipeMap();
     }
 
     @Override

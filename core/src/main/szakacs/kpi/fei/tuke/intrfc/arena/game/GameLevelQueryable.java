@@ -16,14 +16,7 @@ import java.util.List;
  *
  * It enables querying the game for various data.
  */
-public interface GameLevel {
-
-    /**
-     * Gets the player controlling the pipe in the game.
-     *
-     * @return a list of all current players in the game.
-     */
-    List<Player> getPlayers();
+public interface GameLevelQueryable {
 
     /**
      * Gets the state of this level (currently playing, won, lost).

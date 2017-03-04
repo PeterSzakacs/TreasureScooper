@@ -5,6 +5,7 @@ import szakacs.kpi.fei.tuke.intrfc.Player;
 import szakacs.kpi.fei.tuke.intrfc.arena.actors.Actor;
 
 import java.util.List;
+import java.util.Map;
 import java.util.function.Predicate;
 
 /**
@@ -19,13 +20,6 @@ import java.util.function.Predicate;
  * This interface is to be the only actor manager interface exposed to the player.
  */
 public interface ActorManagerQueryable {
-
-    /**
-     * Gets the pipe used by the player in the game
-     *
-     * @return the pipe used by the player in the game
-     */
-    Pipe getPipeOfPlayer(Player player);
 
     /**
      * Gets all currently active game actors
@@ -49,4 +43,6 @@ public interface ActorManagerQueryable {
      *         in the predicate passed to this method as argument.
      */
     List<Actor> getActorsBySearchCriteria(Predicate<Actor> predicate);
+
+    Map<Player, Pipe> getPlayerToPipeMap();
 }

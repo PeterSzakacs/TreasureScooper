@@ -40,6 +40,4 @@ public interface ActorManagerPrivileged extends ActorManagerUpdatable, GameUpdat
      * @see interface intrfc/misc/proxies/ActorGameProxy
      */
     ActorGameInterface getActorGameProxy();
-
-    Map<Player, Pipe> getPlayerToPipeMap();
 }

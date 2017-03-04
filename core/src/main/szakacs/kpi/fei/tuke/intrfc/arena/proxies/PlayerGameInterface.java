@@ -1,8 +1,7 @@
 package szakacs.kpi.fei.tuke.intrfc.arena.proxies;
 
 import szakacs.kpi.fei.tuke.intrfc.arena.game.actorManager.ActorManagerQueryable;
-import szakacs.kpi.fei.tuke.intrfc.arena.game.GameLevel;
-import szakacs.kpi.fei.tuke.intrfc.arena.game.world.GameWorld;
+import szakacs.kpi.fei.tuke.intrfc.arena.game.GameLevelQueryable;
 
 /**
  * Created by developer on 1.12.2016.
@@ -20,5 +19,5 @@ import szakacs.kpi.fei.tuke.intrfc.arena.game.world.GameWorld;
  * the latter can be theoretically bypassed using
  * reflection.
  */
-public interface PlayerGameInterface extends GameLevel, ActorManagerQueryable {
+public interface PlayerGameInterface extends GameLevelQueryable, ActorManagerQueryable {
 }

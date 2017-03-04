@@ -1,12 +1,18 @@
 package szakacs.kpi.fei.tuke.arena.game;
 
+import szakacs.kpi.fei.tuke.arena.PlayerGameProxy;
 import szakacs.kpi.fei.tuke.arena.actors.pipe.Pipe;
 import szakacs.kpi.fei.tuke.intrfc.Player;
 import szakacs.kpi.fei.tuke.intrfc.arena.actors.Actor;
 import szakacs.kpi.fei.tuke.intrfc.arena.game.actorManager.ActorManagerPrivileged;
+import szakacs.kpi.fei.tuke.intrfc.arena.game.world.GameWorld;
 import szakacs.kpi.fei.tuke.intrfc.arena.proxies.ActorGameInterface;
 import szakacs.kpi.fei.tuke.arena.ActorGameProxy;
 import szakacs.kpi.fei.tuke.intrfc.arena.game.GameLevelPrivileged;
+import szakacs.kpi.fei.tuke.intrfc.arena.proxies.PlayerGameInterface;
+import szakacs.kpi.fei.tuke.misc.ConfigProcessingException;
+import szakacs.kpi.fei.tuke.misc.configProcessors.gameValueObjects.DummyEntrance;
+import szakacs.kpi.fei.tuke.misc.configProcessors.gameValueObjects.DummyLevel;
 
 import java.util.*;
 import java.util.function.Predicate;
@@ -15,6 +21,7 @@ import java.util.function.Predicate;
  * Created by developer on 25.1.2017.
  */
 public class ActorManager implements ActorManagerPrivileged {
+
     private List<Actor> actors;
     private List<Actor> searchResults;
     private Map<Actor, Runnable> onDestroyActions;
@@ -22,21 +29,35 @@ public class ActorManager implements ActorManagerPrivileged {
     private Map<Player, Pipe> pipes;
     private ActorGameProxy actorGameProxy;
 
-    ActorManager(GameLevelPrivileged game) {
+    ActorManager(GameLevelPrivileged game, DummyLevel level) throws ConfigProcessingException {
         this.actors = new ArrayList<>();
         this.searchResults = new ArrayList<>();
         this.unregisteredActors = new HashMap<>();
         this.onDestroyActions = new HashMap<>(20);
         this.actorGameProxy = new ActorGameProxy(game, this);
-        this.pipes = new HashMap<>(3);
+        this.setPipes(game, level);
     }
 
-    // ActorManagerBasic methods (only queries)
-
-    @Override
-    public Pipe getPipeOfPlayer(Player player){
-        return pipes.get(player);
+    private void setPipes(GameLevelPrivileged game, DummyLevel level) throws ConfigProcessingException{
+        Map<DummyEntrance, Class<? extends Player>> entranceToPlayerMap = level.getEntranceToPlayerMap();
+        GameWorld gameWorld = game.getGameWorld();
+        this.pipes = new HashMap<>(entranceToPlayerMap.size());
+        for (DummyEntrance de : entranceToPlayerMap.keySet()) {
+            try {
+                Player player = entranceToPlayerMap.get(de).newInstance();
+                Pipe pipe = new Pipe(actorGameProxy, gameWorld.getEntrances().get(de.getId()), player);
+                pipes.put(player, pipe);
+            } catch (IllegalAccessException | InstantiationException e) {
+                throw new ConfigProcessingException("Failed to initialize game", e);
+            }
+        }
+        PlayerGameInterface playerInterface = new PlayerGameProxy(game, this);
+        for (Player player : pipes.keySet()) {
+            player.initialize(playerInterface);
+        }
     }
+
+    // ActorManagerQueryable methods (only queries)
 
     @Override
     public List<Actor> getActors(){
@@ -51,6 +72,11 @@ public class ActorManager implements ActorManagerPrivileged {
                 searchResults.add(actor);
         }
         return searchResults;
+    }
+
+    @Override
+    public Map<Player, Pipe> getPlayerToPipeMap() {
+        return Collections.unmodifiableMap(pipes);
     }
 
     // ActorManagerUpdatable methods (adding and removing actors)
@@ -81,12 +107,16 @@ public class ActorManager implements ActorManagerPrivileged {
         }
     }
 
-    // ActorManagerPrivileged methods (updating all actors)
+    // ActorManagerPrivileged methods (updating all actors and access to internals)
 
     @Override
     public void update() {
-        for (Pipe pipe : pipes.values()){
-            pipe.allowMovement(actorGameProxy);
+        for (Player player : pipes.keySet()){
+            Pipe pipe = pipes.get(player);
+            if (pipe.getHealth() > 0) {
+                player.act();
+                pipe.allowMovement(actorGameProxy);
+            }
         }
         for (Actor actor : actors) {
             actor.act(actorGameProxy);
@@ -113,10 +143,5 @@ public class ActorManager implements ActorManagerPrivileged {
     @Override
     public ActorGameInterface getActorGameProxy() {
         return actorGameProxy;
-    }
-
-    @Override
-    public Map<Player, Pipe> getPlayerToPipeMap() {
-        return pipes;
     }
 }

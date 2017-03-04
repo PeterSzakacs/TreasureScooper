@@ -11,7 +11,7 @@ import szakacs.kpi.fei.tuke.intrfc.arena.proxies.ActorGameInterface;
 public class ActorGameProxy extends PlayerGameProxy implements ActorGameInterface {
 
     public ActorGameProxy(GameLevelPrivileged game, ActorManagerPrivileged actorManager){
-        super(game);
+        super(game, actorManager);
         super.actorManager = actorManager;
     }
 
