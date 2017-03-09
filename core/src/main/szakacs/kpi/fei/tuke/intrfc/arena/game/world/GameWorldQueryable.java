@@ -16,7 +16,7 @@ import java.util.Map;
  * this interface does not have separate "Updatable" or "Privileged"
  * subinterfaces for any hypothetical methods which would modify them.
  */
-public interface GameWorld {
+public interface GameWorldQueryable {
 
     /**
      * Gets the width of the game gameInterface

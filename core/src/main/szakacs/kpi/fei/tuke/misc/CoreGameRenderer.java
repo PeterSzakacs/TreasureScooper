@@ -8,10 +8,10 @@ import com.badlogic.gdx.utils.GdxRuntimeException;
 import szakacs.kpi.fei.tuke.enums.GameState;
 import szakacs.kpi.fei.tuke.arena.GameManager;
 import szakacs.kpi.fei.tuke.intrfc.arena.game.gameLevel.GameLevelPrivileged;
+import szakacs.kpi.fei.tuke.intrfc.arena.game.world.GameWorldQueryable;
 import szakacs.kpi.fei.tuke.intrfc.misc.GameConfig;
 import szakacs.kpi.fei.tuke.intrfc.misc.GameConfigProcessor;
 import szakacs.kpi.fei.tuke.intrfc.misc.GameRenderer;
-import szakacs.kpi.fei.tuke.intrfc.arena.game.world.GameWorld;
 import szakacs.kpi.fei.tuke.misc.configProcessors.SAXprocessor.SAXConfigProcessor;
 import szakacs.kpi.fei.tuke.misc.renderers.*;
 
@@ -105,7 +105,7 @@ public class CoreGameRenderer implements ApplicationListener {
         }
     }
 
-    public GameWorld getWorld() {
+    public GameWorldQueryable getWorld() {
         return game.getGameWorld();
     }
 

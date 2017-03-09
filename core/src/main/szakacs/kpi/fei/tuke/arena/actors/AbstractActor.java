@@ -4,7 +4,7 @@ import szakacs.kpi.fei.tuke.arena.game.world.TunnelCell;
 import szakacs.kpi.fei.tuke.enums.Direction;
 import szakacs.kpi.fei.tuke.enums.ActorType;
 import szakacs.kpi.fei.tuke.intrfc.arena.actors.Actor;
-import szakacs.kpi.fei.tuke.intrfc.arena.game.world.GameWorld;
+import szakacs.kpi.fei.tuke.intrfc.arena.game.world.GameWorldQueryable;
 import szakacs.kpi.fei.tuke.intrfc.arena.proxies.ActorGameInterface;
 
 /**
@@ -18,7 +18,7 @@ public abstract class AbstractActor implements Actor {
     private Direction dir;
     protected final ActorType actorType;
     protected final ActorGameInterface gameInterface;
-    protected final GameWorld world;
+    protected final GameWorldQueryable world;
 
     protected AbstractActor(ActorType at, ActorGameInterface gameInterface){
         if (gameInterface == null)

@@ -1,19 +1,9 @@
 package szakacs.kpi.fei.tuke.arena.game;
 
-import szakacs.kpi.fei.tuke.arena.PlayerGameProxy;
-import szakacs.kpi.fei.tuke.arena.actors.pipe.Pipe;
-import szakacs.kpi.fei.tuke.intrfc.Player;
 import szakacs.kpi.fei.tuke.intrfc.arena.actors.Actor;
 import szakacs.kpi.fei.tuke.intrfc.arena.game.MethodCallAuthenticator;
 import szakacs.kpi.fei.tuke.intrfc.arena.game.actorManager.ActorManagerPrivileged;
-import szakacs.kpi.fei.tuke.intrfc.arena.game.world.GameWorld;
-import szakacs.kpi.fei.tuke.intrfc.arena.proxies.ActorGameInterface;
-import szakacs.kpi.fei.tuke.arena.ActorGameProxy;
 import szakacs.kpi.fei.tuke.intrfc.arena.game.gameLevel.GameLevelPrivileged;
-import szakacs.kpi.fei.tuke.intrfc.arena.proxies.PlayerGameInterface;
-import szakacs.kpi.fei.tuke.intrfc.misc.GameConfig;
-import szakacs.kpi.fei.tuke.misc.ConfigProcessingException;
-import szakacs.kpi.fei.tuke.misc.configProcessors.gameValueObjects.DummyEntrance;
 import szakacs.kpi.fei.tuke.misc.configProcessors.gameValueObjects.DummyLevel;
 
 import java.util.*;

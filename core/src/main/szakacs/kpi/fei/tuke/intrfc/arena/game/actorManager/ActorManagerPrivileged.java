@@ -33,12 +33,4 @@ public interface ActorManagerPrivileged extends ActorManagerUpdatable, GameUpdat
      * Primarily, these values serve for effects rendering when an actor is removed.
      */
     Map<Actor, Integer> getUnregisteredActors();
-
-    /**
-     * Gets the actual object that serves as an interface to game functionality
-     * for actors
-     *
-     * @see interface intrfc/misc/proxies/ActorGameProxy
-     */
-    /*ActorGameInterface getActorGameProxy();*/
 }

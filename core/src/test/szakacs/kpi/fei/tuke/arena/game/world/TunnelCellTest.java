@@ -2,19 +2,17 @@ package szakacs.kpi.fei.tuke.arena.game.world;
 
 import org.junit.Assert;
 import org.junit.Test;
-import szakacs.kpi.fei.tuke.intrfc.arena.game.world.GameWorld;
+import szakacs.kpi.fei.tuke.intrfc.arena.game.world.GameWorldQueryable;
 
 import java.util.List;
 import java.util.Map;
-
-import static org.junit.Assert.*;
 
 /**
  * Created by developer on 18.2.2017.
  */
 public class TunnelCellTest {
 
-    private GameWorld mock = new GameWorld() {
+    private GameWorldQueryable mock = new GameWorldQueryable() {
         int offsetX = 128, offsetY = 128, width = 4096, height = 2048;
 
         public int getWidth() {return width;}

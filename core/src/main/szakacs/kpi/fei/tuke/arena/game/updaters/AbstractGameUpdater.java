@@ -4,7 +4,7 @@ import szakacs.kpi.fei.tuke.intrfc.arena.game.gameLevel.GameLevelPrivileged;
 import szakacs.kpi.fei.tuke.intrfc.arena.game.actorManager.ActorManagerPrivileged;
 import szakacs.kpi.fei.tuke.intrfc.arena.game.GameUpdater;
 import szakacs.kpi.fei.tuke.intrfc.arena.game.playerManager.PlayerManagerPrivileged;
-import szakacs.kpi.fei.tuke.intrfc.arena.game.world.GameWorld;
+import szakacs.kpi.fei.tuke.intrfc.arena.game.world.GameWorldQueryable;
 import szakacs.kpi.fei.tuke.misc.configProcessors.gameValueObjects.DummyLevel;
 
 /**
@@ -13,7 +13,7 @@ import szakacs.kpi.fei.tuke.misc.configProcessors.gameValueObjects.DummyLevel;
 public abstract class AbstractGameUpdater implements GameUpdater {
 
     protected GameLevelPrivileged game;
-    protected GameWorld gameWorld;
+    protected GameWorldQueryable gameWorld;
     protected ActorManagerPrivileged actorManager;
     protected PlayerManagerPrivileged playerManager;
 

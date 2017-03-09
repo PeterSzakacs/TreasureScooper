@@ -6,7 +6,7 @@ import szakacs.kpi.fei.tuke.intrfc.arena.callbacks.OnScoreEventCallback;
 import szakacs.kpi.fei.tuke.intrfc.arena.game.gameLevel.GameLevelPrivileged;
 import szakacs.kpi.fei.tuke.intrfc.arena.game.MethodCallAuthenticator;
 import szakacs.kpi.fei.tuke.intrfc.arena.game.playerManager.PlayerManagerPrivileged;
-import szakacs.kpi.fei.tuke.intrfc.arena.game.world.GameWorld;
+import szakacs.kpi.fei.tuke.intrfc.arena.game.world.GameWorldQueryable;
 import szakacs.kpi.fei.tuke.intrfc.misc.GameConfig;
 import szakacs.kpi.fei.tuke.misc.ConfigProcessingException;
 import szakacs.kpi.fei.tuke.misc.configProcessors.gameValueObjects.DummyEntrance;
@@ -87,7 +87,7 @@ public class PlayerManager implements PlayerManagerPrivileged {
         scores.clear();
         this.gameShop = new GameShop(gameLevel, scoreChangeCallback);
         Map<DummyEntrance, Class<? extends Player>> entranceToPlayerMap = level.getEntranceToPlayerMap();
-        GameWorld gameWorld = gameLevel.getGameWorld();
+        GameWorldQueryable gameWorld = gameLevel.getGameWorld();
         for (DummyEntrance de : entranceToPlayerMap.keySet()) {
             for (Player player : playerInstances){
                 if (player.getClass().equals(entranceToPlayerMap.get(de))){

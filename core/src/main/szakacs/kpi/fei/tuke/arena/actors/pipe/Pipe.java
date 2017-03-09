@@ -1,15 +1,12 @@
 package szakacs.kpi.fei.tuke.arena.actors.pipe;
 
-import szakacs.kpi.fei.tuke.arena.actors.Bullet;
 import szakacs.kpi.fei.tuke.enums.ActorType;
 import szakacs.kpi.fei.tuke.enums.Direction;
-import szakacs.kpi.fei.tuke.enums.PipeSegmentType;
 import szakacs.kpi.fei.tuke.arena.game.world.TunnelCell;
 import szakacs.kpi.fei.tuke.intrfc.Player;
 import szakacs.kpi.fei.tuke.intrfc.arena.actors.Actor;
 import szakacs.kpi.fei.tuke.intrfc.arena.callbacks.OnStackUpdatedCallback;
-import szakacs.kpi.fei.tuke.intrfc.arena.game.world.GameWorld;
-import szakacs.kpi.fei.tuke.intrfc.misc.Queue;
+import szakacs.kpi.fei.tuke.intrfc.arena.game.world.GameWorldQueryable;
 import szakacs.kpi.fei.tuke.intrfc.misc.Stack;
 import szakacs.kpi.fei.tuke.intrfc.arena.proxies.ActorGameInterface;
 
@@ -28,7 +25,7 @@ public class Pipe {
          */
         @Override
         public void onPush() {
-            GameWorld world = gameInterface.getGameWorld();
+            GameWorldQueryable world = gameInterface.getGameWorld();
             head.move(world.getOffsetX(), world.getOffsetY(), segmentStack.top().getDirection());
             head.getCurrentPosition().collectNugget(Pipe.this);
             /*PipeSegment pushed = segmentStack.top();
@@ -169,7 +166,7 @@ public class Pipe {
     }
 
     public boolean intersects(Actor actor){
-        GameWorld world = gameInterface.getGameWorld();
+        GameWorldQueryable world = gameInterface.getGameWorld();
         for (PipeSegment seg : segmentStack){
             if (Math.abs(seg.getX() - actor.getX()) <= world.getOffsetX() &&
                     Math.abs(seg.getY() - actor.getY()) <= world.getOffsetY())

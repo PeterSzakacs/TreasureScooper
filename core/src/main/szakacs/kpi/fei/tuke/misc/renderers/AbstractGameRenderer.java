@@ -4,8 +4,8 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import szakacs.kpi.fei.tuke.intrfc.arena.game.gameLevel.GameLevelPrivileged;
 import szakacs.kpi.fei.tuke.intrfc.arena.game.actorManager.ActorManagerPrivileged;
 import szakacs.kpi.fei.tuke.intrfc.arena.game.playerManager.PlayerManagerPrivileged;
+import szakacs.kpi.fei.tuke.intrfc.arena.game.world.GameWorldQueryable;
 import szakacs.kpi.fei.tuke.intrfc.misc.GameRenderer;
-import szakacs.kpi.fei.tuke.intrfc.arena.game.world.GameWorld;
 
 /**
  * Created by developer on 24.1.2017.
@@ -14,7 +14,7 @@ public abstract class AbstractGameRenderer implements GameRenderer {
 
     protected SpriteBatch batch;
     protected GameLevelPrivileged game;
-    protected GameWorld world;
+    protected GameWorldQueryable world;
     protected ActorManagerPrivileged actorManager;
     protected PlayerManagerPrivileged playerManager;
 

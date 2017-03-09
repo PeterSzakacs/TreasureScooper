@@ -12,7 +12,7 @@ import szakacs.kpi.fei.tuke.intrfc.Player;
  * or buying a new bullet or when his/her pipe
  * collects a piece of treasure.
  *
- * Purchasing something decrement the players score.
+ * Purchasing something decrements the players score.
  * Collecting treasure increments the players score.
  */
 public interface OnScoreEventCallback {

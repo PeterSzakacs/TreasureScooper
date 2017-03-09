@@ -11,7 +11,6 @@ import szakacs.kpi.fei.tuke.intrfc.arena.game.MethodCallAuthenticator;
 import szakacs.kpi.fei.tuke.intrfc.arena.game.actorManager.ActorManagerPrivileged;
 import szakacs.kpi.fei.tuke.intrfc.arena.game.GameUpdater;
 import szakacs.kpi.fei.tuke.intrfc.arena.game.playerManager.PlayerManagerPrivileged;
-import szakacs.kpi.fei.tuke.intrfc.arena.game.world.GameWorld;
 import szakacs.kpi.fei.tuke.intrfc.arena.game.world.GameWorldPrivileged;
 import szakacs.kpi.fei.tuke.intrfc.arena.proxies.ActorGameInterface;
 import szakacs.kpi.fei.tuke.intrfc.arena.proxies.PlayerGameInterface;
@@ -93,11 +92,6 @@ public class TreasureScooperLevel implements GameLevelPrivileged {
         return authenticator;
     }
 
-    @Override
-    public GameWorld getGameWorld() {
-        return gameWorld;
-    }
-
     // GameLevelPrivileged methods (access to all actor manager functions and updating the whole game).
 
     @Override
@@ -139,6 +133,11 @@ public class TreasureScooperLevel implements GameLevelPrivileged {
                     break;
             }
         }
+    }
+
+    @Override
+    public GameWorldPrivileged getGameWorld() {
+        return gameWorld;
     }
 
     @Override
