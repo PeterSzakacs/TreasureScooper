@@ -6,7 +6,8 @@ import szakacs.kpi.fei.tuke.arena.game.world.HorizontalTunnel;
 import szakacs.kpi.fei.tuke.arena.game.world.TunnelCell;
 import szakacs.kpi.fei.tuke.enums.Direction;
 import szakacs.kpi.fei.tuke.enums.TunnelCellType;
-import szakacs.kpi.fei.tuke.intrfc.arena.game.GameLevelPrivileged;
+import szakacs.kpi.fei.tuke.intrfc.arena.game.gameLevel.GameLevelPrivileged;
+import szakacs.kpi.fei.tuke.misc.configProcessors.gameValueObjects.DummyLevel;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -41,9 +42,15 @@ public class GameUpdaterEnemies extends AbstractGameUpdater {
     // of all tunnels in the game gameInterface,
     private List<TunnelCell> eligiblePositions;
 
+    public GameUpdaterEnemies(){
+        super();
+        Random rand = new Random();
+        do {
+            this.turnBound = rand.nextInt(31);
+        } while (this.turnBound < 20);
+    }
 
-
-    public GameUpdaterEnemies(GameLevelPrivileged game){
+    /*public GameUpdaterEnemies(GameLevelPrivileged game){
         super(game);
         this.initialize();
         Random rand = new Random();
@@ -56,14 +63,16 @@ public class GameUpdaterEnemies extends AbstractGameUpdater {
         super(game);
         this.initialize();
         this.turnBound = turnBound;
-    }
+    }*/
 
     /**
      * Initializes the collections used in this class
      * and calculates the maximum number of enemies
      * that can exist at the same time in the game
      */
-    private void initialize(){
+    @Override
+    public void startNewGame(GameLevelPrivileged gameLevel, DummyLevel level){
+        super.startNewGame(gameLevel, level);
         this.turnCounter = 0;
         this.eligiblePositions = new ArrayList<>();
         for (HorizontalTunnel ht : gameWorld.getTunnels()){
@@ -100,8 +109,8 @@ public class GameUpdaterEnemies extends AbstractGameUpdater {
      */
     private void createNewEnemy() {
         // pick a random position that was not selected before
-        List<TunnelCell> pipeHeadPositions = new ArrayList<>(actorManager.getPlayerToPipeMap().size());
-        for (Pipe pipe : actorManager.getPlayerToPipeMap().values()) {
+        List<TunnelCell> pipeHeadPositions = new ArrayList<>(playerManager.getPipes().size());
+        for (Pipe pipe : playerManager.getPipes()) {
             pipeHeadPositions.add(pipe.getHead().getCurrentPosition());
         }
         TunnelCell cell; Random rand = new Random();
@@ -121,7 +130,7 @@ public class GameUpdaterEnemies extends AbstractGameUpdater {
         }
 
         // register the actor
-        Mole enemy = new Mole(dir, cell, actorManager.getActorGameProxy());
+        Mole enemy = new Mole(dir, cell, game.getActorInterface());
         actorManager.registerActor(enemy);
         actorManager.setOnDestroy(enemy, () -> this.createdEnemiesCount-- );
         this.createdEnemiesCount++;

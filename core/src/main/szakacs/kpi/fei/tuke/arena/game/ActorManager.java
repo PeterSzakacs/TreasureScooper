@@ -9,8 +9,9 @@ import szakacs.kpi.fei.tuke.intrfc.arena.game.actorManager.ActorManagerPrivilege
 import szakacs.kpi.fei.tuke.intrfc.arena.game.world.GameWorld;
 import szakacs.kpi.fei.tuke.intrfc.arena.proxies.ActorGameInterface;
 import szakacs.kpi.fei.tuke.arena.ActorGameProxy;
-import szakacs.kpi.fei.tuke.intrfc.arena.game.GameLevelPrivileged;
+import szakacs.kpi.fei.tuke.intrfc.arena.game.gameLevel.GameLevelPrivileged;
 import szakacs.kpi.fei.tuke.intrfc.arena.proxies.PlayerGameInterface;
+import szakacs.kpi.fei.tuke.intrfc.misc.GameConfig;
 import szakacs.kpi.fei.tuke.misc.ConfigProcessingException;
 import szakacs.kpi.fei.tuke.misc.configProcessors.gameValueObjects.DummyEntrance;
 import szakacs.kpi.fei.tuke.misc.configProcessors.gameValueObjects.DummyLevel;
@@ -27,44 +28,21 @@ public class ActorManager implements ActorManagerPrivileged {
     private List<Actor> searchResults;
     private Map<Actor, Runnable> onDestroyActions;
     private Map<Actor, Integer> unregisteredActors;
-    private Map<Player, Pipe> pipes;
-    private ActorGameProxy actorGameProxy;
     private MethodCallAuthenticator authenticator;
 
-    ActorManager(GameLevelPrivileged game, DummyLevel level, MethodCallAuthenticator authenticator) throws ConfigProcessingException {
+    ActorManager(MethodCallAuthenticator authenticator){
         this.actors = new ArrayList<>();
         this.searchResults = new ArrayList<>();
         this.unregisteredActors = new HashMap<>();
         this.onDestroyActions = new HashMap<>(20);
-        this.actorGameProxy = new ActorGameProxy(game, this);
         this.authenticator = authenticator;
-        this.setPipes(game, level);
-    }
-
-    private void setPipes(GameLevelPrivileged game, DummyLevel level) throws ConfigProcessingException{
-        Map<DummyEntrance, Class<? extends Player>> entranceToPlayerMap = level.getEntranceToPlayerMap();
-        GameWorld gameWorld = game.getGameWorld();
-        this.pipes = new HashMap<>(entranceToPlayerMap.size());
-        for (DummyEntrance de : entranceToPlayerMap.keySet()) {
-            try {
-                Player player = entranceToPlayerMap.get(de).newInstance();
-                Pipe pipe = new Pipe(actorGameProxy, gameWorld.getEntrances().get(de.getId()), player);
-                pipes.put(player, pipe);
-            } catch (IllegalAccessException | InstantiationException e) {
-                throw new ConfigProcessingException("Failed to initialize game", e);
-            }
-        }
-        PlayerGameInterface playerInterface = new PlayerGameProxy(game, this);
-        for (Player player : pipes.keySet()) {
-            player.initialize(playerInterface);
-        }
     }
 
     // ActorManagerQueryable methods (only queries)
 
     @Override
     public List<Actor> getActors(){
-        return actors;
+        return Collections.unmodifiableList(actors);
     }
 
     @Override
@@ -75,11 +53,6 @@ public class ActorManager implements ActorManagerPrivileged {
                 searchResults.add(actor);
         }
         return searchResults;
-    }
-
-    @Override
-    public Map<Player, Pipe> getPlayerToPipeMap() {
-        return Collections.unmodifiableMap(pipes);
     }
 
     // ActorManagerUpdatable methods (adding and removing actors)
@@ -110,22 +83,10 @@ public class ActorManager implements ActorManagerPrivileged {
         }
     }
 
-    @Override
-    public MethodCallAuthenticator getAuthenticator() {
-        return authenticator;
-    }
-
     // ActorManagerPrivileged methods (updating all actors and access to internals)
 
     @Override
     public void update() {
-        for (Player player : pipes.keySet()){
-            Pipe pipe = pipes.get(player);
-            if (pipe.getHealth() > 0) {
-                player.act();
-                pipe.allowMovement(authenticator);
-            }
-        }
         for (Actor actor : actors) {
             actor.act(authenticator);
         }
@@ -149,7 +110,10 @@ public class ActorManager implements ActorManagerPrivileged {
     }
 
     @Override
-    public ActorGameInterface getActorGameProxy() {
-        return actorGameProxy;
+    public void startNewGame(GameLevelPrivileged gameLevel, DummyLevel level){
+        actors.clear();
+        searchResults.clear();
+        onDestroyActions.clear();
+        unregisteredActors.clear();
     }
 }

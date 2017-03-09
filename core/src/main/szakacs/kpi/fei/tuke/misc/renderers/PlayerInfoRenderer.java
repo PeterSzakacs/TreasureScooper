@@ -6,7 +6,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import szakacs.kpi.fei.tuke.intrfc.arena.game.GameLevelPrivileged;
+import szakacs.kpi.fei.tuke.intrfc.arena.game.gameLevel.GameLevelPrivileged;
 
 /**
  * Created by developer on 24.1.2017.
@@ -31,7 +31,7 @@ public class PlayerInfoRenderer extends AbstractGameRenderer {
 
     @Override
     public void render() {
-        String displayMsg = Integer.toString(game.getScore());
+        String displayMsg = Integer.toString(0/*game.getScore()*/);
         switch (game.getState()) {
             case PLAYING:
                 break;

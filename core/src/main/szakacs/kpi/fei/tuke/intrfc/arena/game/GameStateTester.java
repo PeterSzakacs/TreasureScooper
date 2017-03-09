@@ -5,7 +5,7 @@ import szakacs.kpi.fei.tuke.enums.GameState;
 /**
  * Created by developer on 4.3.2017.
  */
-public interface GameStateTester {
+public interface GameStateTester extends ResettableGameClass {
 
     GameState testGameState();
 }

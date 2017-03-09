@@ -12,7 +12,7 @@ package szakacs.kpi.fei.tuke.intrfc.arena.game;
  * create an updater class which manages it
  * (in addition to, e.g the new actors)
  */
-public interface GameUpdater {
+public interface GameUpdater extends ResettableGameClass {
 
     /**
      * Self-explanatory.

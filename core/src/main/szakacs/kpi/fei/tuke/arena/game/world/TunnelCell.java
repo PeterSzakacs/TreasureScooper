@@ -1,10 +1,10 @@
 package szakacs.kpi.fei.tuke.arena.game.world;
 
+import szakacs.kpi.fei.tuke.arena.actors.pipe.Pipe;
 import szakacs.kpi.fei.tuke.enums.Direction;
 import szakacs.kpi.fei.tuke.enums.TunnelCellType;
 import szakacs.kpi.fei.tuke.intrfc.arena.actors.GoldCollector;
-import szakacs.kpi.fei.tuke.intrfc.arena.game.MethodCallAuthenticator;
-import szakacs.kpi.fei.tuke.intrfc.arena.game.world.GameWorld;
+import szakacs.kpi.fei.tuke.intrfc.arena.game.world.GameWorldPrivileged;
 
 import java.util.EnumMap;
 import java.util.Map;
@@ -16,13 +16,12 @@ public class TunnelCell {
     private int x;
     private int y;
     private HorizontalTunnel tunnel;
-    private GameWorld world;
+    private GameWorldPrivileged world;
     private TunnelCellType tcType;
     private int NuggetValue;
     private Map<Direction, TunnelCell> fourDirections;
-    private MethodCallAuthenticator authenticator;
 
-    public TunnelCell(int x, int y, TunnelCellType tcType, HorizontalTunnel tunnel, GameWorld world, MethodCallAuthenticator authenticator) {
+    public TunnelCell(int x, int y, TunnelCellType tcType, HorizontalTunnel tunnel, GameWorldPrivileged world) {
         this.x = x;
         this.y = y;
         this.tcType = tcType;
@@ -33,7 +32,6 @@ public class TunnelCell {
         else
             this.NuggetValue = 0;
         this.fourDirections = new EnumMap<>(Direction.class);
-        this.authenticator = authenticator;
     }
 
     @Override
@@ -55,7 +53,7 @@ public class TunnelCell {
     }
 
     public void setAtDirection(Direction dir, TunnelCell pos, Object authToken) {
-        if (authenticator.authenticate(authToken)) {
+        if (world.getAuthenticator().authenticate(authToken)) {
             fourDirections.put(dir, pos);
         }
     }
@@ -72,15 +70,13 @@ public class TunnelCell {
         return this.NuggetValue != 0;
     }
 
-    public int collectNugget(GoldCollector collector) {
-        if (collector.getCurrentPosition().equals(this)){
+    public void collectNugget(Pipe pipe) {
+        if (pipe.getHead().getCurrentPosition().equals(this)) {
             int nuggetVal = this.NuggetValue;
             this.NuggetValue = 0;
             if (this.tunnel != null && nuggetVal != 0)
-                this.tunnel.onNuggetCollected(nuggetVal);
-            return nuggetVal;
+                this.tunnel.onNuggetCollected(pipe, nuggetVal);
         }
-        return 0;
     }
 
     public boolean isWithinCell(int x, int y) {

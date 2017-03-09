@@ -94,9 +94,9 @@ public class PlayerB implements Player {
     }
 
     @Override
-    public void initialize(PlayerGameInterface world) {
+    public void initialize(PlayerGameInterface world, Pipe pipe) {
         this.state = State.BEGIN;
-        this.pipe = world.getPlayerToPipeMap().get(this);
+        this.pipe = pipe;
         this.head = pipe.getHead();
         this.currentDir = this.head.getDirection();
         this.world = world;
@@ -168,7 +168,7 @@ public class PlayerB implements Player {
     }
 
     private void handleClear() {
-        head.getWeapon().getBulletQueue().enqueue(world.getGameShop().buyBullet());
+        head.getWeapon().getBulletQueue().enqueue(world.getGameShop().buyBullet(this));
         segmentStack.push(pipe.calculateNextSegment(currentDir));
         if (pipe.isWall(currentDir)){
             TunnelCellType cellType = head.getCurrentPosition().getCellType();

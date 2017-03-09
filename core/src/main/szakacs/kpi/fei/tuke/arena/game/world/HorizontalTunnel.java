@@ -1,10 +1,9 @@
 package szakacs.kpi.fei.tuke.arena.game.world;
 
+import szakacs.kpi.fei.tuke.arena.actors.pipe.Pipe;
 import szakacs.kpi.fei.tuke.enums.Direction;
 import szakacs.kpi.fei.tuke.enums.TunnelCellType;
-import szakacs.kpi.fei.tuke.intrfc.arena.callbacks.OnNuggetCollectedCallback;
-import szakacs.kpi.fei.tuke.intrfc.arena.game.MethodCallAuthenticator;
-import szakacs.kpi.fei.tuke.intrfc.arena.game.world.GameWorld;
+import szakacs.kpi.fei.tuke.intrfc.arena.game.world.GameWorldPrivileged;
 import szakacs.kpi.fei.tuke.misc.configProcessors.gameValueObjects.DummyTunnel;
 
 import java.util.*;
@@ -19,20 +18,16 @@ public class HorizontalTunnel {
     private int nuggetCount;
     private List<TunnelCell> cells;
     private List<TunnelCell> searchResults;
-    private GameWorld world;
-    private OnNuggetCollectedCallback worldCallback;
-    private MethodCallAuthenticator authenticator;
+    private GameWorldPrivileged world;
 
     /*
      * begin builder methods
      */
 
-    public HorizontalTunnel(DummyTunnel dt, GameWorld world, OnNuggetCollectedCallback worldCallback, MethodCallAuthenticator authenticator){
+    public HorizontalTunnel(DummyTunnel dt, GameWorldPrivileged world){
         this.x = dt.getX();
         this.y = dt.getY();
         this.world = world;
-        this.worldCallback = worldCallback;
-        this.authenticator = authenticator;
         this.buildTunnel(dt.getNumCells());
         this.nuggetCount = dt.getNumCells();
         this.searchResults = new ArrayList<>(dt.getNumCells());
@@ -51,8 +46,7 @@ public class HorizontalTunnel {
                 this.y,
                 TunnelCellType.LEFT_EDGE,
                 this,
-                this.world,
-                authenticator
+                this.world
         );
         this.cells.add(leftmost);
         count++;
@@ -62,19 +56,19 @@ public class HorizontalTunnel {
         for (int x = this.x + Direction.RIGHT.getXStep()*world.getOffsetX();
              count < numCells - 1;
              x += world.getOffsetX()*Direction.RIGHT.getXStep(), count++){
-            nextCell = new TunnelCell(x, this.y, TunnelCellType.TUNNEL, this, world, authenticator);
+            nextCell = new TunnelCell(x, this.y, TunnelCellType.TUNNEL, this, world);
             this.cells.add(nextCell);
-            nextCell.setAtDirection(Direction.LEFT, prevCell, authenticator);
-            prevCell.setAtDirection(Direction.RIGHT, nextCell, authenticator);
+            nextCell.setAtDirection(Direction.LEFT, prevCell, world.getAuthenticator());
+            prevCell.setAtDirection(Direction.RIGHT, nextCell, world.getAuthenticator());
             prevCell = nextCell;
         }
 
         // create and add the right edge cell of the tunnel
         rightmost = new TunnelCell(
-                rightEdge, this.y, TunnelCellType.RIGHT_EDGE, this, world, authenticator);
+                rightEdge, this.y, TunnelCellType.RIGHT_EDGE, this, world);
         this.cells.add(rightmost);
-        rightmost.setAtDirection(Direction.LEFT, prevCell, authenticator);
-        prevCell.setAtDirection(Direction.RIGHT, rightmost, authenticator);
+        rightmost.setAtDirection(Direction.LEFT, prevCell, world.getAuthenticator());
+        prevCell.setAtDirection(Direction.RIGHT, rightmost, world.getAuthenticator());
     }
 
     void addInterconnect(int x, HorizontalTunnel exitTunnel) {
@@ -90,27 +84,26 @@ public class HorizontalTunnel {
                         removed.getY(),
                         TunnelCellType.EXIT,
                         this,
-                        world,
-                        authenticator
+                        world
                 );
                 this.cells.set(idx, added);
 
                 // Connect the new EXIT cell with the previous TUNNEL cell's neighbors
                 TunnelCell left = removed.getCellAtDirection(Direction.LEFT);
                 TunnelCell right = removed.getCellAtDirection(Direction.RIGHT);
-                added.setAtDirection(Direction.LEFT, left, authenticator);
-                added.setAtDirection(Direction.RIGHT, right, authenticator);
-                left.setAtDirection(Direction.RIGHT, added, authenticator);
-                right.setAtDirection(Direction.LEFT, added, authenticator);
+                added.setAtDirection(Direction.LEFT, left, world.getAuthenticator());
+                added.setAtDirection(Direction.RIGHT, right, world.getAuthenticator());
+                left.setAtDirection(Direction.RIGHT, added, world.getAuthenticator());
+                right.setAtDirection(Direction.LEFT, added, world.getAuthenticator());
 
                 // Create new cells until the specified exit tunnel is reached
                 TunnelCell prevCell = added, nextCell;
                 for (int y = this.y + world.getOffsetY() * Direction.DOWN.getYStep();
                      y > exitTunnel.getY();
                      y += world.getOffsetY() * Direction.DOWN.getYStep()) {
-                    nextCell = new TunnelCell(added.getX(), y, TunnelCellType.INTERCONNECT, null, world, authenticator);
-                    nextCell.setAtDirection(Direction.UP, prevCell, authenticator);
-                    prevCell.setAtDirection(Direction.DOWN, nextCell, authenticator);
+                    nextCell = new TunnelCell(added.getX(), y, TunnelCellType.INTERCONNECT, null, world);
+                    nextCell.setAtDirection(Direction.UP, prevCell, world.getAuthenticator());
+                    prevCell.setAtDirection(Direction.DOWN, nextCell, world.getAuthenticator());
                     prevCell = nextCell;
                 }
                 // Tell the exit tunnel to create an entrance
@@ -130,18 +123,17 @@ public class HorizontalTunnel {
                         previous.getY(),
                         TunnelCellType.ENTRANCE,
                         this,
-                        world,
-                        authenticator
+                        world
                 );
                 this.cells.set(idx, newCell);
                 TunnelCell left = previous.getCellAtDirection(Direction.LEFT);
                 TunnelCell right = previous.getCellAtDirection(Direction.RIGHT);
-                left.setAtDirection(Direction.RIGHT, newCell, authenticator);
-                right.setAtDirection(Direction.LEFT, newCell, authenticator);
-                newCell.setAtDirection(Direction.LEFT, left, authenticator);
-                newCell.setAtDirection(Direction.RIGHT, right, authenticator);
-                newCell.setAtDirection(Direction.UP, entranceCell, authenticator);
-                entranceCell.setAtDirection(Direction.DOWN, newCell, authenticator);
+                left.setAtDirection(Direction.RIGHT, newCell, world.getAuthenticator());
+                right.setAtDirection(Direction.LEFT, newCell, world.getAuthenticator());
+                newCell.setAtDirection(Direction.LEFT, left, world.getAuthenticator());
+                newCell.setAtDirection(Direction.RIGHT, right, world.getAuthenticator());
+                newCell.setAtDirection(Direction.UP, entranceCell, world.getAuthenticator());
+                entranceCell.setAtDirection(Direction.DOWN, newCell, world.getAuthenticator());
                 break;
             }
         }
@@ -188,9 +180,9 @@ public class HorizontalTunnel {
      * begin tunnel manipulation methods
      */
 
-    void onNuggetCollected(int nuggetValue){
+    void onNuggetCollected(Pipe pipe, int nuggetValue){
         this.nuggetCount--;
-        this.worldCallback.onNuggetCollected(nuggetValue);
+        this.world.onNuggetCollected(pipe, nuggetValue);
     }
 
     /*

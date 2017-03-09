@@ -1,6 +1,6 @@
 package szakacs.kpi.fei.tuke.intrfc.misc;
 
-import szakacs.kpi.fei.tuke.intrfc.arena.game.GameLevelPrivileged;
+import szakacs.kpi.fei.tuke.intrfc.arena.game.gameLevel.GameLevelPrivileged;
 
 /**
  * Created by developer on 24.1.2017.

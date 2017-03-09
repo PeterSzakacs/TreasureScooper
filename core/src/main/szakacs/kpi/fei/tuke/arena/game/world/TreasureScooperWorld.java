@@ -1,52 +1,49 @@
 package szakacs.kpi.fei.tuke.arena.game.world;
 
+import szakacs.kpi.fei.tuke.arena.actors.pipe.Pipe;
 import szakacs.kpi.fei.tuke.enums.Direction;
 import szakacs.kpi.fei.tuke.enums.TunnelCellType;
-import szakacs.kpi.fei.tuke.intrfc.arena.callbacks.OnNuggetCollectedCallback;
+import szakacs.kpi.fei.tuke.intrfc.Player;
 import szakacs.kpi.fei.tuke.intrfc.arena.game.MethodCallAuthenticator;
-import szakacs.kpi.fei.tuke.intrfc.arena.game.world.GameWorld;
+import szakacs.kpi.fei.tuke.intrfc.arena.game.gameLevel.GameLevelPrivileged;
+import szakacs.kpi.fei.tuke.intrfc.arena.game.playerManager.PlayerManagerPrivileged;
+import szakacs.kpi.fei.tuke.intrfc.arena.game.world.GameWorldPrivileged;
 import szakacs.kpi.fei.tuke.intrfc.misc.GameWorldPrototype;
 import szakacs.kpi.fei.tuke.misc.configProcessors.gameValueObjects.DummyEntrance;
+import szakacs.kpi.fei.tuke.misc.configProcessors.gameValueObjects.DummyLevel;
 import szakacs.kpi.fei.tuke.misc.configProcessors.gameValueObjects.DummyTunnel;
 
 import java.util.*;
 
-public class TreasureScooperWorld implements GameWorld {
+public class TreasureScooperWorld implements GameWorldPrivileged {
 
-    private final int width;
-    private final int height;
-    private final int offsetX;
-    private final int offsetY;
+    private int width;
+    private int height;
+    private int offsetX;
+    private int offsetY;
 
-    private Map<String, TunnelCell> entrances;
-    private List<HorizontalTunnel> tunnels;
+    private final Map<String, TunnelCell> entrances;
+    private final List<HorizontalTunnel> tunnels;
     private int nuggetCount;
 
-    private OnNuggetCollectedCallback worldCallback = new OnNuggetCollectedCallback(){
-        @Override
-        public void onNuggetCollected(int nuggetValue){
-            TreasureScooperWorld.this.nuggetCount--;
-            TreasureScooperWorld.this.gameCallback.onNuggetCollected(nuggetValue);
-        }
-    };
-    private OnNuggetCollectedCallback gameCallback;
+    private PlayerManagerPrivileged playerManager;
     private MethodCallAuthenticator authenticator;
 
-    public TreasureScooperWorld(GameWorldPrototype worldPrototype,
-                                OnNuggetCollectedCallback gameCallback,
-                                MethodCallAuthenticator authenticator) {
-        this.tunnels = new ArrayList<>(worldPrototype.getDummyTunnels().size());
+    public TreasureScooperWorld(MethodCallAuthenticator authenticator) {
+        this.authenticator = authenticator;
+        this.tunnels = new ArrayList<>();
+        this.entrances = new HashMap<>();
+    }
+
+    private void initialize(GameWorldPrototype worldPrototype){
         this.offsetX = worldPrototype.getOffsetX();
         this.offsetY = worldPrototype.getOffsetY();
         this.width = worldPrototype.getWidth();
         this.height = worldPrototype.getHeight();
-        this.gameCallback = gameCallback;
-        this.authenticator = authenticator;
         this.buildTunnelGraph(worldPrototype);
         for (HorizontalTunnel ht : this.tunnels)
             this.nuggetCount += ht.getNuggetCount();
     }
-
 
     /**
      * Initializes the tunnels list, connects those tunnels on particular spots
@@ -62,7 +59,7 @@ public class TreasureScooperWorld implements GameWorld {
 
         // Create the tunnels from their DummyTunnel Prototypes
         for (DummyTunnel dt : dummyTunnels.values()) {
-            HorizontalTunnel ht = new HorizontalTunnel(dt, this, worldCallback, authenticator);
+            HorizontalTunnel ht = new HorizontalTunnel(dt, this);
             tunnelMap.put(dt.getId(), ht);
             // it is more efficient (in terms of time complexity) to add items to two lists simultaneously,
             // instead of calling new ArrayList<>(tunnelMap.values()) at the end of this method.
@@ -85,7 +82,6 @@ public class TreasureScooperWorld implements GameWorld {
 
         // Set the entrances to the tunnel network
         Map<String, DummyEntrance> dummyEntrances = worldPrototype.getDummyEntrances();
-        this.entrances = new HashMap<>(dummyEntrances.size());
         for (String id : dummyEntrances.keySet()){
             DummyEntrance de = dummyEntrances.get(id);
             TunnelCell entrance = new TunnelCell(
@@ -93,14 +89,13 @@ public class TreasureScooperWorld implements GameWorld {
                     de.getY(),
                     TunnelCellType.INTERCONNECT,
                     null,
-                    this,
-                    authenticator
+                    this
             );
             this.entrances.put(id, entrance);
             HorizontalTunnel rootTunnel = tunnelMap.get(de.getTunnel().getId());
             TunnelCell newCell, prevCell = entrance;
             for (int y = entrance.getY() - offsetY; y > rootTunnel.getY(); y -= offsetY) {
-                newCell = new TunnelCell(entrance.getX(), y, TunnelCellType.INTERCONNECT, null, this, authenticator);
+                newCell = new TunnelCell(entrance.getX(), y, TunnelCellType.INTERCONNECT, null, this);
                 newCell.setAtDirection(Direction.UP, prevCell, authenticator);
                 prevCell.setAtDirection(Direction.DOWN, newCell, authenticator);
                 prevCell = newCell;
@@ -142,5 +137,27 @@ public class TreasureScooperWorld implements GameWorld {
     @Override
     public List<HorizontalTunnel> getTunnels(){
         return Collections.unmodifiableList(tunnels);
+    }
+
+    @Override
+    public void startNewGame(GameLevelPrivileged gameLevel, DummyLevel level) {
+        tunnels.clear();
+        entrances.clear();
+        nuggetCount = 0;
+        this.initialize(level.getGameWorldPrototype());
+        this.playerManager = gameLevel.getPlayerManager();
+    }
+
+    @Override
+    public MethodCallAuthenticator getAuthenticator() {
+        return authenticator;
+    }
+
+    @Override
+    public void onNuggetCollected(Pipe pipe, int val) {
+        nuggetCount--;
+        Player player = pipe.getController();
+        int score = playerManager.getPlayersAndScores().get(player);
+        playerManager.getScoreChangeCallback().onScoreEvent(score + val, player);
     }
 }

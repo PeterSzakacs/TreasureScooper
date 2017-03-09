@@ -30,7 +30,7 @@ public class Pipe {
         public void onPush() {
             GameWorld world = gameInterface.getGameWorld();
             head.move(world.getOffsetX(), world.getOffsetY(), segmentStack.top().getDirection());
-            head.getCurrentPosition().collectNugget(head);
+            head.getCurrentPosition().collectNugget(Pipe.this);
             /*PipeSegment pushed = segmentStack.top();
             if (pushed.getSegmentType() != PipeSegmentType.HORIZONTAL
                     && pushed.getSegmentType() != PipeSegmentType.VERTICAL) {
@@ -54,14 +54,8 @@ public class Pipe {
         public void onPop(PipeSegment popped) {
             int xDelta = popped.getX() - head.getX();
             int yDelta = popped.getY() - head.getY();
-            Direction dir = head.getDirection();
-            head.move(Math.abs(xDelta), Math.abs(yDelta), dir.getOpposite());
-            if (popped.getSegmentType() == PipeSegmentType.HORIZONTAL
-                    || popped.getSegmentType() == PipeSegmentType.VERTICAL) {
-                head.setDirection(dir);
-            } else {
-                head.setDirection(segmentStack.top().getOriginDirection().getOpposite());
-            }
+            head.move(Math.abs(xDelta), Math.abs(yDelta), head.getDirection().getOpposite());
+            head.setDirection(popped.getOriginDirection().getOpposite());
         }
     };
 
@@ -94,15 +88,19 @@ public class Pipe {
      */
 
     public int getHealth(){
-        return this.healthPoints;
+        return healthPoints;
     }
 
     public Stack<PipeSegment> getSegmentStack(){
-        return this.segmentStack;
+        return segmentStack;
     }
 
     public PipeHead getHead(){
-        return this.head;
+        return head;
+    }
+
+    public Player getController() {
+        return controller;
     }
 
     /*

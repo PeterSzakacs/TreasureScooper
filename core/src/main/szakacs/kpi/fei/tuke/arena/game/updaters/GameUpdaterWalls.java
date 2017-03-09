@@ -7,7 +7,8 @@ import szakacs.kpi.fei.tuke.arena.game.world.HorizontalTunnel;
 import szakacs.kpi.fei.tuke.enums.TunnelCellType;
 import szakacs.kpi.fei.tuke.arena.game.world.TunnelCell;
 import szakacs.kpi.fei.tuke.intrfc.arena.actors.Actor;
-import szakacs.kpi.fei.tuke.intrfc.arena.game.GameLevelPrivileged;
+import szakacs.kpi.fei.tuke.intrfc.arena.game.gameLevel.GameLevelPrivileged;
+import szakacs.kpi.fei.tuke.misc.configProcessors.gameValueObjects.DummyLevel;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,8 +43,16 @@ public class GameUpdaterWalls extends AbstractGameUpdater {
     // in the game gameInterface,
     private List<TunnelCell> eligiblePositions;
 
+    public GameUpdaterWalls(){
+        Random rand = new Random();
+        do {
+            this.turnBound = rand.nextInt(31);
+        } while (this.turnBound < 20);
+        this.eligiblePositions = new ArrayList<>();
+    }
 
-    public GameUpdaterWalls(GameLevelPrivileged game) {
+
+    /*public GameUpdaterWalls(GameLevelPrivileged game) {
         super(game);
         this.initialize();
         Random rand = new Random();
@@ -56,16 +65,16 @@ public class GameUpdaterWalls extends AbstractGameUpdater {
         super(game);
         this.initialize();
         this.turnBound = turnBound;
-    }
+    }*/
 
     /**
      * Initializes the collections used in this class
      * and calculates the maximum number of walls
      * that can exist at the same time in the game
      */
-    private void initialize(){
+    public void startNewGame(GameLevelPrivileged gameLevel, DummyLevel level){
+        super.startNewGame(gameLevel, level);
         this.turnCounter = 0;
-        this.eligiblePositions = new ArrayList<>();
         for (HorizontalTunnel ht : gameWorld.getTunnels()){
             eligiblePositions.addAll(ht.getCellsBySearchCriteria(
                     (cell) ->
@@ -100,7 +109,7 @@ public class GameUpdaterWalls extends AbstractGameUpdater {
     private void addWall() {
         // get all positions, where the pipe is located, including the head
         List<TunnelCell> positions = new ArrayList<>();
-        for (Pipe pipe : actorManager.getPlayerToPipeMap().values()) {
+        for (Pipe pipe : playerManager.getPipes()) {
             List<PipeSegment> segmentStack = pipe.getSegmentStack().getElementsByCriteria(null);
             for (PipeSegment seg : segmentStack) {
                 positions.add(seg.getCurrentPosition());
@@ -117,7 +126,7 @@ public class GameUpdaterWalls extends AbstractGameUpdater {
         previousPositions.add(cell);
 
         // register the wall actor
-        Wall wall = new Wall(cell, super.actorManager.getActorGameProxy());
+        Wall wall = new Wall(cell, game.getActorInterface());
         actorManager.registerActor(wall);
         actorManager.setOnDestroy(wall, () -> {
             removeWall(wall);

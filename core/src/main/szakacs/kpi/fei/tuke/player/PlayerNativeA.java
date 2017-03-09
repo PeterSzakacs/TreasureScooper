@@ -27,8 +27,8 @@ public class PlayerNativeA implements Player {
     }
 
     @Override
-    public void initialize(PlayerGameInterface world){
-        this.pipe = world.getPlayerToPipeMap().get(this);
+    public void initialize(PlayerGameInterface world, Pipe pipe){
+        this.pipe = pipe;
         this.head = pipe.getHead();
         this.currentDir = this.head.getDirection();
         this.world = world;

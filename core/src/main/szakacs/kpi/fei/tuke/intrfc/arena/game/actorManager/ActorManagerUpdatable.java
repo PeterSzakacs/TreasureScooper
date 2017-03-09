@@ -44,6 +44,4 @@ public interface ActorManagerUpdatable extends ActorManagerQueryable {
      * @param actor Not Null: The actor to remove
      */
     void unregisterActor(Actor actor);
-
-    MethodCallAuthenticator getAuthenticator();
 }

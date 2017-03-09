@@ -4,6 +4,7 @@ import szakacs.kpi.fei.tuke.arena.actors.pipe.Pipe;
 import szakacs.kpi.fei.tuke.intrfc.Player;
 import szakacs.kpi.fei.tuke.intrfc.arena.actors.Actor;
 import szakacs.kpi.fei.tuke.intrfc.arena.game.GameUpdater;
+import szakacs.kpi.fei.tuke.intrfc.arena.game.ResettableGameClass;
 import szakacs.kpi.fei.tuke.intrfc.arena.proxies.ActorGameInterface;
 
 import java.util.Map;
@@ -16,7 +17,7 @@ import java.util.Map;
  * This interface is designed to be exposed only to game backend classes
  * which need access to specific state and behavior of the actor manager.
  */
-public interface ActorManagerPrivileged extends ActorManagerUpdatable, GameUpdater {
+public interface ActorManagerPrivileged extends ActorManagerUpdatable, GameUpdater, ResettableGameClass {
 
     /**
      * Updates all game actors (including unregistered actors,
@@ -39,5 +40,5 @@ public interface ActorManagerPrivileged extends ActorManagerUpdatable, GameUpdat
      *
      * @see interface intrfc/misc/proxies/ActorGameProxy
      */
-    ActorGameInterface getActorGameProxy();
+    /*ActorGameInterface getActorGameProxy();*/
 }

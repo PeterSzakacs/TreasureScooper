@@ -1,20 +1,24 @@
 package szakacs.kpi.fei.tuke.arena.game;
 
+import szakacs.kpi.fei.tuke.arena.ActorGameProxy;
+import szakacs.kpi.fei.tuke.arena.PlayerGameProxy;
 import szakacs.kpi.fei.tuke.arena.game.world.TreasureScooperWorld;
 import szakacs.kpi.fei.tuke.enums.GameState;
-import szakacs.kpi.fei.tuke.intrfc.arena.callbacks.OnItemBoughtCallback;
-import szakacs.kpi.fei.tuke.intrfc.arena.callbacks.OnNuggetCollectedCallback;
 import szakacs.kpi.fei.tuke.intrfc.Player;
-import szakacs.kpi.fei.tuke.intrfc.arena.game.GameLevelPrivileged;
+import szakacs.kpi.fei.tuke.intrfc.arena.game.gameLevel.GameLevelPrivileged;
 import szakacs.kpi.fei.tuke.intrfc.arena.game.GameStateTester;
 import szakacs.kpi.fei.tuke.intrfc.arena.game.MethodCallAuthenticator;
 import szakacs.kpi.fei.tuke.intrfc.arena.game.actorManager.ActorManagerPrivileged;
 import szakacs.kpi.fei.tuke.intrfc.arena.game.GameUpdater;
+import szakacs.kpi.fei.tuke.intrfc.arena.game.playerManager.PlayerManagerPrivileged;
 import szakacs.kpi.fei.tuke.intrfc.arena.game.world.GameWorld;
+import szakacs.kpi.fei.tuke.intrfc.arena.game.world.GameWorldPrivileged;
+import szakacs.kpi.fei.tuke.intrfc.arena.proxies.ActorGameInterface;
+import szakacs.kpi.fei.tuke.intrfc.arena.proxies.PlayerGameInterface;
+import szakacs.kpi.fei.tuke.intrfc.misc.GameConfig;
 import szakacs.kpi.fei.tuke.misc.ConfigProcessingException;
 import szakacs.kpi.fei.tuke.misc.configProcessors.gameValueObjects.DummyLevel;
 
-import java.lang.reflect.InvocationTargetException;
 import java.util.*;
 
 /**
@@ -22,49 +26,55 @@ import java.util.*;
  */
 public class TreasureScooperLevel implements GameLevelPrivileged {
 
-    private GameWorld gameWorld;
-    private ActorManagerPrivileged actorManager;
-    private GameShop gameShop;
-    private Set<GameUpdater> gameUpdaters;
-    private GameStateTester stateTester;
-    private GameState state;
-    private int score;
+    private class GameProxies {
+        private ActorGameInterface actorInterface;
+        private PlayerGameInterface playerInterface;
 
-    public TreasureScooperLevel(DummyLevel level) throws ConfigProcessingException {
-
-        OnNuggetCollectedCallback gameCallback = nuggetValue -> TreasureScooperLevel.this.score += nuggetValue;
-        OnItemBoughtCallback scoreChangeCallback = price -> {
-            TreasureScooperLevel.this.score -= price;
-            if (score < 0) {
-                score = 0;
-            }
-        };
-        MethodCallAuthenticator authenticator = new MethodCallAuthenticator() {
-            @Override
-            public boolean authenticate(Object token) {
-                return token != null && token.equals(this);
-            }
-        };
-
-        this.gameWorld = new TreasureScooperWorld(level.getGameWorldPrototype(), gameCallback, authenticator);
-        this.actorManager = new ActorManager(this, level, authenticator);
-        this.score = 0;
-        this.gameShop = new GameShop(actorManager.getActorGameProxy(), scoreChangeCallback);
-        this.setGameUpdaters(level);
-        this.stateTester = new GameStateTesterBasic(this);
-        this.state = GameState.PLAYING;
+        private GameProxies(){
+            this.actorInterface = new ActorGameProxy(TreasureScooperLevel.this);
+            this.playerInterface = new PlayerGameProxy(TreasureScooperLevel.this);
+        }
     }
 
-    private void setGameUpdaters(DummyLevel level) throws ConfigProcessingException {
-        this.gameUpdaters = new HashSet<>(3);
-        for (Class<? extends GameUpdater> updaterCls : level.getGameUpdaterClasses()){
+    private MethodCallAuthenticator authenticator = new MethodCallAuthenticator() {
+        @Override
+        public boolean authenticate(Object token) {
+            return token != null && token.equals(this);
+        }
+    };
+
+    private GameUpdater[] updaterInstances;
+    private Set<GameUpdater> gameUpdaters;
+
+    private GameWorldPrivileged gameWorld;
+    private ActorManagerPrivileged actorManager;
+    private PlayerManagerPrivileged playerManager;
+    private GameStateTester stateTester;
+    private GameState state;
+    private GameProxies proxies;
+
+    public TreasureScooperLevel(GameConfig config) throws ConfigProcessingException {
+        this.state = GameState.INITIALIZING;
+        this.gameWorld = new TreasureScooperWorld(authenticator);
+        this.actorManager = new ActorManager(authenticator);
+        this.playerManager = new PlayerManager(config, authenticator);
+        this.setGameUpdaters(config);
+        this.stateTester = new GameStateTesterBasic();
+        this.proxies = new GameProxies();
+    }
+
+    private void setGameUpdaters(GameConfig config) throws ConfigProcessingException {
+        Set<Class<? extends GameUpdater>> updaterClasses = config.getUpdaterClasses();
+        int size = updaterClasses.size();
+        this.updaterInstances = new GameUpdater[size];
+        this.gameUpdaters = new HashSet<>(size);
+        int idx = 0;
+        for (Class<? extends GameUpdater> updaterCls : updaterClasses){
             try {
-                gameUpdaters.add(updaterCls.getConstructor(GameLevelPrivileged.class).newInstance(this));
-            } catch (NoSuchMethodException
-                    | InvocationTargetException
-                    | InstantiationException
+                updaterInstances[idx++] = updaterCls.newInstance();
+            } catch (InstantiationException
                     | IllegalAccessException e) {
-                throw new ConfigProcessingException("Failed to initialize game", e);
+                throw new ConfigProcessingException("Failed to initialize game updater class: " + updaterCls, e);
             }
         }
     }
@@ -73,33 +83,46 @@ public class TreasureScooperLevel implements GameLevelPrivileged {
 
     @Override
     public GameState getState() {
-        return this.state;
+        return state;
+    }
+
+    // GameLevelUpdatable methods (access to the method call authenticator and game world)
+
+    @Override
+    public MethodCallAuthenticator getAuthenticator() {
+        return authenticator;
     }
 
     @Override
     public GameWorld getGameWorld() {
-        return this.gameWorld;
-    }
-
-    @Override
-    public int getScore() {
-        return this.score;
-    }
-
-    @Override
-    public GameShop getGameShop() {
-        return this.gameShop;
+        return gameWorld;
     }
 
     // GameLevelPrivileged methods (access to all actor manager functions and updating the whole game).
 
     @Override
-    public ActorManagerPrivileged getActorManager() {
-        return this.actorManager;
+    public void startNewGame(DummyLevel level){
+        gameWorld.startNewGame(this, level);
+        actorManager.startNewGame(this, level);
+        playerManager.startNewGame(this, level);
+        gameUpdaters.clear();
+        Set<Class<? extends GameUpdater>> updaterClasses = level.getGameUpdaterClasses();
+        for (Class<? extends GameUpdater> updaterCls : updaterClasses){
+            for (GameUpdater updater : updaterInstances){
+                if (updater.getClass().equals(updaterCls)){
+                    gameUpdaters.add(updater);
+                    updater.startNewGame(this, level);
+                    break;
+                }
+            }
+        }
+        stateTester.startNewGame(this, level);
+        this.state = GameState.PLAYING;
     }
 
     @Override
     public void update() {
+        playerManager.update();
         actorManager.update();
         for (GameUpdater updater : this.gameUpdaters)
             updater.update();
@@ -110,11 +133,31 @@ public class TreasureScooperLevel implements GameLevelPrivileged {
                 case WON:
                     break;
                 case LOST:
-                    for (Player player : actorManager.getPlayerToPipeMap().keySet()) {
+                    for (Player player : playerManager.getPlayersAndScores().keySet()) {
                         player.deallocate();
                     }
                     break;
             }
         }
+    }
+
+    @Override
+    public ActorManagerPrivileged getActorManager() {
+        return actorManager;
+    }
+
+    @Override
+    public PlayerManagerPrivileged getPlayerManager() {
+        return playerManager;
+    }
+
+    @Override
+    public ActorGameInterface getActorInterface() {
+        return proxies.actorInterface;
+    }
+
+    @Override
+    public PlayerGameInterface getPlayerInterface() {
+        return proxies.playerInterface;
     }
 }

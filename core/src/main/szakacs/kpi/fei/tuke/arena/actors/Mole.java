@@ -26,7 +26,7 @@ public class Mole extends AbstractMoveableActor {
         super(currentPosition, ActorType.ENEMY, direction, gameInterface);
         this.xDelta = gameInterface.getGameWorld().getOffsetX()/4;
         this.yDelta = gameInterface.getGameWorld().getOffsetY()/4;
-        this.pipes = new ArrayList<>(gameInterface.getPlayerToPipeMap().values());
+        this.pipes = gameInterface.getPipes();
         this.moving = true;
     }
 

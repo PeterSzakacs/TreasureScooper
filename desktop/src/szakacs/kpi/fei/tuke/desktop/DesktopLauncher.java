@@ -46,7 +46,7 @@ public class DesktopLauncher {
         }
         config.width = game.getWorld().getWidth();
         config.height = game.getWorld().getHeight();
-        config.title = "TreasureScooperWorld";
+        config.title = "Treasure Scooper";
         config.forceExit = true;
         new LwjglApplication(game, config);
     }

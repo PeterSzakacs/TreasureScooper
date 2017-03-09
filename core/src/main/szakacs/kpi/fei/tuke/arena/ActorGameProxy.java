@@ -3,7 +3,8 @@ package szakacs.kpi.fei.tuke.arena;
 import szakacs.kpi.fei.tuke.intrfc.arena.actors.Actor;
 import szakacs.kpi.fei.tuke.intrfc.arena.game.MethodCallAuthenticator;
 import szakacs.kpi.fei.tuke.intrfc.arena.game.actorManager.ActorManagerPrivileged;
-import szakacs.kpi.fei.tuke.intrfc.arena.game.GameLevelPrivileged;
+import szakacs.kpi.fei.tuke.intrfc.arena.game.gameLevel.GameLevelPrivileged;
+import szakacs.kpi.fei.tuke.intrfc.arena.game.world.GameWorld;
 import szakacs.kpi.fei.tuke.intrfc.arena.proxies.ActorGameInterface;
 
 /**
@@ -11,9 +12,8 @@ import szakacs.kpi.fei.tuke.intrfc.arena.proxies.ActorGameInterface;
  */
 public class ActorGameProxy extends PlayerGameProxy implements ActorGameInterface {
 
-    public ActorGameProxy(GameLevelPrivileged game, ActorManagerPrivileged actorManager){
-        super(game, actorManager);
-        super.actorManager = actorManager;
+    public ActorGameProxy(GameLevelPrivileged game){
+        super(game);
     }
 
     @Override
@@ -33,6 +33,11 @@ public class ActorGameProxy extends PlayerGameProxy implements ActorGameInterfac
 
     @Override
     public MethodCallAuthenticator getAuthenticator() {
-        return actorManager.getAuthenticator();
+        return game.getAuthenticator();
+    }
+
+    @Override
+    public GameWorld getGameWorld() {
+        return gameWorld;
     }
 }

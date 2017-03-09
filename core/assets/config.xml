@@ -30,35 +30,44 @@
         player-package="szakacs.kpi.fei.tuke.player"
         updater-package="szakacs.kpi.fei.tuke.arena.game.updaters"
         actor-package="szakacs.kpi.fei.tuke.arena.actors" >
+    <players>
+        <player id="A" class="PlayerA"/>
+        <player id="B" class="PlayerB"/>
+        <player id="C" class="PlayerC"/>
+    </players>
+    <updaters>
+        <updater id="Walls" class="GameUpdaterWalls" />
+        <updater id="Enemies" class="GameUpdaterEnemies" />
+    </updaters>
     <levels>
         <level world="worlds/world1multiplayer.xml">
-            <player class="PlayerA" entrance="left" />
-            <player class="PlayerB" entrance="center" />
-            <player class="PlayerC" entrance="right" />
+            <player id="A" entrance="left" />
+            <player id="B" entrance="center" />
+            <player id="C" entrance="right" />
         </level>
         <level world="worlds/world2.xml">
-            <updater class="GameUpdaterWalls" />
-            <player class="PlayerA" entrance="left" />
+            <updater id="Walls" />
+            <player id="A" entrance="left" />
         </level>
         <level world="worlds/world3multiplayer.xml">
-            <updater class="GameUpdaterEnemies" />
-            <player class="PlayerA" entrance="center" />
-            <player class="PlayerA" entrance="left" />
+            <updater id="Enemies" />
+            <player id="A" entrance="center" />
+            <player id="C" entrance="left" />
         </level>
         <level world="worlds/world1.xml">
-            <updater class="GameUpdaterEnemies" />
-            <player class="PlayerA" entrance="center" />
+            <updater id="Enemies" />
+            <player id="A" entrance="center" />
         </level>
         <level world="worlds/world2multiplayer.xml">
-            <updater class="GameUpdaterEnemies" />
-            <updater class="GameUpdaterWalls" />
-            <player class="PlayerA" entrance="left" />
-            <player class="PlayerB" entrance="right" />
+            <updater id="Enemies" />
+            <updater id="Walls" />
+            <player id="A" entrance="left" />
+            <player id="B" entrance="right" />
         </level>
         <level world="worlds/world3.xml">
-            <updater class="GameUpdaterEnemies" />
-            <updater class="GameUpdaterWalls" />
-            <player class="PlayerA" entrance="center" />
+            <updater id="Enemies" />
+            <updater id="Walls" />
+            <player id="A" entrance="center" />
         </level>
     </levels>
     <actors>

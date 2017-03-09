@@ -1,18 +1,18 @@
 package szakacs.kpi.fei.tuke.arena;
 
 import szakacs.kpi.fei.tuke.arena.actors.pipe.Pipe;
-import szakacs.kpi.fei.tuke.arena.game.world.HorizontalTunnel;
-import szakacs.kpi.fei.tuke.enums.GameState;
 import szakacs.kpi.fei.tuke.arena.game.GameShop;
+import szakacs.kpi.fei.tuke.arena.game.world.HorizontalTunnel;
 import szakacs.kpi.fei.tuke.arena.game.world.TunnelCell;
+import szakacs.kpi.fei.tuke.enums.GameState;
 import szakacs.kpi.fei.tuke.intrfc.Player;
 import szakacs.kpi.fei.tuke.intrfc.arena.actors.Actor;
-import szakacs.kpi.fei.tuke.intrfc.arena.game.GameLevelPrivileged;
+import szakacs.kpi.fei.tuke.intrfc.arena.game.gameLevel.GameLevelPrivileged;
 import szakacs.kpi.fei.tuke.intrfc.arena.game.actorManager.ActorManagerPrivileged;
+import szakacs.kpi.fei.tuke.intrfc.arena.game.playerManager.PlayerManagerPrivileged;
 import szakacs.kpi.fei.tuke.intrfc.arena.proxies.PlayerGameInterface;
 import szakacs.kpi.fei.tuke.intrfc.arena.game.world.GameWorld;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Predicate;
@@ -29,16 +29,20 @@ import java.util.function.Predicate;
 public class PlayerGameProxy implements PlayerGameInterface {
 
     protected GameLevelPrivileged game;
+    protected GameWorld gameWorld;
     protected ActorManagerPrivileged actorManager;
+    protected PlayerManagerPrivileged playerManager;
 
-    public PlayerGameProxy(GameLevelPrivileged game, ActorManagerPrivileged actorManager){
+    public PlayerGameProxy(GameLevelPrivileged game){
         this.game = game;
-        this.actorManager = actorManager;
+        this.gameWorld = game.getGameWorld();
+        this.actorManager = game.getActorManager();
+        this.playerManager = game.getPlayerManager();
     }
 
     @Override
     public List<Actor> getActors() {
-        return Collections.unmodifiableList(actorManager.getActors());
+        return actorManager.getActors();
     }
 
     @Override
@@ -47,27 +51,57 @@ public class PlayerGameProxy implements PlayerGameInterface {
     }
 
     @Override
-    public Map<Player, Pipe> getPlayerToPipeMap() {
-        return actorManager.getPlayerToPipeMap();
-    }
-
-    @Override
     public GameState getState() {
         return game.getState();
     }
 
     @Override
-    public GameWorld getGameWorld() {
-        return game.getGameWorld();
+    public List<Pipe> getPipes() {
+        return playerManager.getPipes();
     }
 
     @Override
-    public int getScore() {
-        return game.getScore();
+    public Map<Player, Integer> getPlayersAndScores() {
+        return playerManager.getPlayersAndScores();
     }
 
     @Override
     public GameShop getGameShop() {
-        return game.getGameShop();
+        return playerManager.getGameShop();
+    }
+
+    @Override
+    public int getWidth() {
+        return gameWorld.getWidth();
+    }
+
+    @Override
+    public int getHeight() {
+        return gameWorld.getHeight();
+    }
+
+    @Override
+    public int getOffsetX() {
+        return gameWorld.getOffsetX();
+    }
+
+    @Override
+    public int getOffsetY() {
+        return gameWorld.getOffsetY();
+    }
+
+    @Override
+    public int getNuggetCount() {
+        return gameWorld.getNuggetCount();
+    }
+
+    @Override
+    public Map<String, TunnelCell> getEntrances() {
+        return gameWorld.getEntrances();
+    }
+
+    @Override
+    public List<HorizontalTunnel> getTunnels() {
+        return gameWorld.getTunnels();
     }
 }

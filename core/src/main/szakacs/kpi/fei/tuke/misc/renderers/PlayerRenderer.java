@@ -8,7 +8,7 @@ import szakacs.kpi.fei.tuke.arena.actors.pipe.PipeSegment;
 import szakacs.kpi.fei.tuke.enums.Direction;
 import szakacs.kpi.fei.tuke.arena.actors.pipe.PipeHead;
 import szakacs.kpi.fei.tuke.enums.PipeSegmentType;
-import szakacs.kpi.fei.tuke.intrfc.arena.game.GameLevelPrivileged;
+import szakacs.kpi.fei.tuke.intrfc.arena.game.gameLevel.GameLevelPrivileged;
 
 import java.util.ArrayList;
 import java.util.EnumMap;
@@ -51,7 +51,7 @@ public class PlayerRenderer extends AbstractGameRenderer {
 
     @Override
     public void render() {
-        for (Pipe pipe : actorManager.getPlayerToPipeMap().values()) {
+        for (Pipe pipe : playerManager.getPipes()) {
             elapsedTime += Gdx.graphics.getDeltaTime();
             PipeHead head = pipe.getHead();
             for (PipeSegment seg : pipe.getSegmentStack()) {

@@ -43,6 +43,4 @@ public interface ActorManagerQueryable {
      *         in the predicate passed to this method as argument.
      */
     List<Actor> getActorsBySearchCriteria(Predicate<Actor> predicate);
-
-    Map<Player, Pipe> getPlayerToPipeMap();
 }

@@ -24,20 +24,31 @@ import java.util.*;
 public class SAXGameParser extends DefaultHandler implements GameConfig {
 
     private enum ProcessingState{
-        INITIALIZING, LEVELS, ACTORS
+        INITIALIZING, PLAYERS, UPDATERS, LEVELS, ACTORS
     }
-    private class PackageNameContainer {
+    private final class PackageNameContainer {
         private String playerPackage;
         private String actorPackage;
         private String updaterPackage;
     }
+    private final class GameClasses {
+        private Map<String, Class<? extends Player>> playerClasses;
+        private Map<String, Class<? extends GameUpdater>> updaterClasses;
+        private Map<Class<? extends Actor>, Set<Direction>> actorToDirectionsMap;
 
+        private GameClasses(){
+            playerClasses = new HashMap<>(5);
+            updaterClasses = new HashMap<>(5);
+            actorToDirectionsMap = new HashMap<>(12);
+        }
+    }
+
+    private PackageNameContainer packageNames;
+    private GameClasses gameClasses;
     private List<DummyLevel> levels;
-    private Map<Class<? extends Actor>, Set<Direction>> actorToDirectionsMap;
-    private SAXGameParser.ProcessingState state;
+    private ProcessingState state;
     private SAXParser parser;
     private SAXWorldParser worldConfigProcessor;
-    private PackageNameContainer packageNames;
 
     SAXGameParser() throws SAXException {
         super();
@@ -48,8 +59,8 @@ public class SAXGameParser extends DefaultHandler implements GameConfig {
         }
         this.worldConfigProcessor = new SAXWorldParser();
         this.packageNames = new PackageNameContainer();
+        this.gameClasses = new GameClasses();
         this.levels = new ArrayList<>();
-        this.actorToDirectionsMap = new HashMap<>(12);
         this.state = ProcessingState.INITIALIZING;
     }
 
@@ -62,21 +73,10 @@ public class SAXGameParser extends DefaultHandler implements GameConfig {
                     packageNames.actorPackage = attributes.getValue("actor-package");
                     packageNames.updaterPackage = attributes.getValue("updater-package");
                 }
-                this.state = ProcessingState.LEVELS;
+                this.state = ProcessingState.PLAYERS;
                 break;
-            case LEVELS:
-                if (qName.equalsIgnoreCase("level")){
-                    String path = attributes.getValue("world");
-                    try {
-                        parser.parse(new File(path), worldConfigProcessor);
-                    } catch (IOException e) {
-                        throw new SAXException("Could not initialize level config file: " + path, e);
-                    }
-                    DummyLevel level = new DummyLevel(worldConfigProcessor.getWorld());
-                    levels.add(level);
-                    worldConfigProcessor.reset();
-                } else if (qName.equalsIgnoreCase("player")) {
-                    DummyLevel currentLevel = levels.get(levels.size() - 1);
+            case PLAYERS:
+                if (qName.equalsIgnoreCase("player")) {
                     String className = packageNames.playerPackage + '.' + attributes.getValue("class");
                     Class<? extends Player> playerCls;
                     try {
@@ -84,12 +84,11 @@ public class SAXGameParser extends DefaultHandler implements GameConfig {
                     } catch (ClassNotFoundException e) {
                         throw new SAXException("Could not locate player class: " + className, e);
                     }
-                    DummyEntrance entrance = currentLevel.getGameWorldPrototype().getDummyEntrances().get(
-                            attributes.getValue("entrance")
-                    );
-                    currentLevel.getEntranceToPlayerMap().put(entrance, playerCls);
-                } else if (qName.equalsIgnoreCase("updater")) {
-                    DummyLevel currentLevel = levels.get(levels.size() - 1);
+                    gameClasses.playerClasses.put(attributes.getValue("id"), playerCls);
+                }
+                break;
+            case UPDATERS:
+                if (qName.equalsIgnoreCase("updater")) {
                     String className = packageNames.updaterPackage + '.' + attributes.getValue("class");
                     Class<? extends GameUpdater> updaterCls;
                     try {
@@ -97,8 +96,11 @@ public class SAXGameParser extends DefaultHandler implements GameConfig {
                     } catch (ClassNotFoundException e) {
                         throw new SAXException("Could not locate updater class: " + className, e);
                     }
-                    currentLevel.getGameUpdaterClasses().add(updaterCls);
+                    gameClasses.updaterClasses.put(attributes.getValue("id"), updaterCls);
                 }
+                break;
+            case LEVELS:
+                processLevel(qName, attributes);
                 break;
             case ACTORS:
                 if (qName.equalsIgnoreCase("actor")) {
@@ -114,7 +116,7 @@ public class SAXGameParser extends DefaultHandler implements GameConfig {
                         if (Boolean.parseBoolean(attributes.getValue(dir.name().toLowerCase())))
                             dirs.add(dir);
                     }
-                    actorToDirectionsMap.put(actorClass, dirs);
+                    gameClasses.actorToDirectionsMap.put(actorClass, dirs);
                 }
                 break;
         }
@@ -122,8 +124,12 @@ public class SAXGameParser extends DefaultHandler implements GameConfig {
 
     @Override
     public void endElement(String uri, String localName, String qName) throws SAXException {
-        if (qName.equalsIgnoreCase("levels")) {
-            this.state = SAXGameParser.ProcessingState.ACTORS;
+        if (qName.equalsIgnoreCase("players")){
+            state = ProcessingState.UPDATERS;
+        } else if (qName.equalsIgnoreCase("updaters")){
+            state = ProcessingState.LEVELS;
+        } else if (qName.equalsIgnoreCase("levels")) {
+            state = ProcessingState.ACTORS;
         }
     }
 
@@ -141,7 +147,46 @@ public class SAXGameParser extends DefaultHandler implements GameConfig {
     }
 
     @Override
+    public Set<Class<? extends Player>> getPlayerClasses() {
+        return new HashSet<>(gameClasses.playerClasses.values());
+    }
+
+    @Override
+    public Set<Class<? extends GameUpdater>> getUpdaterClasses() {
+        return new HashSet<>(gameClasses.updaterClasses.values());
+    }
+
+    @Override
     public Map<Class<? extends Actor>, Set<Direction>> getActorToDirectionsMap() {
-        return actorToDirectionsMap;
+        return gameClasses.actorToDirectionsMap;
+    }
+
+    /*
+     * Helper methods
+     */
+
+    private void processLevel(String qName, Attributes attributes) throws SAXException {
+        if (qName.equalsIgnoreCase("level")){
+            String path = attributes.getValue("world");
+            try {
+                parser.parse(new File(path), worldConfigProcessor);
+            } catch (IOException e) {
+                throw new SAXException("Could not initialize level config file: " + path, e);
+            }
+            DummyLevel level = new DummyLevel(worldConfigProcessor.getWorld());
+            levels.add(level);
+            worldConfigProcessor.reset();
+        } else if (qName.equalsIgnoreCase("updater")){
+            DummyLevel currentLevel = levels.get(levels.size() - 1);
+            Class<? extends GameUpdater> updaterCls = gameClasses.updaterClasses.get(attributes.getValue("id"));
+            currentLevel.getGameUpdaterClasses().add(updaterCls);
+        } else if (qName.equalsIgnoreCase("player")){
+            DummyLevel currentLevel = levels.get(levels.size() - 1);
+            Class<? extends Player> playerCls = gameClasses.playerClasses.get(attributes.getValue("id"));
+            DummyEntrance entrance = currentLevel.getGameWorldPrototype().getDummyEntrances().get(
+                    attributes.getValue("entrance")
+            );
+            currentLevel.getEntranceToPlayerMap().put(entrance, playerCls);
+        }
     }
 }

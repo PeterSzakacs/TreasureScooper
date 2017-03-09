@@ -1,5 +1,7 @@
 package szakacs.kpi.fei.tuke.intrfc.arena.callbacks;
 
+import szakacs.kpi.fei.tuke.intrfc.Player;
+
 /**
  * Created by developer on 6.2.2017.
  *
@@ -19,5 +21,5 @@ public interface OnItemBoughtCallback {
      * @param price the price payed for whatever was bough from the store
      *              (equals the decrement of the game score).
      */
-    void onItemBought(int price);
+    void onItemBought(int price, Player buyer);
 }

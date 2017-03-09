@@ -2,7 +2,9 @@ package szakacs.kpi.fei.tuke.intrfc.misc;
 
 import szakacs.kpi.fei.tuke.enums.ActorType;
 import szakacs.kpi.fei.tuke.enums.Direction;
+import szakacs.kpi.fei.tuke.intrfc.Player;
 import szakacs.kpi.fei.tuke.intrfc.arena.actors.Actor;
+import szakacs.kpi.fei.tuke.intrfc.arena.game.GameUpdater;
 import szakacs.kpi.fei.tuke.misc.configProcessors.gameValueObjects.DummyLevel;
 
 import java.util.List;
@@ -28,6 +30,10 @@ public interface GameConfig {
      * @return a list of value objects for instantiating the game levels
      */
     List<DummyLevel> getLevels();
+
+    Set<Class<? extends Player>> getPlayerClasses();
+
+    Set<Class<? extends GameUpdater>> getUpdaterClasses();
 
     /**
      * Returns a map which states which directions an actor
