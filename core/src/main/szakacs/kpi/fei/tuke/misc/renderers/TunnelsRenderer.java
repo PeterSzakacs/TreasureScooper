@@ -10,10 +10,7 @@ import szakacs.kpi.fei.tuke.enums.Direction;
 import szakacs.kpi.fei.tuke.enums.TunnelCellType;
 import szakacs.kpi.fei.tuke.intrfc.arena.game.gameLevel.GameLevelPrivileged;
 
-import java.util.ArrayList;
-import java.util.EnumMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created by developer on 24.1.2017.
@@ -22,7 +19,7 @@ public class TunnelsRenderer extends AbstractGameRenderer {
 
     private Sprite nuggetSprite;
     private Map<TunnelCellType, Sprite> tunnelCellSprites;
-    private List<TunnelCell> interconnections;
+    private Set<TunnelCell> interconnections;
 
     public TunnelsRenderer(SpriteBatch batch, GameLevelPrivileged game) {
         super(batch, game);
@@ -36,6 +33,7 @@ public class TunnelsRenderer extends AbstractGameRenderer {
                     )
             );
         }
+        this.interconnections = new HashSet<>();
         this.initializeInterconnections();
     }
 
@@ -71,16 +69,15 @@ public class TunnelsRenderer extends AbstractGameRenderer {
     }
 
     private void initializeInterconnections(){
-        this.interconnections = new ArrayList<>();
+        interconnections.clear();
         for (TunnelCell cell : world.getEntrances().values()) {
-            for (TunnelCell entrance = cell;
-                 cell.getCellType() != TunnelCellType.ENTRANCE;
+            for ( ; cell.getCellType() != TunnelCellType.ENTRANCE;
                  cell = cell.getCellAtDirection(Direction.DOWN)) {
                 interconnections.add(cell);
             }
         }
         for (HorizontalTunnel ht : world.getTunnels()){
-            List<TunnelCell> exits = ht.getCellsBySearchCriteria(cell ->
+            Set<TunnelCell> exits = ht.getCellsBySearchCriteria(cell ->
                     cell.getCellType() == TunnelCellType.EXIT
             );
             for (TunnelCell exitCell : exits){

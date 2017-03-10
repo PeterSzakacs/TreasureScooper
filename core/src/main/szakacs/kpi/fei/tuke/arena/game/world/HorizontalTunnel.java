@@ -16,8 +16,8 @@ public class HorizontalTunnel {
     private int x;
     private int y;
     private int nuggetCount;
-    private List<TunnelCell> cells;
-    private List<TunnelCell> searchResults;
+    private Set<TunnelCell> cells;
+    private Set<TunnelCell> searchResults;
     private GameWorldPrivileged world;
 
     /*
@@ -28,9 +28,11 @@ public class HorizontalTunnel {
         this.x = dt.getX();
         this.y = dt.getY();
         this.world = world;
+        int numCells = dt.getNumCells();
+        this.cells = new HashSet<>(numCells);
+        this.searchResults = new HashSet<>(numCells);
         this.buildTunnel(dt.getNumCells());
-        this.nuggetCount = dt.getNumCells();
-        this.searchResults = new ArrayList<>(dt.getNumCells());
+        this.nuggetCount = numCells;
     }
 
     private void buildTunnel(int numCells){
@@ -38,7 +40,6 @@ public class HorizontalTunnel {
         TunnelCell leftmost, rightmost, prevCell, nextCell;
         int count = 0;
         int rightEdge = this.x + (numCells - 1) * world.getOffsetX() * Direction.RIGHT.getXStep();
-        this.cells = new ArrayList<>(numCells);
 
         // create and add left edge cell cell of the tunnel
         leftmost = new TunnelCell(
@@ -72,70 +73,72 @@ public class HorizontalTunnel {
     }
 
     void addInterconnect(int x, HorizontalTunnel exitTunnel) {
-        /*if (interconnects == null || interconnects.isEmpty())
-            return;*/
-        for (int idx = 0; idx < cells.size() ; idx++) {
-            TunnelCell previous = cells.get(idx);
-            if (previous.getX() == x) {
-                // Remove previous TUNNEL cell and add a new EXIT cell in its place
-                TunnelCell removed = this.cells.get(idx);
-                TunnelCell added = new TunnelCell(
-                        removed.getX(),
-                        removed.getY(),
-                        TunnelCellType.EXIT,
-                        this,
-                        world
-                );
-                this.cells.set(idx, added);
+        this.getCellsBySearchCriteria(
+                (cell) -> cell.getCellType() == TunnelCellType.TUNNEL
+                        && cell.isWithinCell(x, this.y)
+        );
+        if (! searchResults.isEmpty()) {
+            // Remove previous TUNNEL cell and add a new EXIT cell in its place
+            TunnelCell removed = searchResults.iterator().next();
+            TunnelCell added = new TunnelCell(
+                    removed.getX(),
+                    removed.getY(),
+                    TunnelCellType.EXIT,
+                    this,
+                    world
+            );
+            cells.remove(removed);
+            cells.add(added);
 
-                // Connect the new EXIT cell with the previous TUNNEL cell's neighbors
-                TunnelCell left = removed.getCellAtDirection(Direction.LEFT);
-                TunnelCell right = removed.getCellAtDirection(Direction.RIGHT);
-                added.setAtDirection(Direction.LEFT, left, world.getAuthenticator());
-                added.setAtDirection(Direction.RIGHT, right, world.getAuthenticator());
-                left.setAtDirection(Direction.RIGHT, added, world.getAuthenticator());
-                right.setAtDirection(Direction.LEFT, added, world.getAuthenticator());
+            // Connect the new EXIT cell with the previous TUNNEL cell's neighbors
+            TunnelCell left = removed.getCellAtDirection(Direction.LEFT);
+            TunnelCell right = removed.getCellAtDirection(Direction.RIGHT);
+            added.setAtDirection(Direction.LEFT, left, world.getAuthenticator());
+            added.setAtDirection(Direction.RIGHT, right, world.getAuthenticator());
+            left.setAtDirection(Direction.RIGHT, added, world.getAuthenticator());
+            right.setAtDirection(Direction.LEFT, added, world.getAuthenticator());
 
-                // Create new cells until the specified exit tunnel is reached
-                TunnelCell prevCell = added, nextCell;
-                for (int y = this.y + world.getOffsetY() * Direction.DOWN.getYStep();
-                     y > exitTunnel.getY();
-                     y += world.getOffsetY() * Direction.DOWN.getYStep()) {
-                    nextCell = new TunnelCell(added.getX(), y, TunnelCellType.INTERCONNECT, null, world);
-                    nextCell.setAtDirection(Direction.UP, prevCell, world.getAuthenticator());
-                    prevCell.setAtDirection(Direction.DOWN, nextCell, world.getAuthenticator());
-                    prevCell = nextCell;
-                }
-                // Tell the exit tunnel to create an entrance
-                exitTunnel.setEntrance(prevCell);
+            // Create new cells until the specified exit tunnel is reached
+            TunnelCell prevCell = added, nextCell;
+            for (int y = this.y + world.getOffsetY() * Direction.DOWN.getYStep();
+                 y > exitTunnel.getY();
+                 y += world.getOffsetY() * Direction.DOWN.getYStep()) {
+                nextCell = new TunnelCell(added.getX(), y, TunnelCellType.INTERCONNECT, null, world);
+                nextCell.setAtDirection(Direction.UP, prevCell, world.getAuthenticator());
+                prevCell.setAtDirection(Direction.DOWN, nextCell, world.getAuthenticator());
+                prevCell = nextCell;
             }
+            // Tell the exit tunnel to create an entrance
+            exitTunnel.setEntrance(prevCell);
         }
     }
 
     void setEntrance(TunnelCell entranceCell) {
-        if (entranceCell == null || Math.abs(entranceCell.getY() - this.y) > world.getOffsetY())
+        if (entranceCell == null)
             return;
-        for (int idx = 0; idx < cells.size() ; idx++){
-            TunnelCell previous = cells.get(idx);
-            if (previous.getX() == entranceCell.getX()) {
-                TunnelCell newCell = new TunnelCell(
-                        previous.getX(),
-                        previous.getY(),
-                        TunnelCellType.ENTRANCE,
-                        this,
-                        world
-                );
-                this.cells.set(idx, newCell);
-                TunnelCell left = previous.getCellAtDirection(Direction.LEFT);
-                TunnelCell right = previous.getCellAtDirection(Direction.RIGHT);
-                left.setAtDirection(Direction.RIGHT, newCell, world.getAuthenticator());
-                right.setAtDirection(Direction.LEFT, newCell, world.getAuthenticator());
-                newCell.setAtDirection(Direction.LEFT, left, world.getAuthenticator());
-                newCell.setAtDirection(Direction.RIGHT, right, world.getAuthenticator());
-                newCell.setAtDirection(Direction.UP, entranceCell, world.getAuthenticator());
-                entranceCell.setAtDirection(Direction.DOWN, newCell, world.getAuthenticator());
-                break;
-            }
+        this.getCellsBySearchCriteria(
+                (cell) -> cell.getCellType() == TunnelCellType.TUNNEL
+                        && cell.isWithinCell(entranceCell.getX(), this.y)
+        );
+        if (! searchResults.isEmpty()) {
+            TunnelCell previous = searchResults.iterator().next();
+            TunnelCell newCell = new TunnelCell(
+                    previous.getX(),
+                    previous.getY(),
+                    TunnelCellType.ENTRANCE,
+                    this,
+                    world
+            );
+            cells.remove(previous);
+            cells.add(newCell);
+            TunnelCell left = previous.getCellAtDirection(Direction.LEFT);
+            TunnelCell right = previous.getCellAtDirection(Direction.RIGHT);
+            left.setAtDirection(Direction.RIGHT, newCell, world.getAuthenticator());
+            right.setAtDirection(Direction.LEFT, newCell, world.getAuthenticator());
+            newCell.setAtDirection(Direction.LEFT, left, world.getAuthenticator());
+            newCell.setAtDirection(Direction.RIGHT, right, world.getAuthenticator());
+            newCell.setAtDirection(Direction.UP, entranceCell, world.getAuthenticator());
+            entranceCell.setAtDirection(Direction.DOWN, newCell, world.getAuthenticator());
         }
     }
 
@@ -156,15 +159,15 @@ public class HorizontalTunnel {
         return y;
     }
 
-    public List<TunnelCell> getCells() {
-        return Collections.unmodifiableList(cells);
-    }
-
     public int getNuggetCount(){
         return this.nuggetCount;
     }
 
-    public List<TunnelCell> getCellsBySearchCriteria(Predicate<TunnelCell> criteria){
+    public Set<TunnelCell> getCells() {
+        return Collections.unmodifiableSet(cells);
+    }
+
+    public Set<TunnelCell> getCellsBySearchCriteria(Predicate<TunnelCell> criteria){
         searchResults.clear();
         for (TunnelCell cell : this.cells)
             if (criteria.test(cell))

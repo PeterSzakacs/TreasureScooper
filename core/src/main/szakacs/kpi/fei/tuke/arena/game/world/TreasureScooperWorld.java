@@ -23,7 +23,7 @@ public class TreasureScooperWorld implements GameWorldPrivileged {
     private int offsetY;
 
     private final Map<String, TunnelCell> entrances;
-    private final List<HorizontalTunnel> tunnels;
+    private final Set<HorizontalTunnel> tunnels;
     private int nuggetCount;
 
     private PlayerManagerPrivileged playerManager;
@@ -31,7 +31,7 @@ public class TreasureScooperWorld implements GameWorldPrivileged {
 
     public TreasureScooperWorld(MethodCallAuthenticator authenticator) {
         this.authenticator = authenticator;
-        this.tunnels = new ArrayList<>();
+        this.tunnels = new HashSet<>();
         this.entrances = new HashMap<>();
     }
 
@@ -62,7 +62,7 @@ public class TreasureScooperWorld implements GameWorldPrivileged {
             HorizontalTunnel ht = new HorizontalTunnel(dt, this);
             tunnelMap.put(dt.getId(), ht);
             // it is more efficient (in terms of time complexity) to add items to two lists simultaneously,
-            // instead of calling new ArrayList<>(tunnelMap.values()) at the end of this method.
+            // instead of calling tunnels.addAll(tunnelMap.values()) at the end of this method.
             this.tunnels.add(ht);
         }
 
@@ -135,8 +135,8 @@ public class TreasureScooperWorld implements GameWorldPrivileged {
     }
 
     @Override
-    public List<HorizontalTunnel> getTunnels(){
-        return Collections.unmodifiableList(tunnels);
+    public Set<HorizontalTunnel> getTunnels(){
+        return Collections.unmodifiableSet(tunnels);
     }
 
     @Override

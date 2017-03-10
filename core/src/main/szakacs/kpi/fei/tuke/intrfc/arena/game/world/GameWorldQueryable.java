@@ -3,8 +3,8 @@ package szakacs.kpi.fei.tuke.intrfc.arena.game.world;
 import szakacs.kpi.fei.tuke.arena.game.world.HorizontalTunnel;
 import szakacs.kpi.fei.tuke.arena.game.world.TunnelCell;
 
-import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * Created by developer on 25.1.2017.
@@ -69,5 +69,5 @@ public interface GameWorldQueryable {
      *
      * @return all horizontal tunnels of the game gameInterface as an unmodifiable list
      */
-    List<HorizontalTunnel> getTunnels();
+    Set<HorizontalTunnel> getTunnels();
 }

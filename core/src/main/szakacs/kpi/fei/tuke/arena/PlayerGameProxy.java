@@ -37,7 +37,7 @@ public class PlayerGameProxy implements PlayerGameInterface {
         public int getOffsetY() { return gameWorld.getOffsetY(); }
         public int getNuggetCount() { return gameWorld.getNuggetCount(); }
         public Map<String, TunnelCell> getEntrances() { return gameWorld.getEntrances(); }
-        public List<HorizontalTunnel> getTunnels() { return gameWorld.getTunnels(); }
+        public Set<HorizontalTunnel> getTunnels() { return gameWorld.getTunnels(); }
     };
 
     protected GameLevelPrivileged game;

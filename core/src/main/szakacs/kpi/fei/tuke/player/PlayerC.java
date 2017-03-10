@@ -12,6 +12,7 @@ import szakacs.kpi.fei.tuke.intrfc.misc.Stack;
 import szakacs.kpi.fei.tuke.intrfc.arena.proxies.PlayerGameInterface;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * Created by developer on 5.11.2016.
@@ -121,11 +122,11 @@ public class PlayerC implements Player {
     }
 
     private TunnelCell findNearestExit() {
-        List<TunnelCell> exits = this.currentTunnel.getCellsBySearchCriteria((cell) ->
+        Set<TunnelCell> exits = this.currentTunnel.getCellsBySearchCriteria((cell) ->
                 cell.getCellType() == TunnelCellType.EXIT
         );
         if ( ! exits.isEmpty() ) {
-            TunnelCell nearest = exits.get(0);
+            TunnelCell nearest = exits.iterator().next();
             int nearest_diff = Math.abs(nearest.getX() - head.getX()), diff_x;
             for (TunnelCell cell : exits) {
                 diff_x = Math.abs(head.getX() - cell.getX());
