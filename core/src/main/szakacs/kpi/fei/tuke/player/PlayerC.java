@@ -2,16 +2,12 @@ package szakacs.kpi.fei.tuke.player;
 
 import szakacs.kpi.fei.tuke.arena.actors.pipe.Pipe;
 import szakacs.kpi.fei.tuke.arena.actors.pipe.PipeHead;
-import szakacs.kpi.fei.tuke.arena.actors.pipe.PipeSegment;
 import szakacs.kpi.fei.tuke.enums.Direction;
 import szakacs.kpi.fei.tuke.enums.TunnelCellType;
 import szakacs.kpi.fei.tuke.arena.game.world.HorizontalTunnel;
 import szakacs.kpi.fei.tuke.arena.game.world.TunnelCell;
-import szakacs.kpi.fei.tuke.intrfc.Player;
-import szakacs.kpi.fei.tuke.intrfc.misc.Stack;
 import szakacs.kpi.fei.tuke.intrfc.arena.proxies.PlayerGameInterface;
 
-import java.util.List;
 import java.util.Set;
 
 /**
@@ -19,11 +15,9 @@ import java.util.Set;
  *
  * GameLevelQueryable API quality at current stage is still NOT guaranteed. :P
  */
-public class PlayerC implements Player {
+public class PlayerC extends AbstractPlayer {
 
-    private PipeHead head;
     // again, this is all code the student can implement
-    private Pipe pipe;
 
     private enum State {
         // Currently this example student code does NOT take enemies into account
@@ -31,15 +25,22 @@ public class PlayerC implements Player {
         BEGIN, ENTERTUNNEL, CLEAR, RETURN, FINISH, PURSUE_ENEMY
     }
 
+    private PipeHead head;
     private State state;
     private Direction currentDir;
     private TunnelCell currentPosition;
     private HorizontalTunnel currentTunnel;
     private TunnelCell entrance;
-    private PlayerGameInterface world;
-    private Stack<PipeSegment> segmentStack;
 
-    public PlayerC() {
+    @Override
+    public void initialize(PlayerGameInterface gameInterface, Pipe pipe) {
+        super.initialize(gameInterface, pipe);
+        this.state = State.BEGIN;
+        this.head = pipe.getHead();
+        this.currentDir = this.head.getDirection();
+        this.currentPosition = pipe.getHead().getCurrentPosition();
+        this.currentTunnel = null;
+        this.entrance = null;
     }
 
     /**
@@ -92,24 +93,6 @@ public class PlayerC implements Player {
                     segmentStack.pop();
                 break;
         }
-    }
-
-    @Override
-    public void initialize(PlayerGameInterface world, Pipe pipe) {
-        this.state = State.BEGIN;
-        this.pipe = pipe;
-        this.head = pipe.getHead();
-        this.currentDir = this.head.getDirection();
-        this.world = world;
-        this.currentPosition = pipe.getHead().getCurrentPosition();
-        this.currentTunnel = null;
-        this.entrance = null;
-        this.segmentStack = pipe.getSegmentStack();
-    }
-
-    @Override
-    public void deallocate() {
-
     }
 
     private void handleEntertunnel() {
@@ -169,7 +152,7 @@ public class PlayerC implements Player {
     }
 
     private void handleClear() {
-        head.getWeapon().getBulletQueue().enqueue(world.getGameShop().buyBullet(this));
+        head.getWeapon().getBulletQueue().enqueue(gameInterface.getGameShop().buyBullet(this));
         segmentStack.push(pipe.calculateNextSegment(currentDir));
         if (pipe.isWall(currentDir)){
             TunnelCellType cellType = head.getCurrentPosition().getCellType();

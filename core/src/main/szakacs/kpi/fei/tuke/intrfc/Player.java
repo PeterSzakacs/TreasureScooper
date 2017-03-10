@@ -23,9 +23,9 @@ public interface Player {
      * of any member variables the player wants to use is reserved
      * for this method (and the constructor has no parameters).
      *
-     * @param world the interface to the game functionality for the player
+     * @param gameInterface the interface to the game functionality for the player
      */
-    void initialize(PlayerGameInterface world, Pipe pipe);
+    void initialize(PlayerGameInterface gameInterface, Pipe pipe);
 
     /**
      * Frees resources that are not taken care of by the garbage
