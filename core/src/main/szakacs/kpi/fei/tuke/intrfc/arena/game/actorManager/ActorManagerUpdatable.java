@@ -13,23 +13,18 @@ import szakacs.kpi.fei.tuke.intrfc.arena.game.MethodCallAuthenticator;
 public interface ActorManagerUpdatable extends ActorManagerQueryable {
 
     /**
-     * Sets a method (an action) that is to be called (performed)
-     * when the actor given as argument is unregistered, that is,
-     * removed from the game.
+     * Registers an actor, thereby adding the actor to the game level.
+     * Also optionally sets a method (an action) that is to be called
+     * (performed) when the actor given as argument is unregistered,
+     * that is, removed from the game level.
      *
-     * @param actor: The actor
-     * @param action: The action to be performed when the actor is unregistered,
-     *              must be a method returning void and taking no arguments
+     *
+     * @param actor Not Null: The actor to add to the game level
+     * @param action Optional: The action to be performed when the actor is unregistered,
+     *               Must be a reference to a method returning void and taking no arguments
+     *               or null if nothing is to be performed on a given actors removal.
      */
-    void setOnDestroy(Actor actor, Runnable action);
-
-    /**
-     * Registers an actor, thereby adding the actor to the game gameInterface
-     *
-     * @param actor Not Null: The actor to add to the game gameInterface
-     *
-     */
-    void registerActor(Actor actor);
+    void registerActor(Actor actor, Runnable action);
 
     /**
      * Unregisters an actor (removing from the game, in the sense that update()

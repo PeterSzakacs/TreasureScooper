@@ -14,31 +14,29 @@ import java.util.function.Predicate;
  */
 public class ActorManager implements ActorManagerPrivileged {
 
-    private List<Actor> actors;
-    private List<Actor> searchResults;
-    private Map<Actor, Runnable> onDestroyActions;
+    private Map<Actor, Runnable> actorActionMap;
     private Map<Actor, Integer> unregisteredActors;
+    private Set<Actor> searchResults;
     private MethodCallAuthenticator authenticator;
 
     ActorManager(MethodCallAuthenticator authenticator){
-        this.actors = new ArrayList<>();
-        this.searchResults = new ArrayList<>();
-        this.unregisteredActors = new HashMap<>();
-        this.onDestroyActions = new HashMap<>(20);
         this.authenticator = authenticator;
+        this.actorActionMap = new HashMap<>(20);
+        this.unregisteredActors = new HashMap<>();
+        this.searchResults = new HashSet<>();
     }
 
     // ActorManagerQueryable methods (only queries)
 
     @Override
-    public List<Actor> getActors(){
-        return Collections.unmodifiableList(actors);
+    public Set<Actor> getActors(){
+        return Collections.unmodifiableSet(actorActionMap.keySet());
     }
 
     @Override
-    public List<Actor> getActorsBySearchCriteria(Predicate<Actor> predicate){
+    public Set<Actor> getActorsBySearchCriteria(Predicate<Actor> predicate){
         searchResults.clear();
-        for (Actor actor : actors){
+        for (Actor actor : actorActionMap.keySet()){
             if (predicate.test(actor))
                 searchResults.add(actor);
         }
@@ -48,15 +46,10 @@ public class ActorManager implements ActorManagerPrivileged {
     // ActorManagerUpdatable methods (adding and removing actors)
 
     @Override
-    public void setOnDestroy(Actor actor, Runnable action) {
-        onDestroyActions.put(actor, action);
-    }
-
-    @Override
-    public void registerActor(Actor actor) {
+    public void registerActor(Actor actor, Runnable action) {
         if (actor != null) {
             System.out.println("Registering: " + actor.toString());
-            actors.add(actor);
+            actorActionMap.put(actor, action);
         }
     }
 
@@ -65,10 +58,9 @@ public class ActorManager implements ActorManagerPrivileged {
         if (actor != null) {
             System.out.println("Unregistering: " + actor.toString());
             this.unregisteredActors.put(actor, 0);
-            Runnable action = onDestroyActions.get(actor);
+            Runnable action = actorActionMap.get(actor);
             if (action != null) {
                 action.run();
-                onDestroyActions.remove(actor, action);
             }
         }
     }
@@ -77,14 +69,14 @@ public class ActorManager implements ActorManagerPrivileged {
 
     @Override
     public void update() {
-        for (Actor actor : actors) {
+        for (Actor actor : actorActionMap.keySet()) {
             actor.act(authenticator);
         }
         for (Iterator<Actor> actorIt = unregisteredActors.keySet().iterator(); actorIt.hasNext(); ) {
             Actor unregistered = actorIt.next();
             Integer counter = unregisteredActors.get(unregistered);
             if (counter == 0) {
-                actors.remove(unregistered);
+                actorActionMap.remove(unregistered);
                 unregisteredActors.put(unregistered, ++counter);
             } else if (counter > 3) {
                 actorIt.remove();
@@ -101,9 +93,8 @@ public class ActorManager implements ActorManagerPrivileged {
 
     @Override
     public void startNewGame(GameLevelPrivileged gameLevel, DummyLevel level){
-        actors.clear();
+        actorActionMap.clear();
         searchResults.clear();
-        onDestroyActions.clear();
         unregisteredActors.clear();
     }
 }

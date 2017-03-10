@@ -133,8 +133,7 @@ public class GameUpdaterEnemies extends AbstractGameUpdater {
 
         // register the actor
         Mole enemy = new Mole(dir, cell, game.getActorInterface());
-        actorManager.registerActor(enemy);
-        actorManager.setOnDestroy(enemy, () -> this.createdEnemiesCount-- );
+        actorManager.registerActor(enemy, () -> this.createdEnemiesCount--);
         this.createdEnemiesCount++;
     }
 }

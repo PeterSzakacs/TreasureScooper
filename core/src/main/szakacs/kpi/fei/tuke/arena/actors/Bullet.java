@@ -43,7 +43,7 @@ public class Bullet extends AbstractMoveableActor {
             super.setCurrentPosition(position);
             this.xDelta = gameInterface.getGameWorld().getOffsetX() * 2;
             this.yDelta = gameInterface.getGameWorld().getOffsetY() * 2;
-            gameInterface.registerActor(this);
+            gameInterface.registerActor(this, null);
             super.move(xDelta, yDelta, dir);
         }
     }

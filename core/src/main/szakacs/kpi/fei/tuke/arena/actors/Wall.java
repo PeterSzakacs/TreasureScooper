@@ -6,7 +6,7 @@ import szakacs.kpi.fei.tuke.enums.Direction;
 import szakacs.kpi.fei.tuke.intrfc.arena.actors.Actor;
 import szakacs.kpi.fei.tuke.intrfc.arena.proxies.ActorGameInterface;
 
-import java.util.List;
+import java.util.Set;
 
 /**
  * Created by developer on 31.12.2016.
@@ -24,7 +24,7 @@ public class Wall extends AbstractActor {
     @Override
     public void act(Object authToken) {
         if (gameInterface.getAuthenticator().authenticate(authToken)) {
-            List<Actor> intersecting = gameInterface.getActorsBySearchCriteria(actor ->
+            Set<Actor> intersecting = gameInterface.getActorsBySearchCriteria(actor ->
                     actor.getType() == ActorType.BULLET
                             && this.intersects(actor));
             if (!intersecting.isEmpty()) {

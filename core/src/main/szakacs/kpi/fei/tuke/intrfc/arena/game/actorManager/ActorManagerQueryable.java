@@ -6,6 +6,7 @@ import szakacs.kpi.fei.tuke.intrfc.arena.actors.Actor;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.function.Predicate;
 
 /**
@@ -28,7 +29,7 @@ public interface ActorManagerQueryable {
      *
      * @return all game actors (except the PipeHead) as an unmodifiable list
      */
-    List<Actor> getActors();
+    Set<Actor> getActors();
 
     /**
      * Queries all currently active game actors
@@ -42,5 +43,5 @@ public interface ActorManagerQueryable {
      * @return a list of all game actors satisfying the criteria specified
      *         in the predicate passed to this method as argument.
      */
-    List<Actor> getActorsBySearchCriteria(Predicate<Actor> predicate);
+    Set<Actor> getActorsBySearchCriteria(Predicate<Actor> predicate);
 }

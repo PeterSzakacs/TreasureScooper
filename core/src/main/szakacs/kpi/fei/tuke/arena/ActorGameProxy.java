@@ -15,13 +15,8 @@ public class ActorGameProxy extends PlayerGameProxy implements ActorGameInterfac
     }
 
     @Override
-    public void setOnDestroy(Actor actor, Runnable action) {
-        actorManager.setOnDestroy(actor, action);
-    }
-
-    @Override
-    public void registerActor(Actor actor) {
-        actorManager.registerActor(actor);
+    public void registerActor(Actor actor, Runnable action) {
+        actorManager.registerActor(actor, action);
     }
 
     @Override

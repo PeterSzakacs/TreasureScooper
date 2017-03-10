@@ -131,8 +131,7 @@ public class GameUpdaterWalls extends AbstractGameUpdater {
 
         // register the wall actor
         Wall wall = new Wall(cell, game.getActorInterface());
-        actorManager.registerActor(wall);
-        actorManager.setOnDestroy(wall, () -> {
+        actorManager.registerActor(wall, () -> {
             removeWall(wall);
             wall.reconnectCells();
         });

@@ -10,7 +10,7 @@ import szakacs.kpi.fei.tuke.intrfc.arena.game.world.GameWorldQueryable;
 import szakacs.kpi.fei.tuke.intrfc.misc.Stack;
 import szakacs.kpi.fei.tuke.intrfc.arena.proxies.ActorGameInterface;
 
-import java.util.List;
+import java.util.Set;
 
 /**
  * Created by developer on 4.11.2016.
@@ -33,7 +33,7 @@ public class Pipe {
                     && pushed.getSegmentType() != PipeSegmentType.VERTICAL) {
                 edges.add(pushed);
             }*/
-            List<Actor> enemies = gameInterface.getActorsBySearchCriteria(actor ->
+            Set<Actor> enemies = gameInterface.getActorsBySearchCriteria(actor ->
                     actor.getType() == ActorType.ENEMY && actor.intersects(head)
             );
             for (Actor actor : enemies){

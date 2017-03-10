@@ -16,6 +16,7 @@ import szakacs.kpi.fei.tuke.intrfc.arena.proxies.PlayerGameInterface;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.function.Predicate;
 
 /**
@@ -52,12 +53,12 @@ public class PlayerGameProxy implements PlayerGameInterface {
     }
 
     @Override
-    public List<Actor> getActors() {
+    public Set<Actor> getActors() {
         return actorManager.getActors();
     }
 
     @Override
-    public List<Actor> getActorsBySearchCriteria(Predicate<Actor> predicate) {
+    public Set<Actor> getActorsBySearchCriteria(Predicate<Actor> predicate) {
         return actorManager.getActorsBySearchCriteria(predicate);
     }
 
