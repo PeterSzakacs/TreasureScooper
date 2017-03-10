@@ -73,7 +73,7 @@ public class PlayerGameProxy implements PlayerGameInterface {
     }
 
     @Override
-    public List<Pipe> getPipes() {
+    public Set<Pipe> getPipes() {
         return playerManager.getPipes();
     }
 

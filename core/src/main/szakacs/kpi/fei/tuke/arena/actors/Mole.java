@@ -6,14 +6,14 @@ import szakacs.kpi.fei.tuke.enums.ActorType;
 import szakacs.kpi.fei.tuke.enums.Direction;
 import szakacs.kpi.fei.tuke.intrfc.arena.proxies.ActorGameInterface;
 
-import java.util.Collection;
+import java.util.Set;
 
 /**
  * Created by developer on 5.11.2016.
  */
 public class Mole extends AbstractMoveableActor {
 
-    private Collection<Pipe> pipes;
+    private Set<Pipe> pipes;
     private Pipe intersectingPipe;
     private int xDelta;
     private int yDelta;

@@ -29,7 +29,7 @@ public class PlayerManager implements PlayerManagerPrivileged {
     };
 
     private Player[] playerInstances;
-    private List<Pipe> pipes;
+    private Set<Pipe> pipes;
     private Map<Player, Integer> scores;
     private GameShop gameShop;
     private MethodCallAuthenticator authenticator;
@@ -39,7 +39,7 @@ public class PlayerManager implements PlayerManagerPrivileged {
         Set<Class<? extends Player>> playerClasses = config.getPlayerClasses();
         int size = playerClasses.size();
         this.playerInstances = new Player[size];
-        this.pipes = new ArrayList<>(size);
+        this.pipes = new HashSet<>(size);
         this.scores = new HashMap<>(size);
         int idx = 0;
         for (Class<? extends Player> playerCls : playerClasses) {
@@ -52,8 +52,8 @@ public class PlayerManager implements PlayerManagerPrivileged {
     }
 
     @Override
-    public List<Pipe> getPipes() {
-        return Collections.unmodifiableList(pipes);
+    public Set<Pipe> getPipes() {
+        return Collections.unmodifiableSet(pipes);
     }
 
     @Override
