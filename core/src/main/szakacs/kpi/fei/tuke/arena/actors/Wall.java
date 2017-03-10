@@ -16,7 +16,7 @@ public class Wall extends AbstractActor {
 
     public Wall(TunnelCell cell, ActorGameInterface gameInterface) {
         super(cell, ActorType.WALL, Direction.LEFT, gameInterface);
-        this.neighbouringCell = cell.getCellAtDirection(Direction.RIGHT);
+        this.neighbouringCell = cell.getCellAtDirection(Direction.LEFT);
         this.disconnectCells(cell);
         System.out.println("Wall<init>()");
     }
@@ -42,14 +42,14 @@ public class Wall extends AbstractActor {
     }
 
     private void disconnectCells(TunnelCell currentPosition){
-        this.neighbouringCell.setAtDirection(Direction.LEFT, null, gameInterface.getAuthenticator());
-        currentPosition.setAtDirection(Direction.RIGHT, null, gameInterface.getAuthenticator());
+        this.neighbouringCell.setAtDirection(Direction.RIGHT, null, gameInterface.getAuthenticator());
+        currentPosition.setAtDirection(Direction.LEFT, null, gameInterface.getAuthenticator());
     }
 
     public void reconnectCells(){
         System.out.println("Wall.reconnectCells()");
         TunnelCell cell = super.getCurrentPosition();
-        cell.setAtDirection(Direction.RIGHT, this.neighbouringCell, gameInterface.getAuthenticator());
-        this.neighbouringCell.setAtDirection(Direction.LEFT, cell, gameInterface.getAuthenticator());
+        cell.setAtDirection(Direction.LEFT, this.neighbouringCell, gameInterface.getAuthenticator());
+        this.neighbouringCell.setAtDirection(Direction.RIGHT, cell, gameInterface.getAuthenticator());
     }
 }

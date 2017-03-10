@@ -48,6 +48,7 @@ public class GameUpdaterEnemies extends AbstractGameUpdater {
         do {
             this.turnBound = rand.nextInt(31);
         } while (this.turnBound < 20);
+        this.eligiblePositions = new ArrayList<>();
     }
 
     /*public GameUpdaterEnemies(GameLevelPrivileged game){
@@ -73,8 +74,9 @@ public class GameUpdaterEnemies extends AbstractGameUpdater {
     @Override
     public void startNewGame(GameLevelPrivileged gameLevel, DummyLevel level){
         super.startNewGame(gameLevel, level);
-        this.turnCounter = 0;
-        this.eligiblePositions = new ArrayList<>();
+        eligiblePositions.clear();
+        createdEnemiesCount = 0;
+        turnCounter = 0;
         for (HorizontalTunnel ht : gameWorld.getTunnels()){
             eligiblePositions.addAll(ht.getCellsBySearchCriteria(
                     (cell) ->

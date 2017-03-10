@@ -4,6 +4,7 @@ import szakacs.kpi.fei.tuke.arena.actors.Wall;
 import szakacs.kpi.fei.tuke.arena.actors.pipe.Pipe;
 import szakacs.kpi.fei.tuke.arena.actors.pipe.PipeSegment;
 import szakacs.kpi.fei.tuke.arena.game.world.HorizontalTunnel;
+import szakacs.kpi.fei.tuke.enums.Direction;
 import szakacs.kpi.fei.tuke.enums.TunnelCellType;
 import szakacs.kpi.fei.tuke.arena.game.world.TunnelCell;
 import szakacs.kpi.fei.tuke.intrfc.arena.actors.Actor;
@@ -74,11 +75,14 @@ public class GameUpdaterWalls extends AbstractGameUpdater {
      */
     public void startNewGame(GameLevelPrivileged gameLevel, DummyLevel level){
         super.startNewGame(gameLevel, level);
-        this.turnCounter = 0;
+        eligiblePositions.clear();
+        createdWallsCount = 0;
+        turnCounter = 0;
         for (HorizontalTunnel ht : gameWorld.getTunnels()){
             eligiblePositions.addAll(ht.getCellsBySearchCriteria(
                     (cell) ->
                             cell.getCellType() == TunnelCellType.TUNNEL
+                                    && cell.getCellAtDirection(Direction.LEFT).getCellType() == TunnelCellType.TUNNEL
                     )
             );
         }
