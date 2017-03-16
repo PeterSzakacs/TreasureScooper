@@ -6,6 +6,7 @@ import szakacs.kpi.fei.tuke.intrfc.arena.game.playerManager.PlayerManagerPrivile
 import szakacs.kpi.fei.tuke.intrfc.arena.game.world.GameWorldPrivileged;
 import szakacs.kpi.fei.tuke.intrfc.arena.proxies.ActorGameInterface;
 import szakacs.kpi.fei.tuke.intrfc.arena.proxies.PlayerGameInterface;
+import szakacs.kpi.fei.tuke.misc.GameLevelInitializationException;
 import szakacs.kpi.fei.tuke.misc.configProcessors.gameValueObjects.DummyLevel;
 
 /**
@@ -16,7 +17,7 @@ import szakacs.kpi.fei.tuke.misc.configProcessors.gameValueObjects.DummyLevel;
  */
 public interface GameLevelPrivileged extends GameLevelUpdatable {
 
-    void startNewGame(DummyLevel level);
+    void startNewGame(DummyLevel level) throws GameLevelInitializationException;
 
     /**
      * Updates the entire game

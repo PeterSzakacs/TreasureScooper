@@ -16,6 +16,7 @@ import szakacs.kpi.fei.tuke.intrfc.arena.proxies.ActorGameInterface;
 import szakacs.kpi.fei.tuke.intrfc.arena.proxies.PlayerGameInterface;
 import szakacs.kpi.fei.tuke.intrfc.misc.GameConfig;
 import szakacs.kpi.fei.tuke.misc.ConfigProcessingException;
+import szakacs.kpi.fei.tuke.misc.GameLevelInitializationException;
 import szakacs.kpi.fei.tuke.misc.configProcessors.gameValueObjects.DummyLevel;
 
 import java.util.*;
@@ -95,7 +96,7 @@ public class TreasureScooperLevel implements GameLevelPrivileged {
     // GameLevelPrivileged methods (access to all actor manager functions and updating the whole game).
 
     @Override
-    public void startNewGame(DummyLevel level){
+    public void startNewGame(DummyLevel level) throws GameLevelInitializationException {
         gameWorld.startNewGame(this, level);
         actorManager.startNewGame(this, level);
         playerManager.startNewGame(this, level);

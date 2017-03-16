@@ -1,6 +1,7 @@
 package szakacs.kpi.fei.tuke.intrfc.arena.game;
 
 import szakacs.kpi.fei.tuke.intrfc.arena.game.gameLevel.GameLevelPrivileged;
+import szakacs.kpi.fei.tuke.misc.GameLevelInitializationException;
 import szakacs.kpi.fei.tuke.misc.configProcessors.gameValueObjects.DummyLevel;
 
 /**
@@ -8,5 +9,5 @@ import szakacs.kpi.fei.tuke.misc.configProcessors.gameValueObjects.DummyLevel;
  */
 public interface ResettableGameClass {
 
-    void startNewGame(GameLevelPrivileged gameLevel, DummyLevel level);
+    void startNewGame(GameLevelPrivileged gameLevel, DummyLevel level) throws GameLevelInitializationException;
 }

@@ -22,72 +22,66 @@ import java.util.*;
  */
 public class CoreGameRenderer implements ApplicationListener {
 
-    private GameLevelPrivileged game;
     private GameManager manager;
+    private GameLevelPrivileged currentGameLevel;
     private GameConfig config;
 
     private List<GameRenderer> renderers;
+    private GameRenderer scoreRenderer;
     private SpriteBatch batch;
     private int counter = 0;
 
-    public CoreGameRenderer(String configFilename) throws ConfigProcessingException {
+    public CoreGameRenderer() throws ConfigProcessingException, GameLevelInitializationException {
         GameConfigProcessor configProcessor = new SAXConfigProcessor();
         configProcessor.processGameConfig();
         this.config = configProcessor.getGameConfig();
         this.manager = new GameManager(config);
-        this.game = manager.getNextGameLevel();
+        this.currentGameLevel = manager.getNextGameLevel();
     }
 
     @Override
     public void create() {
         this.batch = new SpriteBatch();
         this.renderers = new ArrayList<>();
-        this.renderers.add(new BackgroundRenderer(batch, game));
-        this.renderers.add(new TunnelsRenderer(batch, game));
-        this.renderers.add(new ActorRenderer(batch, game, config));
-        this.renderers.add(new PlayerRenderer(batch, game));
-        this.renderers.add(new PlayerInfoRenderer(batch, game));
+        this.renderers.add(new BackgroundRenderer(batch, currentGameLevel));
+        this.renderers.add(new TunnelsRenderer(batch, currentGameLevel));
+        this.renderers.add(new ActorRenderer(batch, currentGameLevel, config));
+        this.renderers.add(new PlayerRenderer(batch, currentGameLevel));
+        this.renderers.add(new PlayerInfoRenderer(batch, currentGameLevel));
     }
 
     @Override
     public void resize(int width, int height) {}
 
+    // Yes, this is the main game loop
     @Override
     public void render() {
-        Gdx.gl.glClearColor(1, 1, 1, 1);
+        Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-        game.update();
+        if (currentGameLevel != null) {
+            // update game logic in current level
+            currentGameLevel.update();
 
-        batch.begin();
-        for (GameRenderer renderer : this.renderers)
-            renderer.render();
-        batch.end();
-        try {
-            Thread.sleep(80);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-
-        if (game.getState() != GameState.PLAYING){
-            counter++;
-            if (counter > 30) {
-                counter = 0;
-                GameLevelPrivileged game = null;
-                try {
-                    game = manager.getNextGameLevel();
-                } catch (ConfigProcessingException e) {
-                    throw new GdxRuntimeException("Failed to start new game level", e);
-                }
-                if (game == null) {
-                    Gdx.app.exit();
-                } else {
-                    this.game = game;
-                    for (GameRenderer renderer : renderers) {
-                        renderer.reset(game);
-                    }
-                }
+            // render current game level
+            batch.begin();
+            for (GameRenderer renderer : this.renderers)
+                renderer.render();
+            batch.end();
+            try {
+                Thread.sleep(80);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
             }
+
+            if (currentGameLevel.getState() != GameState.PLAYING) {
+                startNewGameLevel();
+            }
+        } else {
+            batch.begin();
+            scoreRenderer.render();
+            batch.end();
+            Gdx.graphics.setContinuousRendering(false);
         }
     }
 
@@ -100,16 +94,43 @@ public class CoreGameRenderer implements ApplicationListener {
     @Override
     public void dispose() {
         batch.dispose();
-        for (GameRenderer renderer : this.renderers){
+        for (GameRenderer renderer : renderers){
             renderer.dispose();
+        }
+        if (scoreRenderer != null) {
+            scoreRenderer.dispose();
         }
     }
 
     public GameWorldQueryable getWorld() {
-        return game.getGameWorld();
+        return currentGameLevel.getGameWorld();
     }
 
     /*
-     * helper rendering methods
+     * helper methods
      */
+
+    private void startNewGameLevel(){
+        counter++;
+        if (counter > 30) {
+            counter = 0;
+            GameLevelPrivileged level;
+            try {
+                level = manager.getNextGameLevel();
+            } catch (GameLevelInitializationException e) {
+                throw new GdxRuntimeException("Failed to start new game level", e);
+            }
+            if (level == null) {
+                this.scoreRenderer = new FinalScoreRenderer(batch, manager.getResults(),
+                        currentGameLevel.getGameWorld().getWidth(),
+                        currentGameLevel.getGameWorld().getHeight()
+                );
+            } else {
+                for (GameRenderer renderer : renderers) {
+                    renderer.reset(currentGameLevel);
+                }
+            }
+            currentGameLevel = level;
+        }
+    }
 }

@@ -4,6 +4,7 @@ import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
 import szakacs.kpi.fei.tuke.misc.ConfigProcessingException;
 import szakacs.kpi.fei.tuke.misc.CoreGameRenderer;
+import szakacs.kpi.fei.tuke.misc.GameLevelInitializationException;
 
 public class DesktopLauncher {
 
@@ -39,8 +40,8 @@ public class DesktopLauncher {
         LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
         CoreGameRenderer game = null;
         try {
-            game = new CoreGameRenderer("config.xml");
-        } catch (ConfigProcessingException e) {
+            game = new CoreGameRenderer();
+        } catch (ConfigProcessingException | GameLevelInitializationException e) {
             e.printStackTrace();
             System.exit(1);
         }

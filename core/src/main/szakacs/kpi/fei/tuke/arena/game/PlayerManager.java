@@ -9,6 +9,7 @@ import szakacs.kpi.fei.tuke.intrfc.arena.game.playerManager.PlayerManagerPrivile
 import szakacs.kpi.fei.tuke.intrfc.arena.game.world.GameWorldQueryable;
 import szakacs.kpi.fei.tuke.intrfc.misc.GameConfig;
 import szakacs.kpi.fei.tuke.misc.ConfigProcessingException;
+import szakacs.kpi.fei.tuke.misc.GameLevelInitializationException;
 import szakacs.kpi.fei.tuke.misc.configProcessors.gameValueObjects.DummyEntrance;
 import szakacs.kpi.fei.tuke.misc.configProcessors.gameValueObjects.DummyLevel;
 
@@ -28,27 +29,17 @@ public class PlayerManager implements PlayerManagerPrivileged {
         }
     };
 
-    private Player[] playerInstances;
     private Set<Pipe> pipes;
     private Map<Player, Integer> scores;
     private GameShop gameShop;
     private MethodCallAuthenticator authenticator;
 
-    public PlayerManager(GameConfig config, MethodCallAuthenticator authenticator) throws ConfigProcessingException {
+    public PlayerManager(GameConfig config, MethodCallAuthenticator authenticator) {
         this.authenticator = authenticator;
         Set<Class<? extends Player>> playerClasses = config.getPlayerClasses();
         int size = playerClasses.size();
-        this.playerInstances = new Player[size];
         this.pipes = new HashSet<>(size);
         this.scores = new HashMap<>(size);
-        int idx = 0;
-        for (Class<? extends Player> playerCls : playerClasses) {
-            try {
-                playerInstances[idx++] = playerCls.newInstance();
-            } catch (IllegalAccessException | InstantiationException e) {
-                throw new ConfigProcessingException("Failed to initialize player: " + playerCls, e);
-            }
-        }
     }
 
     @Override
@@ -82,26 +73,28 @@ public class PlayerManager implements PlayerManagerPrivileged {
     }
 
     @Override
-    public void startNewGame(GameLevelPrivileged gameLevel, DummyLevel level){
+    public void startNewGame(GameLevelPrivileged gameLevel, DummyLevel level) throws GameLevelInitializationException {
         pipes.clear();
         scores.clear();
         this.gameShop = new GameShop(gameLevel, scoreChangeCallback);
         Map<DummyEntrance, Class<? extends Player>> entranceToPlayerMap = level.getEntranceToPlayerMap();
         GameWorldQueryable gameWorld = gameLevel.getGameWorld();
         for (DummyEntrance de : entranceToPlayerMap.keySet()) {
-            for (Player player : playerInstances){
-                if (player.getClass().equals(entranceToPlayerMap.get(de))){
-                    Pipe pipe = new Pipe(
-                            gameLevel.getActorInterface(),
-                            gameWorld.getEntrances().get(de.getId()),
-                            player
-                    );
-                    pipes.add(pipe);
-                    scores.put(player, 0);
-                    player.initialize(gameLevel.getPlayerInterface(), pipe);
-                    break;
-                }
+            Class<? extends Player> playerCls = entranceToPlayerMap.get(de);
+            Player player;
+            try {
+                player = entranceToPlayerMap.get(de).newInstance();
+            } catch (IllegalAccessException | InstantiationException e) {
+                throw new GameLevelInitializationException("Failed to initialize player: " + playerCls, e);
             }
+            Pipe pipe = new Pipe(
+                    gameLevel.getActorInterface(),
+                    gameWorld.getEntrances().get(de.getId()),
+                    player
+            );
+            pipes.add(pipe);
+            scores.put(player, 0);
+            player.initialize(gameLevel.getPlayerInterface(), pipe);
         }
     }
 }

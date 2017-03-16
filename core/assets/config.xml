@@ -52,7 +52,7 @@
         <level world="worlds/world3multiplayer.xml">
             <updater id="Enemies" />
             <player id="A" entrance="center" />
-            <player id="C" entrance="left" />
+            <player id="A" entrance="left" />
         </level>
         <level world="worlds/world1.xml">
             <updater id="Enemies" />
