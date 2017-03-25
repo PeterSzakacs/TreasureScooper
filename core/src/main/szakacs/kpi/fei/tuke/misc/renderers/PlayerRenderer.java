@@ -21,7 +21,7 @@ import java.util.Map;
 public class PlayerRenderer extends AbstractGameRenderer {
 
     private List<TextureAtlas> textures;
-    private Map<Direction, Animation> pipeHeadSprites;
+    private Map<Direction, Animation<TextureRegion>> pipeHeadSprites;
     private Map<PipeSegmentType, Sprite> pipeSegmentSprites;
     private float elapsedTime;
 
@@ -36,7 +36,7 @@ public class PlayerRenderer extends AbstractGameRenderer {
         for (Direction dir : Direction.values()){
             TextureAtlas ta = new TextureAtlas(Gdx.files.internal(
                     "images/Pipe/PipeHead/" + dir.name() + ".atlas"));
-            this.pipeHeadSprites.put(dir, new Animation(1/10f,
+            this.pipeHeadSprites.put(dir, new Animation<TextureRegion>(1/10f,
                     ta.getRegions()));
             this.textures.add(ta);
         }
@@ -58,7 +58,7 @@ public class PlayerRenderer extends AbstractGameRenderer {
                 pipeSegmentSprites.get(seg.getSegmentType()).setPosition(seg.getX(), seg.getY());
                 pipeSegmentSprites.get(seg.getSegmentType()).draw(batch);
             }
-            Animation anim = this.pipeHeadSprites.get(Direction.RIGHT);
+            Animation<TextureRegion> anim = this.pipeHeadSprites.get(Direction.RIGHT);
             int rotation = 0;
             switch (head.getDirection()) {
                 case UP:

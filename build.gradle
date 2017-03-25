@@ -28,6 +28,7 @@ allprojects {
         mavenCentral()
         maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
         maven { url "https://oss.sonatype.org/content/repositories/releases/" }
+        maven { url "http://maven.kpi.fei.tuke.sk/artifactory/libs-release/" }
     }
 }
 
@@ -48,6 +49,8 @@ project(":core") {
     dependencies {
         compile "com.badlogicgames.gdx:gdx:$gdxVersion"
         compile "com.badlogicgames.gdx:gdx-box2d:$gdxVersion"
+        compile 'kpi.openlab.arena:arena-runner-libgdx:1.0'
+        compile 'kpi.openlab.arena:arena-runner:1.0'
         testCompile "junit:junit:4.12"
     }
 }

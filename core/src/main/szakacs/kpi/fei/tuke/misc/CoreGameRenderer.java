@@ -22,20 +22,18 @@ import java.util.*;
  */
 public class CoreGameRenderer implements ApplicationListener {
 
-    private GameManager manager;
+    private final GameManager manager;
+    private final GameConfig config;
     private GameLevelPrivileged currentGameLevel;
-    private GameConfig config;
 
     private List<GameRenderer> renderers;
     private GameRenderer scoreRenderer;
     private SpriteBatch batch;
     private int counter = 0;
 
-    public CoreGameRenderer() throws ConfigProcessingException, GameLevelInitializationException {
-        GameConfigProcessor configProcessor = new SAXConfigProcessor();
-        configProcessor.processGameConfig();
-        this.config = configProcessor.getGameConfig();
-        this.manager = new GameManager(config);
+    public CoreGameRenderer(GameManager manager, GameConfig config) throws GameLevelInitializationException {
+        this.manager = manager;
+        this.config = config;
         this.currentGameLevel = manager.getNextGameLevel();
     }
 
@@ -68,11 +66,6 @@ public class CoreGameRenderer implements ApplicationListener {
             for (GameRenderer renderer : this.renderers)
                 renderer.render();
             batch.end();
-            try {
-                Thread.sleep(80);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
 
             if (currentGameLevel.getState() != GameState.PLAYING) {
                 startNewGameLevel();
@@ -81,7 +74,6 @@ public class CoreGameRenderer implements ApplicationListener {
             batch.begin();
             scoreRenderer.render();
             batch.end();
-            Gdx.graphics.setContinuousRendering(false);
         }
     }
 
@@ -125,12 +117,19 @@ public class CoreGameRenderer implements ApplicationListener {
                         currentGameLevel.getGameWorld().getWidth(),
                         currentGameLevel.getGameWorld().getHeight()
                 );
+                // no need to update the game any longer
+                Gdx.graphics.setContinuousRendering(false);
+                currentGameLevel = null;
             } else {
+                currentGameLevel = level;
                 for (GameRenderer renderer : renderers) {
                     renderer.reset(currentGameLevel);
                 }
             }
-            currentGameLevel = level;
         }
+    }
+
+    public GameManager getManager() {
+        return manager;
     }
 }

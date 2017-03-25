@@ -1,10 +1,13 @@
 package szakacs.kpi.fei.tuke.desktop;
 
-import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
-import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
+import kpi.openlab.arena.StartArena;
+import kpi.openlab.arena.interfaces.Bot;
+import szakacs.kpi.fei.tuke.arena.TreasureScooperArenaAdapter;
+import szakacs.kpi.fei.tuke.intrfc.Player;
 import szakacs.kpi.fei.tuke.misc.ConfigProcessingException;
-import szakacs.kpi.fei.tuke.misc.CoreGameRenderer;
 import szakacs.kpi.fei.tuke.misc.GameLevelInitializationException;
+
+import java.util.List;
 
 public class DesktopLauncher {
 
@@ -37,18 +40,23 @@ public class DesktopLauncher {
     }
 
     public static void main (String[] arg) {
-        LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
-        CoreGameRenderer game = null;
+        StartArena arenaStarter = new StartArena();
+        TreasureScooperArenaAdapter treasureScooperAdapter = null;
         try {
-            game = new CoreGameRenderer();
+            treasureScooperAdapter = new TreasureScooperArenaAdapter();
         } catch (ConfigProcessingException | GameLevelInitializationException e) {
+            System.err.println("Faliled to start the game: ");
             e.printStackTrace();
             System.exit(1);
         }
-        config.width = game.getWorld().getWidth();
-        config.height = game.getWorld().getHeight();
-        config.title = "Treasure Scooper";
-        config.forceExit = true;
-        new LwjglApplication(game, config);
+        List<Bot<Player>> bots = treasureScooperAdapter.getBotList();
+        Player[] players = new Player[bots.size()];
+        for (int idx = 0; idx < bots.size(); idx++){
+            players[idx] = bots.get(idx).getBotInstance();
+        }
+        arenaStarter.start(
+                treasureScooperAdapter,
+                players
+        );
     }
 }
