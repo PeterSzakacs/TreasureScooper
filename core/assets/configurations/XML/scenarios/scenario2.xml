@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE levels SYSTEM "scenario.dtd">
+<levels>
+    <level world="world1.xml">
+        <player id="A" entrance="center"/>
+    </level>
+    <level world="world1.xml">
+        <player id="B" entrance="center"/>
+    </level>
+    <level world="world1.xml">
+        <player id="C" entrance="center"/>
+    </level>
+    <level world="world2.xml">
+        <player id="A" entrance="left"/>
+    </level>
+    <level world="world2.xml">
+        <player id="B" entrance="left"/>
+    </level>
+    <level world="world2.xml">
+        <player id="C" entrance="left"/>
+    </level>
+    <level world="world3.xml">
+        <player id="A" entrance="center"/>
+        <updater id="Walls" />
+    </level>
+    <level world="world3.xml">
+        <player id="B" entrance="center"/>
+        <updater id="Walls" />
+    </level>
+    <level world="world3.xml">
+        <player id="C" entrance="center"/>
+        <updater id="Walls" />
+    </level>
+</levels>

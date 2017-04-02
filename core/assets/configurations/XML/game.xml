@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<game
+        player-package="szakacs.kpi.fei.tuke.player"
+        updater-package="szakacs.kpi.fei.tuke.arena.game.updaters"
+        actor-package="szakacs.kpi.fei.tuke.arena.actors"
+        level-file="scenario1.xml" >
+    <!--
+    == XML configuration file for the entire game ==
+    -->
+    <players>
+        <player id="A" class="PlayerA"/>
+        <player id="B" class="PlayerB"/>
+        <player id="C" class="PlayerC"/>
+    </players>
+    <updaters>
+        <updater id="Walls" class="GameUpdaterWalls" />
+        <updater id="Enemies" class="GameUpdaterEnemies" />
+    </updaters>
+    <actors>
+        <actor class="Mole" left="true" right="true" up="false" down="false" />
+        <actor class="Bullet" left="true" right="true" up="true" down="true" />
+        <actor class="Wall" left="true" right="false" up="false" down="false" />
+    </actors>
+</game>

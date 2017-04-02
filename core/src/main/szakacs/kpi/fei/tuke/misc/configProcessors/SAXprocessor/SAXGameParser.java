@@ -5,7 +5,6 @@ import szakacs.kpi.fei.tuke.intrfc.Player;
 import szakacs.kpi.fei.tuke.intrfc.arena.actors.Actor;
 import szakacs.kpi.fei.tuke.intrfc.arena.game.GameUpdater;
 import szakacs.kpi.fei.tuke.intrfc.misc.GameConfig;
-import szakacs.kpi.fei.tuke.misc.configProcessors.gameValueObjects.DummyEntrance;
 import szakacs.kpi.fei.tuke.misc.configProcessors.gameValueObjects.DummyLevel;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
@@ -14,7 +13,6 @@ import org.xml.sax.helpers.DefaultHandler;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
-import java.io.File;
 import java.io.IOException;
 import java.util.*;
 
@@ -23,44 +21,36 @@ import java.util.*;
  */
 public class SAXGameParser extends DefaultHandler implements GameConfig {
 
-    private enum ProcessingState{
-        INITIALIZING, PLAYERS, UPDATERS, LEVELS, ACTORS
+    final static class GameClasses {
+        Map<String, Class<? extends Player>> playerClasses = new HashMap<>(5);
+        Map<String, Class<? extends GameUpdater>> updaterClasses = new HashMap<>(5);
+        Map<Class<? extends Actor>, Set<Direction>> actorToDirectionsMap = new HashMap<>(12);
     }
+    static final GameClasses gameClasses = new GameClasses();
+
+    private enum ProcessingState{
+        INITIALIZING, PLAYERS, UPDATERS, LEVEL, ACTORS
+    }
+    private ProcessingState state;
+
+
     private final class PackageNameContainer {
         private String playerPackage;
         private String actorPackage;
         private String updaterPackage;
     }
-    private final class GameClasses {
-        private Map<String, Class<? extends Player>> playerClasses;
-        private Map<String, Class<? extends GameUpdater>> updaterClasses;
-        private Map<Class<? extends Actor>, Set<Direction>> actorToDirectionsMap;
+    private final PackageNameContainer packageNames;
 
-        private GameClasses(){
-            playerClasses = new HashMap<>(5);
-            updaterClasses = new HashMap<>(5);
-            actorToDirectionsMap = new HashMap<>(12);
-        }
-    }
+    private final String scenariosDir;
+    private String levelFile;
+    private SAXLevelParser levelParser;
 
-    private PackageNameContainer packageNames;
-    private GameClasses gameClasses;
-    private List<DummyLevel> levels;
-    private ProcessingState state;
-    private SAXParser parser;
-    private SAXWorldParser worldConfigProcessor;
-
-    SAXGameParser() throws SAXException {
+    SAXGameParser(String baseDir) throws SAXException {
         super();
-        try {
-            this.parser = SAXParserFactory.newInstance().newSAXParser();
-        } catch (SAXException | ParserConfigurationException e) {
-            throw new SAXException("Error initializing the game parser", e);
-        }
-        this.worldConfigProcessor = new SAXWorldParser();
+        this.levelParser = new SAXLevelParser(baseDir);
+        String dirSeparator = System.getProperty("file.separator");
+        this.scenariosDir = baseDir + "scenarios" + dirSeparator;
         this.packageNames = new PackageNameContainer();
-        this.gameClasses = new GameClasses();
-        this.levels = new ArrayList<>();
         this.state = ProcessingState.INITIALIZING;
     }
 
@@ -68,10 +58,11 @@ public class SAXGameParser extends DefaultHandler implements GameConfig {
     public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
         switch (this.state) {
             case INITIALIZING:
-                if (qName.equalsIgnoreCase("config")){
+                if (qName.equalsIgnoreCase("game")){
                     packageNames.playerPackage = attributes.getValue("player-package");
                     packageNames.actorPackage = attributes.getValue("actor-package");
                     packageNames.updaterPackage = attributes.getValue("updater-package");
+                    levelFile = scenariosDir + attributes.getValue("level-file");
                 }
                 this.state = ProcessingState.PLAYERS;
                 break;
@@ -99,15 +90,12 @@ public class SAXGameParser extends DefaultHandler implements GameConfig {
                     gameClasses.updaterClasses.put(attributes.getValue("id"), updaterCls);
                 }
                 break;
-            case LEVELS:
-                processLevel(qName, attributes);
-                break;
             case ACTORS:
                 if (qName.equalsIgnoreCase("actor")) {
                     String className = packageNames.actorPackage + "." + attributes.getValue("class");
-                    Class<? extends Actor> actorClass;
+                    Class<? extends Actor> actorCls;
                     try {
-                        actorClass = (Class<? extends Actor>) Class.forName(className);
+                        actorCls = (Class<? extends Actor>) Class.forName(className);
                     } catch (ClassNotFoundException e) {
                         throw new SAXException("Could not locate class for actor: " + className, e);
                     }
@@ -116,7 +104,7 @@ public class SAXGameParser extends DefaultHandler implements GameConfig {
                         if (Boolean.parseBoolean(attributes.getValue(dir.name().toLowerCase())))
                             dirs.add(dir);
                     }
-                    gameClasses.actorToDirectionsMap.put(actorClass, dirs);
+                    gameClasses.actorToDirectionsMap.put(actorCls, dirs);
                 }
                 break;
         }
@@ -127,14 +115,16 @@ public class SAXGameParser extends DefaultHandler implements GameConfig {
         if (qName.equalsIgnoreCase("players")){
             state = ProcessingState.UPDATERS;
         } else if (qName.equalsIgnoreCase("updaters")){
-            state = ProcessingState.LEVELS;
-        } else if (qName.equalsIgnoreCase("levels")) {
             state = ProcessingState.ACTORS;
+        } else if (qName.equalsIgnoreCase("actors")) {
+            state = ProcessingState.LEVEL;
+            try {
+                SAXParser parser = SAXParserFactory.newInstance().newSAXParser();
+                parser.parse(levelFile, levelParser);
+            } catch (IOException | ParserConfigurationException e) {
+                throw new SAXException("Error parsing level file: " + levelFile, e);
+            }
         }
-    }
-
-    @Override
-    public void characters(char[] ch, int start, int length) throws SAXException {
     }
 
     /*
@@ -143,7 +133,7 @@ public class SAXGameParser extends DefaultHandler implements GameConfig {
 
     @Override
     public List<DummyLevel> getLevels(){
-        return levels;
+        return levelParser.getLevels();
     }
 
     @Override
@@ -159,34 +149,5 @@ public class SAXGameParser extends DefaultHandler implements GameConfig {
     @Override
     public Map<Class<? extends Actor>, Set<Direction>> getActorToDirectionsMap() {
         return gameClasses.actorToDirectionsMap;
-    }
-
-    /*
-     * Helper methods
-     */
-
-    private void processLevel(String qName, Attributes attributes) throws SAXException {
-        if (qName.equalsIgnoreCase("level")){
-            String path = attributes.getValue("world");
-            try {
-                parser.parse(new File(path), worldConfigProcessor);
-            } catch (IOException e) {
-                throw new SAXException("Could not initialize level config file: " + path, e);
-            }
-            DummyLevel level = new DummyLevel(worldConfigProcessor.getWorld());
-            levels.add(level);
-            worldConfigProcessor.reset();
-        } else if (qName.equalsIgnoreCase("updater")){
-            DummyLevel currentLevel = levels.get(levels.size() - 1);
-            Class<? extends GameUpdater> updaterCls = gameClasses.updaterClasses.get(attributes.getValue("id"));
-            currentLevel.getGameUpdaterClasses().add(updaterCls);
-        } else if (qName.equalsIgnoreCase("player")){
-            DummyLevel currentLevel = levels.get(levels.size() - 1);
-            Class<? extends Player> playerCls = gameClasses.playerClasses.get(attributes.getValue("id"));
-            DummyEntrance entrance = currentLevel.getGameWorldPrototype().getDummyEntrances().get(
-                    attributes.getValue("entrance")
-            );
-            currentLevel.getEntranceToPlayerMap().put(entrance, playerCls);
-        }
     }
 }

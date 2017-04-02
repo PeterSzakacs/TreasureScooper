@@ -24,14 +24,13 @@ import java.util.Set;
  */
 public class TreasureScooperArenaAdapter extends ArenaLwjglApplication<CoreGameRenderer, Player> {
 
-    private GameConfig config;
     private CoreGameRenderer renderer;
     private List<Bot<Player>> bots;
 
     public TreasureScooperArenaAdapter() throws ConfigProcessingException, GameLevelInitializationException {
         GameConfigProcessor configProcessor = new SAXConfigProcessor();
         configProcessor.processGameConfig();
-        this.config = configProcessor.getGameConfig();
+        GameConfig config = configProcessor.getGameConfig();
         this.renderer = new CoreGameRenderer(new GameManager(config), config);
 
         Set<Class<? extends Player>> playerClasses = config.getPlayerClasses();
@@ -65,7 +64,7 @@ public class TreasureScooperArenaAdapter extends ArenaLwjglApplication<CoreGameR
 
     @Override
     public int getNumberOfRequiredBots() {
-        return config.getPlayerClasses().size();
+        return bots.size();
     }
 
     @Override

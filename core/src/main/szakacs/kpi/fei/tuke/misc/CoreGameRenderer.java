@@ -23,7 +23,7 @@ import java.util.*;
 public class CoreGameRenderer implements ApplicationListener {
 
     private final GameManager manager;
-    private final GameConfig config;
+    private GameConfig config;
     private GameLevelPrivileged currentGameLevel;
 
     private List<GameRenderer> renderers;
@@ -46,6 +46,7 @@ public class CoreGameRenderer implements ApplicationListener {
         this.renderers.add(new ActorRenderer(batch, currentGameLevel, config));
         this.renderers.add(new PlayerRenderer(batch, currentGameLevel));
         this.renderers.add(new PlayerInfoRenderer(batch, currentGameLevel));
+        this.config = null;
     }
 
     @Override

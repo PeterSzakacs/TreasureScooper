@@ -1,0 +1,11 @@
+<!ELEMENT levels (level+)>
+
+    <!ELEMENT level (player+, updater*)>
+    <!ATTLIST level world CDATA #REQUIRED>
+
+        <!ELEMENT player EMPTY>
+        <!ATTLIST player id CDATA #REQUIRED>
+        <!ATTLIST player entrance CDATA #REQUIRED>
+
+        <!ELEMENT updater EMPTY>
+        <!ATTLIST updater id CDATA #REQUIRED>
