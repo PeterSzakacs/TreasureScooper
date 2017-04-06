@@ -39,12 +39,6 @@ public interface Actor {
     Direction getDirection();
 
     /**
-     * Called on every iteration of the game loop (the gameInterface passed as argument is only
-     * method caller authentication of sorts)
-     */
-    void act(Object authToken);
-
-    /**
      * Returns true if the actor intersects the actor passed as parameter to this method.
      * Most commonly this means whether their current position, or TunnelCell objects are
      * equal).

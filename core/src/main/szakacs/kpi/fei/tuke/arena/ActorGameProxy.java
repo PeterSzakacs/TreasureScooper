@@ -1,6 +1,7 @@
 package szakacs.kpi.fei.tuke.arena;
 
 import szakacs.kpi.fei.tuke.intrfc.arena.actors.Actor;
+import szakacs.kpi.fei.tuke.intrfc.arena.actors.ActorPrivileged;
 import szakacs.kpi.fei.tuke.intrfc.arena.game.MethodCallAuthenticator;
 import szakacs.kpi.fei.tuke.intrfc.arena.game.gameLevel.GameLevelPrivileged;
 import szakacs.kpi.fei.tuke.intrfc.arena.proxies.ActorGameInterface;
@@ -15,7 +16,7 @@ public class ActorGameProxy extends PlayerGameProxy implements ActorGameInterfac
     }
 
     @Override
-    public void registerActor(Actor actor, Runnable action) {
+    public void registerActor(ActorPrivileged actor, Runnable action) {
         actorManager.registerActor(actor, action);
     }
 

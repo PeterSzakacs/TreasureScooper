@@ -5,6 +5,7 @@ import szakacs.kpi.fei.tuke.enums.Direction;
 import szakacs.kpi.fei.tuke.arena.game.world.TunnelCell;
 import szakacs.kpi.fei.tuke.intrfc.Player;
 import szakacs.kpi.fei.tuke.intrfc.arena.actors.Actor;
+import szakacs.kpi.fei.tuke.intrfc.arena.actors.pipe.BasicPipe;
 import szakacs.kpi.fei.tuke.intrfc.arena.callbacks.OnStackUpdatedCallback;
 import szakacs.kpi.fei.tuke.intrfc.arena.game.world.GameWorldQueryable;
 import szakacs.kpi.fei.tuke.intrfc.misc.Stack;
@@ -15,7 +16,7 @@ import java.util.Set;
 /**
  * Created by developer on 4.11.2016.
  */
-public class Pipe {
+public class Pipe implements BasicPipe {
 
     private OnStackUpdatedCallback<PipeSegment> segmentStackCallback = new OnStackUpdatedCallback<PipeSegment>() {
 
@@ -81,31 +82,69 @@ public class Pipe {
     }
 
     /*
-     * begin getters
+     * begin interface methods
      */
 
-    public int getHealth(){
-        return healthPoints;
-    }
-
-    public Stack<PipeSegment> getSegmentStack(){
-        return segmentStack;
-    }
-
+    @Override
     public PipeHead getHead(){
         return head;
     }
-
-    public Player getController() {
-        return controller;
+    
+    @Override
+    public Stack<PipeSegment> getSegmentStack(){
+        return segmentStack;
+    }
+    
+    @Override
+    public PipeSegment calculateNextSegment(Direction dir) throws IllegalArgumentException {
+        System.out.println("calculating new segment: " + dir.name());
+        switch (dir) {
+            case LEFT:
+            case RIGHT:
+            case UP:
+            case DOWN:
+                break;
+            default:
+                throw new IllegalArgumentException("Unknown or null Direction value was passed as parameter: " + dir);
+        }
+        if (isWall(dir)) {
+            return null;
+        } else {
+            return new PipeSegment(head.getCurrentPosition(), head.getDirection().getOpposite(), dir, gameInterface);
+        }
+    }
+    
+    @Override
+    public boolean isWall(Direction dir){
+        return head.getCurrentPosition().getCellAtDirection(dir) == null;
     }
 
+    @Override
+    public boolean intersects(Actor actor){
+        GameWorldQueryable world = gameInterface.getGameWorld();
+        for (PipeSegment seg : segmentStack){
+            if (Math.abs(seg.getX() - actor.getX()) <= world.getOffsetX() &&
+                    Math.abs(seg.getY() - actor.getY()) <= world.getOffsetY())
+                return true;
+        }
+        return head.intersects(actor);
+    }
+
+    @Override
+    public int getHealth(){
+        return healthPoints;
+    }
+    
     /*
-     * end getters
+     * end interface methods
      *
      * begin helper methods
      */
 
+    public Player getController() {
+        return controller;
+    }
+    
     public void setPlayer(Player controller) {
         if (this.controller == null) {
             this.controller = controller;
@@ -126,55 +165,7 @@ public class Pipe {
             }
         }
     }
-
-    /**
-     * A method to calculate the segment to push onto the segmentStack
-     * according to the direction the player wants to move to.
-     * This method is made purely for convenience purposes,
-     * to unburden the person calling push() from having to
-     * implement calculating the segment manually.
-     *
-     * @param dir the direction the player wishes to move the head to
-     * @return the pipe segment required to move the pipe head in the specified direction
-     * @throws IllegalArgumentException if null or an unknown Direction enum value passed as parameter
-     */
-    public PipeSegment calculateNextSegment(Direction dir) throws IllegalArgumentException {
-        System.out.println("calculating new segment: " + dir.name());
-        switch (dir) {
-            case LEFT:
-            case RIGHT:
-            case UP:
-            case DOWN:
-                break;
-            default:
-                throw new IllegalArgumentException("Unknown or null Direction value was passed as parameter: " + dir);
-        }
-        if (isWall(dir)) {
-            return null;
-        } else {
-            return new PipeSegment(head.getCurrentPosition(), head.getDirection().getOpposite(), dir, gameInterface);
-        }
-    }
-
-    /**
-     * Checks if a given direction from the head contains a wall
-     *
-     * @return boolean true if wall is present | false otherwise
-     */
-    public boolean isWall(Direction dir){
-        return head.getCurrentPosition().getCellAtDirection(dir) == null;
-    }
-
-    public boolean intersects(Actor actor){
-        GameWorldQueryable world = gameInterface.getGameWorld();
-        for (PipeSegment seg : segmentStack){
-            if (Math.abs(seg.getX() - actor.getX()) <= world.getOffsetX() &&
-                    Math.abs(seg.getY() - actor.getY()) <= world.getOffsetY())
-                return true;
-        }
-        return head.intersects(actor);
-    }
-
+    
     /*
      * end helper methods
      */

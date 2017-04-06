@@ -1,11 +1,7 @@
 package szakacs.kpi.fei.tuke.intrfc.arena.game.actorManager;
 
-import szakacs.kpi.fei.tuke.arena.actors.pipe.Pipe;
-import szakacs.kpi.fei.tuke.intrfc.Player;
 import szakacs.kpi.fei.tuke.intrfc.arena.actors.Actor;
 
-import java.util.List;
-import java.util.Map;
 import java.util.Set;
 import java.util.function.Predicate;
 
@@ -24,24 +20,24 @@ public interface ActorManagerQueryable {
 
     /**
      * Gets all currently active game actors
-     * (meaning actors whose update() method is
+     * (meaning actors whose act() method is
      * still called)
      *
-     * @return all game actors (except the PipeHead) as an unmodifiable list
+     * @return all game actors (except the PipeHead) as an unmodifiable set
      */
     Set<Actor> getActors();
 
     /**
-     * Queries all currently active game actors
-     * (meaning actors whose update() method is
-     * still called) satisfying the criteria
-     * passed as the argument
+     * Queries the set of all currently active
+     * game actors (meaning actors whose act()
+     * method is still called) and returns a subset of them satisfying the criteria
+     * passed as argument. If no criteria is passed (null is passed) it returns all game actors
      *
-     * @param predicate a functional interface or lambda function
-     *                  used in evaluating whether the actor should
-     *                  be included in the query results.
-     * @return a list of all game actors satisfying the criteria specified
-     *         in the predicate passed to this method as argument.
+     * @param criteria a functional interface or lambda function
+     *                 used in evaluating whether the actor should
+     *                 be included in the query results. If null
+     *                 is passed, all game actors are returned.
+     * @return a set of all game actors satisfying the criteria specified.
      */
-    Set<Actor> getActorsBySearchCriteria(Predicate<Actor> predicate);
+    Set<Actor> getActorsBySearchCriteria(Predicate<Actor> criteria);
 }

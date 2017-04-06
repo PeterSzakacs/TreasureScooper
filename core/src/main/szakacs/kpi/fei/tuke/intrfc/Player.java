@@ -1,6 +1,7 @@
 package szakacs.kpi.fei.tuke.intrfc;
 
 import szakacs.kpi.fei.tuke.arena.actors.pipe.Pipe;
+import szakacs.kpi.fei.tuke.intrfc.arena.actors.pipe.BasicPipe;
 import szakacs.kpi.fei.tuke.intrfc.arena.proxies.PlayerGameInterface;
 
 /**
@@ -24,8 +25,9 @@ public interface Player {
      * for this method (and the constructor has no parameters).
      *
      * @param gameInterface the interface to the game functionality for the player
+     * @param pipe
      */
-    void initialize(PlayerGameInterface gameInterface, Pipe pipe);
+    void initialize(PlayerGameInterface gameInterface, BasicPipe pipe);
 
     /**
      * Frees resources that are not taken care of by the garbage

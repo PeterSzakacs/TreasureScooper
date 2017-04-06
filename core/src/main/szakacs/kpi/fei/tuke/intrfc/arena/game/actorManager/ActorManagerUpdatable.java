@@ -1,7 +1,7 @@
 package szakacs.kpi.fei.tuke.intrfc.arena.game.actorManager;
 
 import szakacs.kpi.fei.tuke.intrfc.arena.actors.Actor;
-import szakacs.kpi.fei.tuke.intrfc.arena.game.MethodCallAuthenticator;
+import szakacs.kpi.fei.tuke.intrfc.arena.actors.ActorPrivileged;
 
 /**
  * Created by developer on 29.1.2017.
@@ -18,17 +18,16 @@ public interface ActorManagerUpdatable extends ActorManagerQueryable {
      * (performed) when the actor given as argument is unregistered,
      * that is, removed from the game level.
      *
-     *
-     * @param actor Not Null: The actor to add to the game level
+     * @param actor Not Null: The actor to add to the game level.
      * @param action Optional: The action to be performed when the actor is unregistered,
      *               Must be a reference to a method returning void and taking no arguments
      *               or null if nothing is to be performed on a given actors removal.
      */
-    void registerActor(Actor actor, Runnable action);
+    void registerActor(ActorPrivileged actor, Runnable action);
 
     /**
-     * Unregisters an actor (removing from the game, in the sense that update()
-     * is no longer called),
+     * Unregisters an actor (removing from it from the game, in the sense
+     * that its update() method is no longer called),
      *
      * Note that the actual implementation can use late removal to prevent
      * ConcurrentModificationException.

@@ -1,11 +1,8 @@
 package szakacs.kpi.fei.tuke.intrfc.arena.game.actorManager;
 
-import szakacs.kpi.fei.tuke.arena.actors.pipe.Pipe;
-import szakacs.kpi.fei.tuke.intrfc.Player;
 import szakacs.kpi.fei.tuke.intrfc.arena.actors.Actor;
 import szakacs.kpi.fei.tuke.intrfc.arena.game.GameUpdater;
 import szakacs.kpi.fei.tuke.intrfc.arena.game.ResettableGameClass;
-import szakacs.kpi.fei.tuke.intrfc.arena.proxies.ActorGameInterface;
 
 import java.util.Map;
 

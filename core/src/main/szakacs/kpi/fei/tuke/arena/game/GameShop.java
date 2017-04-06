@@ -9,6 +9,7 @@ import szakacs.kpi.fei.tuke.intrfc.arena.proxies.ActorGameInterface;
 import szakacs.kpi.fei.tuke.misc.configProcessors.gameValueObjects.DummyLevel;
 
 import java.util.Map;
+import java.util.Set;
 
 /**
  * Created by developer on 6.2.2017.
@@ -30,8 +31,18 @@ public class GameShop {
         return new Bullet(gameInterface);
     }
 
-    public void repairPipe(Pipe pipe, int byHowMuch){
-        callback.onScoreEvent(playerScores.get(pipe.getController()) - byHowMuch * 5, pipe.getController());
-        pipe.setHealth(pipe.getHealth() + byHowMuch, gameInterface.getAuthenticator());
+    public void repairPipeOfPlayer(Player player, int byHowMuch){
+        Set<Pipe> allPipes = gameInterface.getPipes();
+        Pipe pipe = null;
+        for (Pipe potentialPipe : allPipes){
+            if (potentialPipe.getController().equals(player)){
+                pipe = potentialPipe;
+                break;
+            }
+        }
+        if (pipe != null) {
+            callback.onScoreEvent(playerScores.get(pipe.getController()) - byHowMuch * 5, pipe.getController());
+            pipe.setHealth(pipe.getHealth() + byHowMuch, gameInterface.getAuthenticator());
+        }
     }
 }

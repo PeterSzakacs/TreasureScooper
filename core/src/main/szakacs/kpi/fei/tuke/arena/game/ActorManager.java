@@ -1,6 +1,7 @@
 package szakacs.kpi.fei.tuke.arena.game;
 
 import szakacs.kpi.fei.tuke.intrfc.arena.actors.Actor;
+import szakacs.kpi.fei.tuke.intrfc.arena.actors.ActorPrivileged;
 import szakacs.kpi.fei.tuke.intrfc.arena.game.MethodCallAuthenticator;
 import szakacs.kpi.fei.tuke.intrfc.arena.game.actorManager.ActorManagerPrivileged;
 import szakacs.kpi.fei.tuke.intrfc.arena.game.gameLevel.GameLevelPrivileged;
@@ -14,9 +15,10 @@ import java.util.function.Predicate;
  */
 public class ActorManager implements ActorManagerPrivileged {
 
-    private Map<Actor, Runnable> actorActionMap;
+    private Map<ActorPrivileged, Runnable> actorActionMap;
     private Map<Actor, Integer> unregisteredActors;
     private Set<Actor> searchResults;
+
     private MethodCallAuthenticator authenticator;
 
     ActorManager(MethodCallAuthenticator authenticator){
@@ -29,12 +31,14 @@ public class ActorManager implements ActorManagerPrivileged {
     // ActorManagerQueryable methods (only queries)
 
     @Override
-    public Set<Actor> getActors(){
+    public Set<Actor> getActors() {
         return Collections.unmodifiableSet(actorActionMap.keySet());
     }
 
     @Override
     public Set<Actor> getActorsBySearchCriteria(Predicate<Actor> predicate){
+        if (predicate == null)
+            return Collections.unmodifiableSet(actorActionMap.keySet());
         searchResults.clear();
         for (Actor actor : actorActionMap.keySet()){
             if (predicate.test(actor))
@@ -46,7 +50,7 @@ public class ActorManager implements ActorManagerPrivileged {
     // ActorManagerUpdatable methods (adding and removing actors)
 
     @Override
-    public void registerActor(Actor actor, Runnable action) {
+    public void registerActor(ActorPrivileged actor, Runnable action) {
         if (actor != null) {
             System.out.println("Registering: " + actor.toString());
             actorActionMap.put(actor, action);
@@ -69,7 +73,7 @@ public class ActorManager implements ActorManagerPrivileged {
 
     @Override
     public void update() {
-        for (Actor actor : actorActionMap.keySet()) {
+        for (ActorPrivileged actor : actorActionMap.keySet()) {
             actor.act(authenticator);
         }
         for (Iterator<Actor> actorIt = unregisteredActors.keySet().iterator(); actorIt.hasNext(); ) {

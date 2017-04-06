@@ -1,11 +1,10 @@
 package szakacs.kpi.fei.tuke.player;
 
-import szakacs.kpi.fei.tuke.arena.actors.pipe.Pipe;
-import szakacs.kpi.fei.tuke.arena.actors.pipe.PipeHead;
 import szakacs.kpi.fei.tuke.enums.Direction;
 import szakacs.kpi.fei.tuke.enums.TunnelCellType;
 import szakacs.kpi.fei.tuke.arena.game.world.HorizontalTunnel;
 import szakacs.kpi.fei.tuke.arena.game.world.TunnelCell;
+import szakacs.kpi.fei.tuke.intrfc.arena.actors.pipe.BasicPipe;
 import szakacs.kpi.fei.tuke.intrfc.arena.proxies.PlayerGameInterface;
 
 import java.util.Set;
@@ -25,7 +24,6 @@ public class PlayerC extends AbstractPlayer {
         BEGIN, ENTERTUNNEL, CLEAR, RETURN, FINISH, PURSUE_ENEMY
     }
 
-    private PipeHead head;
     private State state;
     private Direction currentDir;
     private TunnelCell currentPosition;
@@ -33,10 +31,9 @@ public class PlayerC extends AbstractPlayer {
     private TunnelCell entrance;
 
     @Override
-    public void initialize(PlayerGameInterface gameInterface, Pipe pipe) {
+    public void initialize(PlayerGameInterface gameInterface, BasicPipe pipe) {
         super.initialize(gameInterface, pipe);
         this.state = State.BEGIN;
-        this.head = pipe.getHead();
         this.currentDir = this.head.getDirection();
         this.currentPosition = pipe.getHead().getCurrentPosition();
         this.currentTunnel = null;
