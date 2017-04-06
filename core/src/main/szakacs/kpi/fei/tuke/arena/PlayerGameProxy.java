@@ -6,15 +6,14 @@ import szakacs.kpi.fei.tuke.arena.game.world.HorizontalTunnel;
 import szakacs.kpi.fei.tuke.arena.game.world.TunnelCell;
 import szakacs.kpi.fei.tuke.enums.GameState;
 import szakacs.kpi.fei.tuke.intrfc.Player;
-import szakacs.kpi.fei.tuke.intrfc.arena.actors.Actor;
+import szakacs.kpi.fei.tuke.intrfc.arena.actors.ActorBasic;
 import szakacs.kpi.fei.tuke.intrfc.arena.game.gameLevel.GameLevelPrivileged;
 import szakacs.kpi.fei.tuke.intrfc.arena.game.actorManager.ActorManagerPrivileged;
 import szakacs.kpi.fei.tuke.intrfc.arena.game.playerManager.PlayerManagerPrivileged;
 import szakacs.kpi.fei.tuke.intrfc.arena.game.world.GameWorldPrivileged;
-import szakacs.kpi.fei.tuke.intrfc.arena.game.world.GameWorldQueryable;
+import szakacs.kpi.fei.tuke.intrfc.arena.game.world.GameWorldBasic;
 import szakacs.kpi.fei.tuke.intrfc.arena.proxies.PlayerGameInterface;
 
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.function.Predicate;
@@ -30,7 +29,7 @@ import java.util.function.Predicate;
  */
 public class PlayerGameProxy implements PlayerGameInterface {
 
-    protected GameWorldQueryable worldProxy = new GameWorldQueryable() {
+    protected GameWorldBasic worldProxy = new GameWorldBasic() {
         public int getWidth() { return gameWorld.getWidth(); }
         public int getHeight() { return gameWorld.getHeight(); }
         public int getOffsetX() { return gameWorld.getOffsetX(); }
@@ -53,12 +52,12 @@ public class PlayerGameProxy implements PlayerGameInterface {
     }
 
     @Override
-    public Set<Actor> getActors() {
+    public Set<ActorBasic> getActors() {
         return actorManager.getActors();
     }
 
     @Override
-    public Set<Actor> getActorsBySearchCriteria(Predicate<Actor> predicate) {
+    public Set<ActorBasic> getActorsBySearchCriteria(Predicate<ActorBasic> predicate) {
         return actorManager.getActorsBySearchCriteria(predicate);
     }
 
@@ -68,7 +67,7 @@ public class PlayerGameProxy implements PlayerGameInterface {
     }
 
     @Override
-    public GameWorldQueryable getGameWorld() {
+    public GameWorldBasic getGameWorld() {
         return worldProxy;
     }
 

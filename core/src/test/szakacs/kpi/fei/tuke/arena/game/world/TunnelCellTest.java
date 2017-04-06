@@ -2,7 +2,7 @@ package szakacs.kpi.fei.tuke.arena.game.world;
 
 import org.junit.Assert;
 import org.junit.Test;
-import szakacs.kpi.fei.tuke.intrfc.arena.game.world.GameWorldQueryable;
+import szakacs.kpi.fei.tuke.intrfc.arena.game.world.GameWorldBasic;
 
 import java.util.List;
 import java.util.Map;
@@ -12,7 +12,7 @@ import java.util.Map;
  */
 public class TunnelCellTest {
 
-    private GameWorldQueryable mock = new GameWorldQueryable() {
+    private GameWorldBasic mock = new GameWorldBasic() {
         int offsetX = 128, offsetY = 128, width = 4096, height = 2048;
 
         public int getWidth() {return width;}

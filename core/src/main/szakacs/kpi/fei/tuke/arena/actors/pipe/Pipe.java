@@ -4,10 +4,10 @@ import szakacs.kpi.fei.tuke.enums.ActorType;
 import szakacs.kpi.fei.tuke.enums.Direction;
 import szakacs.kpi.fei.tuke.arena.game.world.TunnelCell;
 import szakacs.kpi.fei.tuke.intrfc.Player;
-import szakacs.kpi.fei.tuke.intrfc.arena.actors.Actor;
-import szakacs.kpi.fei.tuke.intrfc.arena.actors.pipe.BasicPipe;
+import szakacs.kpi.fei.tuke.intrfc.arena.actors.ActorBasic;
+import szakacs.kpi.fei.tuke.intrfc.arena.actors.pipe.PipeBasic;
 import szakacs.kpi.fei.tuke.intrfc.arena.callbacks.OnStackUpdatedCallback;
-import szakacs.kpi.fei.tuke.intrfc.arena.game.world.GameWorldQueryable;
+import szakacs.kpi.fei.tuke.intrfc.arena.game.world.GameWorldBasic;
 import szakacs.kpi.fei.tuke.intrfc.misc.Stack;
 import szakacs.kpi.fei.tuke.intrfc.arena.proxies.ActorGameInterface;
 
@@ -16,7 +16,7 @@ import java.util.Set;
 /**
  * Created by developer on 4.11.2016.
  */
-public class Pipe implements BasicPipe {
+public class Pipe implements PipeBasic {
 
     private OnStackUpdatedCallback<PipeSegment> segmentStackCallback = new OnStackUpdatedCallback<PipeSegment>() {
 
@@ -26,7 +26,7 @@ public class Pipe implements BasicPipe {
          */
         @Override
         public void onPush() {
-            GameWorldQueryable world = gameInterface.getGameWorld();
+            GameWorldBasic world = gameInterface.getGameWorld();
             head.move(world.getOffsetX(), world.getOffsetY(), segmentStack.top().getDirection());
             head.getCurrentPosition().collectNugget(Pipe.this);
             /*PipeSegment pushed = segmentStack.top();
@@ -34,10 +34,10 @@ public class Pipe implements BasicPipe {
                     && pushed.getSegmentType() != PipeSegmentType.VERTICAL) {
                 edges.add(pushed);
             }*/
-            Set<Actor> enemies = gameInterface.getActorsBySearchCriteria(actor ->
+            Set<ActorBasic> enemies = gameInterface.getActorsBySearchCriteria(actor ->
                     actor.getType() == ActorType.ENEMY && actor.intersects(head)
             );
-            for (Actor actor : enemies){
+            for (ActorBasic actor : enemies){
                 gameInterface.unregisterActor(actor);
             }
         }
@@ -120,8 +120,8 @@ public class Pipe implements BasicPipe {
     }
 
     @Override
-    public boolean intersects(Actor actor){
-        GameWorldQueryable world = gameInterface.getGameWorld();
+    public boolean intersects(ActorBasic actor){
+        GameWorldBasic world = gameInterface.getGameWorld();
         for (PipeSegment seg : segmentStack){
             if (Math.abs(seg.getX() - actor.getX()) <= world.getOffsetX() &&
                     Math.abs(seg.getY() - actor.getY()) <= world.getOffsetY())

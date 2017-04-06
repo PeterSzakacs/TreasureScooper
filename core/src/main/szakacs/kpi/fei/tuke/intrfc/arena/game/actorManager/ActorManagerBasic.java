@@ -1,6 +1,6 @@
 package szakacs.kpi.fei.tuke.intrfc.arena.game.actorManager;
 
-import szakacs.kpi.fei.tuke.intrfc.arena.actors.Actor;
+import szakacs.kpi.fei.tuke.intrfc.arena.actors.ActorBasic;
 
 import java.util.Set;
 import java.util.function.Predicate;
@@ -16,7 +16,7 @@ import java.util.function.Predicate;
  *
  * This interface is to be the only actor manager interface exposed to the player.
  */
-public interface ActorManagerQueryable {
+public interface ActorManagerBasic {
 
     /**
      * Gets all currently active game actors
@@ -25,7 +25,7 @@ public interface ActorManagerQueryable {
      *
      * @return all game actors (except the PipeHead) as an unmodifiable set
      */
-    Set<Actor> getActors();
+    Set<ActorBasic> getActors();
 
     /**
      * Queries the set of all currently active
@@ -39,5 +39,5 @@ public interface ActorManagerQueryable {
      *                 is passed, all game actors are returned.
      * @return a set of all game actors satisfying the criteria specified.
      */
-    Set<Actor> getActorsBySearchCriteria(Predicate<Actor> criteria);
+    Set<ActorBasic> getActorsBySearchCriteria(Predicate<ActorBasic> criteria);
 }

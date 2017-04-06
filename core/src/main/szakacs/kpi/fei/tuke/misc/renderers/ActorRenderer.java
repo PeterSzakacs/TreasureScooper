@@ -4,7 +4,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import szakacs.kpi.fei.tuke.enums.Direction;
-import szakacs.kpi.fei.tuke.intrfc.arena.actors.Actor;
+import szakacs.kpi.fei.tuke.intrfc.arena.actors.ActorBasic;
 import szakacs.kpi.fei.tuke.intrfc.arena.game.gameLevel.GameLevelPrivileged;
 import szakacs.kpi.fei.tuke.intrfc.misc.GameConfig;
 
@@ -18,16 +18,16 @@ import java.util.Set;
  */
 public class ActorRenderer extends AbstractGameRenderer {
 
-    private Map<Class<? extends Actor>, Map<Direction, Sprite>> actorSprites;
+    private Map<Class<? extends ActorBasic>, Map<Direction, Sprite>> actorSprites;
 
     public ActorRenderer(SpriteBatch batch, GameLevelPrivileged game, GameConfig config) {
         super(batch, game);
         this.initializeActorSprites(config.getActorToDirectionsMap());
     }
 
-    private void initializeActorSprites(Map<Class<? extends Actor>, Set<Direction>> mappings){
+    private void initializeActorSprites(Map<Class<? extends ActorBasic>, Set<Direction>> mappings){
         this.actorSprites = new HashMap<>(mappings.size());
-        for (Class<? extends Actor> clazz : mappings.keySet()){
+        for (Class<? extends ActorBasic> clazz : mappings.keySet()){
             Map<Direction, Sprite> directionsToSpritesMap = new EnumMap<>(Direction.class);
             for (Direction dir : mappings.get(clazz))
                 directionsToSpritesMap.put(dir,
@@ -42,15 +42,15 @@ public class ActorRenderer extends AbstractGameRenderer {
 
     @Override
     public void render() {
-        for (Actor actor : actorManager.getActors()){
+        for (ActorBasic actor : actorManager.getActors()){
             Sprite actorSprite = actorSprites.get(actor.getClass()).get(actor.getDirection());
             actorSprite.setPosition(actor.getX(), actor.getY());
             actorSprite.draw(batch);
         }
 
         // Every actor that has been removed shall slowly fade into the background after removal
-        Map<Actor, Integer> unregisteredActors = actorManager.getUnregisteredActors();
-        for (Actor actor : unregisteredActors.keySet()){
+        Map<ActorBasic, Integer> unregisteredActors = actorManager.getUnregisteredActors();
+        for (ActorBasic actor : unregisteredActors.keySet()){
             Sprite actorSprite = actorSprites.get(actor.getClass()).get(actor.getDirection());
             actorSprite.setPosition(actor.getX(), actor.getY());
             actorSprite.setAlpha((float)1/(float)unregisteredActors.get(actor));

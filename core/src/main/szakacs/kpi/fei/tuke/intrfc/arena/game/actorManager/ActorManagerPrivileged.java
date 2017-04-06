@@ -1,6 +1,6 @@
 package szakacs.kpi.fei.tuke.intrfc.arena.game.actorManager;
 
-import szakacs.kpi.fei.tuke.intrfc.arena.actors.Actor;
+import szakacs.kpi.fei.tuke.intrfc.arena.actors.ActorBasic;
 import szakacs.kpi.fei.tuke.intrfc.arena.game.GameUpdater;
 import szakacs.kpi.fei.tuke.intrfc.arena.game.ResettableGameClass;
 
@@ -29,5 +29,5 @@ public interface ActorManagerPrivileged extends ActorManagerUpdatable, GameUpdat
      * unregistered (only kept for N further iterations, where N is arbitrary).
      * Primarily, these values serve for effects rendering when an actor is removed.
      */
-    Map<Actor, Integer> getUnregisteredActors();
+    Map<ActorBasic, Integer> getUnregisteredActors();
 }

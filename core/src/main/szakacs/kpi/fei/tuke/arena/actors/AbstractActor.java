@@ -3,9 +3,9 @@ package szakacs.kpi.fei.tuke.arena.actors;
 import szakacs.kpi.fei.tuke.arena.game.world.TunnelCell;
 import szakacs.kpi.fei.tuke.enums.Direction;
 import szakacs.kpi.fei.tuke.enums.ActorType;
-import szakacs.kpi.fei.tuke.intrfc.arena.actors.Actor;
+import szakacs.kpi.fei.tuke.intrfc.arena.actors.ActorBasic;
 import szakacs.kpi.fei.tuke.intrfc.arena.actors.ActorPrivileged;
-import szakacs.kpi.fei.tuke.intrfc.arena.game.world.GameWorldQueryable;
+import szakacs.kpi.fei.tuke.intrfc.arena.game.world.GameWorldBasic;
 import szakacs.kpi.fei.tuke.intrfc.arena.proxies.ActorGameInterface;
 
 /**
@@ -19,7 +19,7 @@ public abstract class AbstractActor implements ActorPrivileged {
     private Direction dir;
     protected final ActorType actorType;
     protected final ActorGameInterface gameInterface;
-    protected final GameWorldQueryable world;
+    protected final GameWorldBasic world;
 
     protected AbstractActor(ActorType at, ActorGameInterface gameInterface){
         if (gameInterface == null)
@@ -56,7 +56,7 @@ public abstract class AbstractActor implements ActorPrivileged {
     }
 
     @Override
-    public boolean intersects(Actor other){
+    public boolean intersects(ActorBasic other){
         return other != null && other.getCurrentPosition() == this.currentPosition;
     }
 

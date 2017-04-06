@@ -3,7 +3,7 @@ package szakacs.kpi.fei.tuke.intrfc.arena.actors.pipe;
 import szakacs.kpi.fei.tuke.arena.actors.pipe.PipeHead;
 import szakacs.kpi.fei.tuke.arena.actors.pipe.PipeSegment;
 import szakacs.kpi.fei.tuke.enums.Direction;
-import szakacs.kpi.fei.tuke.intrfc.arena.actors.Actor;
+import szakacs.kpi.fei.tuke.intrfc.arena.actors.ActorBasic;
 import szakacs.kpi.fei.tuke.intrfc.misc.Stack;
 
 /**
@@ -12,7 +12,7 @@ import szakacs.kpi.fei.tuke.intrfc.misc.Stack;
  * The interface for the pipe implementation that is currently exposed to the player
  * to use for collecting treasures.
  */
-public interface BasicPipe {
+public interface PipeBasic {
 
     /**
      * Returns the head of the pipe which automatically collects treasure 
@@ -57,7 +57,7 @@ public interface BasicPipe {
      * 
      * @return boolean true if the actor intersects | false otherwise
      */
-    boolean intersects(Actor actor);
+    boolean intersects(ActorBasic actor);
 
     /**
      * Returns a value in the range 0 to 100 representing the percentage to which the pipe is undamaged.

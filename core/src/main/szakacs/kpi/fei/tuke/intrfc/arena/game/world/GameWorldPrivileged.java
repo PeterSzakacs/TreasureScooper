@@ -7,7 +7,7 @@ import szakacs.kpi.fei.tuke.intrfc.arena.game.ResettableGameClass;
 /**
  * Created by developer on 17.2.2017.
  */
-public interface GameWorldPrivileged extends GameWorldQueryable, ResettableGameClass {
+public interface GameWorldPrivileged extends GameWorldBasic, ResettableGameClass {
 
     MethodCallAuthenticator getAuthenticator();
 

@@ -10,7 +10,7 @@ import java.util.Set;
 /**
  * Created by developer on 7.3.2017.
  */
-public interface PlayerManagerQueryable {
+public interface PlayerManagerBasic {
 
     Set<Pipe> getPipes();
 

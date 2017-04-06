@@ -3,7 +3,6 @@ package szakacs.kpi.fei.tuke.intrfc.arena.actors;
 import szakacs.kpi.fei.tuke.enums.Direction;
 import szakacs.kpi.fei.tuke.arena.game.world.TunnelCell;
 import szakacs.kpi.fei.tuke.enums.ActorType;
-import szakacs.kpi.fei.tuke.intrfc.arena.proxies.ActorGameInterface;
 
 /**
  * Created by developer on 6.11.2016.
@@ -14,7 +13,7 @@ import szakacs.kpi.fei.tuke.intrfc.arena.proxies.ActorGameInterface;
  * implementing this interface and whose size
  * on the screen is offsetX * offsetY.
  */
-public interface Actor {
+public interface ActorBasic {
 
     /**
      * Gets the horizontal coordinate of the actor (it is within its current position).
@@ -43,7 +42,7 @@ public interface Actor {
      * Most commonly this means whether their current position, or TunnelCell objects are
      * equal).
      */
-    boolean intersects(Actor other);
+    boolean intersects(ActorBasic other);
 
     /**
      * Gets the current position of the actor (i.e. a TunnelCell object which is the current

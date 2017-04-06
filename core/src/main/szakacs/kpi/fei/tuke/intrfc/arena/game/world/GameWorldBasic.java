@@ -16,7 +16,7 @@ import java.util.Set;
  * this interface does not have separate "Updatable" or "Privileged"
  * subinterfaces for any hypothetical methods which would modify them.
  */
-public interface GameWorldQueryable {
+public interface GameWorldBasic {
 
     /**
      * Gets the width of the game gameInterface

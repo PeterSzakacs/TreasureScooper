@@ -22,13 +22,13 @@ public class Bullet extends AbstractMoveableActor {
             if (boundReached()) {
                 super.gameInterface.unregisterActor(this);
             } /*else {
-                List<Actor> intersecting = super.gameInterface.getActorsBySearchCriteria(
-                        (Actor a) ->
+                List<ActorBasic> intersecting = super.gameInterface.getActorsBySearchCriteria(
+                        (ActorBasic a) ->
                                 (a.getType() != ActorType.BULLET
                                         && a.getType() != ActorType.PIPEHEAD)
                                         && a.intersects(this));
                 if (!intersecting.isEmpty()) {
-                    for (Actor actor : intersecting)
+                    for (ActorBasic actor : intersecting)
                         super.gameInterface.unregisterActor(actor);
                     super.gameInterface.unregisterActor(this);
                 }

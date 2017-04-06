@@ -4,7 +4,7 @@ import szakacs.kpi.fei.tuke.enums.Direction;
 import szakacs.kpi.fei.tuke.enums.TunnelCellType;
 import szakacs.kpi.fei.tuke.arena.game.world.HorizontalTunnel;
 import szakacs.kpi.fei.tuke.arena.game.world.TunnelCell;
-import szakacs.kpi.fei.tuke.intrfc.arena.actors.pipe.BasicPipe;
+import szakacs.kpi.fei.tuke.intrfc.arena.actors.pipe.PipeBasic;
 import szakacs.kpi.fei.tuke.intrfc.arena.proxies.PlayerGameInterface;
 
 import java.util.Set;
@@ -31,7 +31,7 @@ public class PlayerC extends AbstractPlayer {
     private TunnelCell entrance;
 
     @Override
-    public void initialize(PlayerGameInterface gameInterface, BasicPipe pipe) {
+    public void initialize(PlayerGameInterface gameInterface, PipeBasic pipe) {
         super.initialize(gameInterface, pipe);
         this.state = State.BEGIN;
         this.currentDir = this.head.getDirection();

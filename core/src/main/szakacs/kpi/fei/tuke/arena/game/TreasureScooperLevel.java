@@ -79,7 +79,7 @@ public class TreasureScooperLevel implements GameLevelPrivileged {
         }
     }
 
-    // GameLevelQueryable methods (only queries)
+    // GameLevelBasic methods (only queries)
 
     @Override
     public GameState getState() {

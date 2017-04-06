@@ -7,7 +7,7 @@ import szakacs.kpi.fei.tuke.arena.game.world.HorizontalTunnel;
 import szakacs.kpi.fei.tuke.enums.Direction;
 import szakacs.kpi.fei.tuke.enums.TunnelCellType;
 import szakacs.kpi.fei.tuke.arena.game.world.TunnelCell;
-import szakacs.kpi.fei.tuke.intrfc.arena.actors.Actor;
+import szakacs.kpi.fei.tuke.intrfc.arena.actors.ActorBasic;
 import szakacs.kpi.fei.tuke.intrfc.arena.game.gameLevel.GameLevelPrivileged;
 import szakacs.kpi.fei.tuke.misc.configProcessors.gameValueObjects.DummyLevel;
 
@@ -144,7 +144,7 @@ public class GameUpdaterWalls extends AbstractGameUpdater {
      *
      * @param wall the wall to remove (the caller basically)
      */
-    private void removeWall(Actor wall){
+    private void removeWall(ActorBasic wall){
         this.createdWallsCount--;
         this.previousPositions.remove(wall.getCurrentPosition());
     }

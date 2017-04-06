@@ -1,6 +1,6 @@
 package szakacs.kpi.fei.tuke.intrfc.arena.game.actorManager;
 
-import szakacs.kpi.fei.tuke.intrfc.arena.actors.Actor;
+import szakacs.kpi.fei.tuke.intrfc.arena.actors.ActorBasic;
 import szakacs.kpi.fei.tuke.intrfc.arena.actors.ActorPrivileged;
 
 /**
@@ -10,7 +10,7 @@ import szakacs.kpi.fei.tuke.intrfc.arena.actors.ActorPrivileged;
  *
  * This interface is designed to be exposed to game actors.
  */
-public interface ActorManagerUpdatable extends ActorManagerQueryable {
+public interface ActorManagerUpdatable extends ActorManagerBasic {
 
     /**
      * Registers an actor, thereby adding the actor to the game level.
@@ -37,5 +37,5 @@ public interface ActorManagerUpdatable extends ActorManagerQueryable {
      *
      * @param actor Not Null: The actor to remove
      */
-    void unregisterActor(Actor actor);
+    void unregisterActor(ActorBasic actor);
 }

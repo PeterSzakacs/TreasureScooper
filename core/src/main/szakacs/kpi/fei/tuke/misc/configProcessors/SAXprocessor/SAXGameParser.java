@@ -2,7 +2,7 @@ package szakacs.kpi.fei.tuke.misc.configProcessors.SAXprocessor;
 
 import szakacs.kpi.fei.tuke.enums.Direction;
 import szakacs.kpi.fei.tuke.intrfc.Player;
-import szakacs.kpi.fei.tuke.intrfc.arena.actors.Actor;
+import szakacs.kpi.fei.tuke.intrfc.arena.actors.ActorBasic;
 import szakacs.kpi.fei.tuke.intrfc.arena.game.GameUpdater;
 import szakacs.kpi.fei.tuke.intrfc.misc.GameConfig;
 import szakacs.kpi.fei.tuke.misc.configProcessors.gameValueObjects.DummyLevel;
@@ -24,7 +24,7 @@ public class SAXGameParser extends DefaultHandler implements GameConfig {
     final static class GameClasses {
         Map<String, Class<? extends Player>> playerClasses = new HashMap<>(5);
         Map<String, Class<? extends GameUpdater>> updaterClasses = new HashMap<>(5);
-        Map<Class<? extends Actor>, Set<Direction>> actorToDirectionsMap = new HashMap<>(12);
+        Map<Class<? extends ActorBasic>, Set<Direction>> actorToDirectionsMap = new HashMap<>(12);
     }
     static final GameClasses gameClasses = new GameClasses();
 
@@ -93,9 +93,9 @@ public class SAXGameParser extends DefaultHandler implements GameConfig {
             case ACTORS:
                 if (qName.equalsIgnoreCase("actor")) {
                     String className = packageNames.actorPackage + "." + attributes.getValue("class");
-                    Class<? extends Actor> actorCls;
+                    Class<? extends ActorBasic> actorCls;
                     try {
-                        actorCls = (Class<? extends Actor>) Class.forName(className);
+                        actorCls = (Class<? extends ActorBasic>) Class.forName(className);
                     } catch (ClassNotFoundException e) {
                         throw new SAXException("Could not locate class for actor: " + className, e);
                     }
@@ -147,7 +147,7 @@ public class SAXGameParser extends DefaultHandler implements GameConfig {
     }
 
     @Override
-    public Map<Class<? extends Actor>, Set<Direction>> getActorToDirectionsMap() {
+    public Map<Class<? extends ActorBasic>, Set<Direction>> getActorToDirectionsMap() {
         return gameClasses.actorToDirectionsMap;
     }
 }

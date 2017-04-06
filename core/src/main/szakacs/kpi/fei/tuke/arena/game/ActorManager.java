@@ -1,6 +1,6 @@
 package szakacs.kpi.fei.tuke.arena.game;
 
-import szakacs.kpi.fei.tuke.intrfc.arena.actors.Actor;
+import szakacs.kpi.fei.tuke.intrfc.arena.actors.ActorBasic;
 import szakacs.kpi.fei.tuke.intrfc.arena.actors.ActorPrivileged;
 import szakacs.kpi.fei.tuke.intrfc.arena.game.MethodCallAuthenticator;
 import szakacs.kpi.fei.tuke.intrfc.arena.game.actorManager.ActorManagerPrivileged;
@@ -16,8 +16,8 @@ import java.util.function.Predicate;
 public class ActorManager implements ActorManagerPrivileged {
 
     private Map<ActorPrivileged, Runnable> actorActionMap;
-    private Map<Actor, Integer> unregisteredActors;
-    private Set<Actor> searchResults;
+    private Map<ActorBasic, Integer> unregisteredActors;
+    private Set<ActorBasic> searchResults;
 
     private MethodCallAuthenticator authenticator;
 
@@ -28,19 +28,19 @@ public class ActorManager implements ActorManagerPrivileged {
         this.searchResults = new HashSet<>();
     }
 
-    // ActorManagerQueryable methods (only queries)
+    // ActorManagerBasic methods (only queries)
 
     @Override
-    public Set<Actor> getActors() {
+    public Set<ActorBasic> getActors() {
         return Collections.unmodifiableSet(actorActionMap.keySet());
     }
 
     @Override
-    public Set<Actor> getActorsBySearchCriteria(Predicate<Actor> predicate){
+    public Set<ActorBasic> getActorsBySearchCriteria(Predicate<ActorBasic> predicate){
         if (predicate == null)
             return Collections.unmodifiableSet(actorActionMap.keySet());
         searchResults.clear();
-        for (Actor actor : actorActionMap.keySet()){
+        for (ActorBasic actor : actorActionMap.keySet()){
             if (predicate.test(actor))
                 searchResults.add(actor);
         }
@@ -58,7 +58,7 @@ public class ActorManager implements ActorManagerPrivileged {
     }
 
     @Override
-    public void unregisterActor(Actor actor) {
+    public void unregisterActor(ActorBasic actor) {
         if (actor != null) {
             System.out.println("Unregistering: " + actor.toString());
             this.unregisteredActors.put(actor, 0);
@@ -76,8 +76,8 @@ public class ActorManager implements ActorManagerPrivileged {
         for (ActorPrivileged actor : actorActionMap.keySet()) {
             actor.act(authenticator);
         }
-        for (Iterator<Actor> actorIt = unregisteredActors.keySet().iterator(); actorIt.hasNext(); ) {
-            Actor unregistered = actorIt.next();
+        for (Iterator<ActorBasic> actorIt = unregisteredActors.keySet().iterator(); actorIt.hasNext(); ) {
+            ActorBasic unregistered = actorIt.next();
             Integer counter = unregisteredActors.get(unregistered);
             if (counter == 0) {
                 actorActionMap.remove(unregistered);
@@ -91,7 +91,7 @@ public class ActorManager implements ActorManagerPrivileged {
     }
 
     @Override
-    public Map<Actor, Integer> getUnregisteredActors(){
+    public Map<ActorBasic, Integer> getUnregisteredActors(){
         return unregisteredActors;
     }
 

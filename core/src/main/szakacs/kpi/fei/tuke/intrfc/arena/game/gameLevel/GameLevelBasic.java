@@ -1,7 +1,7 @@
 package szakacs.kpi.fei.tuke.intrfc.arena.game.gameLevel;
 
 import szakacs.kpi.fei.tuke.enums.GameState;
-import szakacs.kpi.fei.tuke.intrfc.arena.game.world.GameWorldQueryable;
+import szakacs.kpi.fei.tuke.intrfc.arena.game.world.GameWorldBasic;
 
 /**
  * Created by developer on 25.1.2017.
@@ -12,7 +12,7 @@ import szakacs.kpi.fei.tuke.intrfc.arena.game.world.GameWorldQueryable;
  *
  * It enables querying the game for various data.
  */
-public interface GameLevelQueryable {
+public interface GameLevelBasic {
 
     /**
      * Gets the state of this level (currently playing, won, lost).
@@ -26,5 +26,5 @@ public interface GameLevelQueryable {
      *
      * @return the current game world
      */
-    GameWorldQueryable getGameWorld();
+    GameWorldBasic getGameWorld();
 }

@@ -3,7 +3,7 @@ package szakacs.kpi.fei.tuke.arena.actors;
 import szakacs.kpi.fei.tuke.arena.game.world.TunnelCell;
 import szakacs.kpi.fei.tuke.enums.ActorType;
 import szakacs.kpi.fei.tuke.enums.Direction;
-import szakacs.kpi.fei.tuke.intrfc.arena.actors.Actor;
+import szakacs.kpi.fei.tuke.intrfc.arena.actors.ActorBasic;
 import szakacs.kpi.fei.tuke.intrfc.arena.proxies.ActorGameInterface;
 
 import java.util.Set;
@@ -24,19 +24,19 @@ public class Wall extends AbstractActor {
     @Override
     public void act(Object authToken) {
         if (gameInterface.getAuthenticator().authenticate(authToken)) {
-            Set<Actor> intersecting = gameInterface.getActorsBySearchCriteria(actor ->
+            Set<ActorBasic> intersecting = gameInterface.getActorsBySearchCriteria(actor ->
                     actor.getType() == ActorType.BULLET
                             && this.intersects(actor));
             if (!intersecting.isEmpty()) {
                 gameInterface.unregisterActor(this);
-                for (Actor actor : intersecting)
+                for (ActorBasic actor : intersecting)
                     gameInterface.unregisterActor(actor);
             }
         }
     }
 
     @Override
-    public boolean intersects(Actor actor){
+    public boolean intersects(ActorBasic actor){
         return super.intersects(actor)
                 || neighbouringCell.equals(actor.getCurrentPosition());
     }

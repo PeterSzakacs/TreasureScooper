@@ -1,6 +1,5 @@
 package szakacs.kpi.fei.tuke.intrfc.arena.game.gameLevel;
 
-import szakacs.kpi.fei.tuke.intrfc.arena.game.ResettableGameClass;
 import szakacs.kpi.fei.tuke.intrfc.arena.game.actorManager.ActorManagerPrivileged;
 import szakacs.kpi.fei.tuke.intrfc.arena.game.playerManager.PlayerManagerPrivileged;
 import szakacs.kpi.fei.tuke.intrfc.arena.game.world.GameWorldPrivileged;
@@ -12,7 +11,7 @@ import szakacs.kpi.fei.tuke.misc.configProcessors.gameValueObjects.DummyLevel;
 /**
  * Created by developer on 29.1.2017.
  *
- * An extension to {@link GameLevelQueryable} interface exposing functionality
+ * An extension to {@link GameLevelBasic} interface exposing functionality
  * necessary for background code running the game.
  */
 public interface GameLevelPrivileged extends GameLevelUpdatable {
