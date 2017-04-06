@@ -29,6 +29,10 @@ public class PipeSegment extends AbstractActor {
         return segmentType;
     }
 
+    public Direction getDirectionFrom() {
+        return from;
+    }
+
     private void setSegmentType(Direction from, Direction to){
         if (from.getOpposite() == to){
             switch (from){
@@ -60,9 +64,5 @@ public class PipeSegment extends AbstractActor {
                 this.segmentType = PipeSegmentType.TOP_RIGHT;
             }
         }
-    }
-
-    Direction getOriginDirection() {
-        return from;
     }
 }

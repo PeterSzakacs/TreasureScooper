@@ -3,6 +3,7 @@ package szakacs.kpi.fei.tuke.intrfc.arena.game.playerManager;
 import szakacs.kpi.fei.tuke.arena.actors.pipe.Pipe;
 import szakacs.kpi.fei.tuke.arena.game.GameShop;
 import szakacs.kpi.fei.tuke.intrfc.Player;
+import szakacs.kpi.fei.tuke.intrfc.arena.actors.pipe.PipeBasic;
 
 import java.util.Map;
 import java.util.Set;
@@ -12,7 +13,7 @@ import java.util.Set;
  */
 public interface PlayerManagerBasic {
 
-    Set<Pipe> getPipes();
+    Set<PipeBasic> getPipes();
 
     Map<Player, Integer> getPlayersAndScores();
 

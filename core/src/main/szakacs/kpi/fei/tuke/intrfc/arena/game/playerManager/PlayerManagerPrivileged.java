@@ -7,7 +7,7 @@ import szakacs.kpi.fei.tuke.intrfc.arena.game.ResettableGameClass;
 /**
  * Created by developer on 7.3.2017.
  */
-public interface PlayerManagerPrivileged extends PlayerManagerBasic, GameUpdater, ResettableGameClass {
+public interface PlayerManagerPrivileged extends PlayerManagerUpdatable, GameUpdater, ResettableGameClass {
 
     OnScoreEventCallback getScoreChangeCallback();
 }

@@ -1,7 +1,7 @@
 package szakacs.kpi.fei.tuke.arena.game;
 
-import szakacs.kpi.fei.tuke.arena.actors.pipe.Pipe;
 import szakacs.kpi.fei.tuke.enums.GameState;
+import szakacs.kpi.fei.tuke.intrfc.arena.actors.pipe.PipeBasic;
 import szakacs.kpi.fei.tuke.intrfc.arena.game.gameLevel.GameLevelPrivileged;
 import szakacs.kpi.fei.tuke.intrfc.arena.game.GameStateTester;
 import szakacs.kpi.fei.tuke.intrfc.arena.game.playerManager.PlayerManagerPrivileged;
@@ -28,7 +28,7 @@ public class GameStateTesterBasic implements GameStateTester {
         if (world.getNuggetCount() == 0)
             return GameState.WON;
         int healthCount = 0;
-        for (Pipe pipe : playerManager.getPipes()) {
+        for (PipeBasic pipe : playerManager.getPipes()) {
             healthCount += pipe.getHealth();
         }
         if (healthCount <= 0) {

@@ -3,11 +3,11 @@ package szakacs.kpi.fei.tuke.misc.renderers;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.*;
-import szakacs.kpi.fei.tuke.arena.actors.pipe.Pipe;
 import szakacs.kpi.fei.tuke.arena.actors.pipe.PipeSegment;
 import szakacs.kpi.fei.tuke.enums.Direction;
 import szakacs.kpi.fei.tuke.arena.actors.pipe.PipeHead;
 import szakacs.kpi.fei.tuke.enums.PipeSegmentType;
+import szakacs.kpi.fei.tuke.intrfc.arena.actors.pipe.PipeBasic;
 import szakacs.kpi.fei.tuke.intrfc.arena.game.gameLevel.GameLevelPrivileged;
 
 import java.util.ArrayList;
@@ -51,7 +51,7 @@ public class PlayerRenderer extends AbstractGameRenderer {
 
     @Override
     public void render() {
-        for (Pipe pipe : playerManager.getPipes()) {
+        for (PipeBasic pipe : playerManager.getPipes()) {
             elapsedTime += Gdx.graphics.getDeltaTime();
             PipeHead head = pipe.getHead();
             for (PipeSegment seg : pipe.getSegmentStack()) {
@@ -69,6 +69,7 @@ public class PlayerRenderer extends AbstractGameRenderer {
                     break;
                 case DOWN:
                     rotation = -90;
+
                     break;
             }
             TextureRegion keyFrame = anim.getKeyFrame(elapsedTime, true);

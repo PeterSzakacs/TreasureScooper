@@ -113,7 +113,7 @@ public class GameUpdaterWalls extends AbstractGameUpdater {
     private void addWall() {
         // get all positions, where the pipe is located, including the head
         List<TunnelCell> positions = new ArrayList<>();
-        for (Pipe pipe : playerManager.getPipes()) {
+        for (Pipe pipe : playerManager.getPipesUpdatable()) {
             List<PipeSegment> segmentStack = pipe.getSegmentStack().getElementsByCriteria(null);
             for (PipeSegment seg : segmentStack) {
                 positions.add(seg.getCurrentPosition());

@@ -2,6 +2,7 @@ package szakacs.kpi.fei.tuke.intrfc.arena.proxies;
 
 import szakacs.kpi.fei.tuke.intrfc.arena.game.actorManager.ActorManagerUpdatable;
 import szakacs.kpi.fei.tuke.intrfc.arena.game.gameLevel.GameLevelUpdatable;
+import szakacs.kpi.fei.tuke.intrfc.arena.game.playerManager.PlayerManagerUpdatable;
 
 /**
  * Created by developer on 2.12.2016.
@@ -29,5 +30,5 @@ import szakacs.kpi.fei.tuke.intrfc.arena.game.gameLevel.GameLevelUpdatable;
  * should not call, since it would be considered
  * cheating.
  */
-public interface ActorGameInterface extends PlayerGameInterface, ActorManagerUpdatable, GameLevelUpdatable {
+public interface ActorGameInterface extends PlayerGameInterface, ActorManagerUpdatable, PlayerManagerUpdatable, GameLevelUpdatable {
 }

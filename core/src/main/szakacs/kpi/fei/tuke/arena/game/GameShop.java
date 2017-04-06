@@ -32,7 +32,7 @@ public class GameShop {
     }
 
     public void repairPipeOfPlayer(Player player, int byHowMuch){
-        Set<Pipe> allPipes = gameInterface.getPipes();
+        Set<Pipe> allPipes = gameInterface.getPipesUpdatable();
         Pipe pipe = null;
         for (Pipe potentialPipe : allPipes){
             if (potentialPipe.getController().equals(player)){

@@ -2,6 +2,7 @@ package szakacs.kpi.fei.tuke.arena.game;
 
 import szakacs.kpi.fei.tuke.arena.actors.pipe.Pipe;
 import szakacs.kpi.fei.tuke.intrfc.Player;
+import szakacs.kpi.fei.tuke.intrfc.arena.actors.pipe.PipeBasic;
 import szakacs.kpi.fei.tuke.intrfc.arena.callbacks.OnScoreEventCallback;
 import szakacs.kpi.fei.tuke.intrfc.arena.game.gameLevel.GameLevelPrivileged;
 import szakacs.kpi.fei.tuke.intrfc.arena.game.MethodCallAuthenticator;
@@ -42,7 +43,7 @@ public class PlayerManager implements PlayerManagerPrivileged {
     }
 
     @Override
-    public Set<Pipe> getPipes() {
+    public Set<PipeBasic> getPipes() {
         return Collections.unmodifiableSet(pipes);
     }
 
@@ -54,6 +55,11 @@ public class PlayerManager implements PlayerManagerPrivileged {
     @Override
     public GameShop getGameShop() {
         return gameShop;
+    }
+
+    @Override
+    public Set<Pipe> getPipesUpdatable() {
+        return Collections.unmodifiableSet(pipes);
     }
 
     @Override

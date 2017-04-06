@@ -53,7 +53,7 @@ public class Pipe implements PipeBasic {
             int xDelta = popped.getX() - head.getX();
             int yDelta = popped.getY() - head.getY();
             head.move(Math.abs(xDelta), Math.abs(yDelta), head.getDirection().getOpposite());
-            head.setDirection(popped.getOriginDirection().getOpposite());
+            head.setDirection(popped.getDirectionFrom().getOpposite());
         }
     };
 

@@ -9,6 +9,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import szakacs.kpi.fei.tuke.arena.actors.Bullet;
 import szakacs.kpi.fei.tuke.arena.actors.pipe.Pipe;
 import szakacs.kpi.fei.tuke.arena.actors.pipe.Weapon;
+import szakacs.kpi.fei.tuke.intrfc.arena.actors.pipe.PipeBasic;
 import szakacs.kpi.fei.tuke.intrfc.arena.game.gameLevel.GameLevelPrivileged;
 import szakacs.kpi.fei.tuke.intrfc.misc.Queue;
 
@@ -32,7 +33,7 @@ public class PlayerInfoRenderer extends AbstractGameRenderer {
     private BitmapFont score;
     private Sprite bulletSprite;
     private Sprite queue;
-    private Map<Pipe, QueuePosition> bulletQueuePositions;
+    private Map<PipeBasic, QueuePosition> bulletQueuePositions;
 
     public PlayerInfoRenderer(SpriteBatch batch, GameLevelPrivileged game) {
         super(batch, game);
@@ -64,7 +65,7 @@ public class PlayerInfoRenderer extends AbstractGameRenderer {
         }
         score.draw(batch, displayMsg, 128, 2000);
         queue.draw(batch);
-        for (Pipe pipe : playerManager.getPipes()) {
+        for (PipeBasic pipe : playerManager.getPipes()) {
             QueuePosition queuePosition = bulletQueuePositions.get(pipe);
             queue.setPosition(queuePosition.x, queuePosition.y);
             queue.draw(batch);
@@ -100,7 +101,7 @@ public class PlayerInfoRenderer extends AbstractGameRenderer {
     @Override
     public void reset(GameLevelPrivileged game) {
         super.reset(game);
-        for (Pipe pipe : playerManager.getPipes()){
+        for (PipeBasic pipe : playerManager.getPipes()){
             bulletQueuePositions.put(pipe,
                     new QueuePosition(
                             pipe.getHead().getX() + world.getOffsetX(),
