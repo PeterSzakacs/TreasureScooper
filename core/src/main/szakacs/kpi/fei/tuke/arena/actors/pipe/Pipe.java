@@ -81,9 +81,7 @@ public class Pipe implements PipeBasic {
         );
     }
 
-    /*
-     * begin interface methods
-     */
+    // PipeBasic methods
 
     @Override
     public PipeHead getHead(){
@@ -134,16 +132,13 @@ public class Pipe implements PipeBasic {
     public int getHealth(){
         return healthPoints;
     }
-    
-    /*
-     * end interface methods
-     *
-     * begin helper methods
-     */
 
+    @Override
     public Player getController() {
         return controller;
     }
+
+    // helper methods
     
     public void setPlayer(Player controller) {
         if (this.controller == null) {
@@ -165,8 +160,4 @@ public class Pipe implements PipeBasic {
             }
         }
     }
-    
-    /*
-     * end helper methods
-     */
 }

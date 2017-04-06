@@ -4,8 +4,10 @@ import szakacs.kpi.fei.tuke.arena.game.world.HorizontalTunnel;
 import szakacs.kpi.fei.tuke.arena.game.world.TunnelCell;
 import szakacs.kpi.fei.tuke.enums.Direction;
 import szakacs.kpi.fei.tuke.enums.TunnelCellType;
+import szakacs.kpi.fei.tuke.intrfc.PlayerToken;
 import szakacs.kpi.fei.tuke.intrfc.arena.actors.pipe.PipeBasic;
 import szakacs.kpi.fei.tuke.intrfc.arena.proxies.PlayerGameInterface;
+import szakacs.kpi.fei.tuke.player.common.AbstractPlayer;
 
 import java.util.Set;
 
@@ -31,13 +33,15 @@ public class PlayerA extends AbstractPlayer {
     private TunnelCell entrance;
 
     @Override
-    public void initialize(PlayerGameInterface gameInterface, PipeBasic pipe) {
-        super.initialize(gameInterface, pipe);
-        this.state = State.BEGIN;
-        this.currentDir = this.head.getDirection();
-        this.currentPosition = pipe.getHead().getCurrentPosition();
-        this.currentTunnel = null;
-        this.entrance = null;
+    public void initialize(PlayerGameInterface gameInterface, PipeBasic pipe, PlayerToken token) {
+        if (super.getToken().validate(token)) {
+            super.initialize(gameInterface, pipe, token);
+            this.state = State.BEGIN;
+            this.currentDir = this.head.getDirection();
+            this.currentPosition = pipe.getHead().getCurrentPosition();
+            this.currentTunnel = null;
+            this.entrance = null;
+        }
     }
 
     /**
@@ -62,7 +66,7 @@ public class PlayerA extends AbstractPlayer {
     // Just for reference, the player destroys enemies by eating them.
 
     @Override
-    public void act() {
+    public void act(PlayerToken token) {
         // TODO: Investigate ways to prevent access to private member variables
         /*try {
             Field f = Pipe.class.getDeclaredField("gameInterface");
@@ -72,6 +76,8 @@ public class PlayerA extends AbstractPlayer {
         } catch (Exception e){
             e.printStackTrace();
         }*/
+        if (!super.getToken().validate(token))
+            return;
         switch(this.state) {
             case BEGIN:
                 this.handleBegin();

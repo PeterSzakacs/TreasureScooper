@@ -3,6 +3,7 @@ package szakacs.kpi.fei.tuke.intrfc.arena.actors.pipe;
 import szakacs.kpi.fei.tuke.arena.actors.pipe.PipeHead;
 import szakacs.kpi.fei.tuke.arena.actors.pipe.PipeSegment;
 import szakacs.kpi.fei.tuke.enums.Direction;
+import szakacs.kpi.fei.tuke.intrfc.Player;
 import szakacs.kpi.fei.tuke.intrfc.arena.actors.ActorBasic;
 import szakacs.kpi.fei.tuke.intrfc.misc.Stack;
 
@@ -65,4 +66,11 @@ public interface PipeBasic {
      * @return the current degree to which the pipe is undamaged as a percentage. 
      */
     int getHealth();
+
+    /**
+     * Returns the player who controls the pipe.
+     *
+     * @return the player controlling the pipe.
+     */
+    Player getController();
 }
