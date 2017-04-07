@@ -82,7 +82,7 @@ public class GameUpdaterWalls extends AbstractGameUpdater {
             eligiblePositions.addAll(ht.getCellsBySearchCriteria(
                     (cell) ->
                             cell.getCellType() == TunnelCellType.TUNNEL
-                                    && cell.getCellAtDirection(Direction.LEFT).getCellType() == TunnelCellType.TUNNEL
+                                    && cell.getCellAtDirection(Direction.RIGHT).getCellType() == TunnelCellType.TUNNEL
                     )
             );
         }

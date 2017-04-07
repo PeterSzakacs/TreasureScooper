@@ -5,6 +5,7 @@ import szakacs.kpi.fei.tuke.enums.ActorType;
 import szakacs.kpi.fei.tuke.enums.Direction;
 import szakacs.kpi.fei.tuke.intrfc.arena.actors.ActorBasic;
 import szakacs.kpi.fei.tuke.intrfc.arena.proxies.ActorGameInterface;
+import szakacs.kpi.fei.tuke.intrfc.misc.ActorRectangle;
 
 import java.util.Set;
 
@@ -12,13 +13,17 @@ import java.util.Set;
  * Created by developer on 31.12.2016.
  */
 public class Wall extends AbstractActor {
+
     private TunnelCell neighbouringCell;
+
+    // TODO: Use the left cell as current position.
 
     public Wall(TunnelCell cell, ActorGameInterface gameInterface) {
         super(cell, ActorType.WALL, Direction.LEFT, gameInterface);
-        this.neighbouringCell = cell.getCellAtDirection(Direction.LEFT);
+        this.actorRectangle = new ActorRectangleImpl(cell, 2*world.getOffsetX(), world.getOffsetY());
+        this.neighbouringCell = cell.getCellAtDirection(Direction.RIGHT);
         this.disconnectCells(cell);
-        System.out.println("Wall<init>()");
+        //System.out.println("Wall<init>()");
     }
 
     @Override
@@ -42,14 +47,14 @@ public class Wall extends AbstractActor {
     }
 
     private void disconnectCells(TunnelCell currentPosition){
-        this.neighbouringCell.setAtDirection(Direction.RIGHT, null, gameInterface.getAuthenticator());
-        currentPosition.setAtDirection(Direction.LEFT, null, gameInterface.getAuthenticator());
+        this.neighbouringCell.setAtDirection(Direction.LEFT, null, gameInterface.getAuthenticator());
+        currentPosition.setAtDirection(Direction.RIGHT, null, gameInterface.getAuthenticator());
     }
 
     public void reconnectCells(){
-        System.out.println("Wall.reconnectCells()");
+        //System.out.println("Wall.reconnectCells()");
         TunnelCell cell = super.getCurrentPosition();
-        cell.setAtDirection(Direction.LEFT, this.neighbouringCell, gameInterface.getAuthenticator());
-        this.neighbouringCell.setAtDirection(Direction.RIGHT, cell, gameInterface.getAuthenticator());
+        cell.setAtDirection(Direction.RIGHT, this.neighbouringCell, gameInterface.getAuthenticator());
+        this.neighbouringCell.setAtDirection(Direction.LEFT, cell, gameInterface.getAuthenticator());
     }
 }

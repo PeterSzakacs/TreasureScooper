@@ -3,6 +3,7 @@ package szakacs.kpi.fei.tuke.intrfc.arena.actors;
 import szakacs.kpi.fei.tuke.enums.Direction;
 import szakacs.kpi.fei.tuke.arena.game.world.TunnelCell;
 import szakacs.kpi.fei.tuke.enums.ActorType;
+import szakacs.kpi.fei.tuke.intrfc.misc.ActorRectangle;
 
 /**
  * Created by developer on 6.11.2016.
@@ -15,15 +16,14 @@ import szakacs.kpi.fei.tuke.enums.ActorType;
  */
 public interface ActorBasic {
 
-    /**
-     * Gets the horizontal coordinate of the actor (it is within its current position).
-     */
     int getX();
+    int getY();
+    TunnelCell getCurrentPosition();
 
     /**
-     * Gets the vertical coordinate of the actor (it is within its current position)
+     * Returns an actorRectangle object which contains actor properties related to position.
      */
-    int getY();
+    ActorRectangle getActorRectangle();
 
     /**
      * Gets the type of the actor (note that this is not the actual class of the object,
@@ -43,10 +43,4 @@ public interface ActorBasic {
      * equal).
      */
     boolean intersects(ActorBasic other);
-
-    /**
-     * Gets the current position of the actor (i.e. a TunnelCell object which is the current
-     * cell within which the actor is located).
-     */
-    TunnelCell getCurrentPosition();
 }

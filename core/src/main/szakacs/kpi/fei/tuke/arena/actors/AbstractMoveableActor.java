@@ -10,7 +10,7 @@ import szakacs.kpi.fei.tuke.intrfc.arena.proxies.ActorGameInterface;
  */
 public abstract class AbstractMoveableActor extends AbstractActor {
 
-    private boolean boundReached;
+    private boolean boundReached = false;
 
     protected AbstractMoveableActor(ActorType at, ActorGameInterface gameInterface) {
         super(at, gameInterface);
@@ -28,27 +28,11 @@ public abstract class AbstractMoveableActor extends AbstractActor {
 
     protected void move(int dxAbs, int dyAbs, Direction dir){
         if (getDirection() != dir) {
-            this.boundReached = false;
             setDirection(dir);
         }
-        int x = getX() + dir.getXStep() * dxAbs;
-        int y = getY() + dir.getYStep() * dyAbs;
-        TunnelCell prev, next;
-        prev = next = getCurrentPosition();
-        do {
-            if (next.isWithinCell(x, y)) {
-                // successfully found the new position
-                setCurrentPosition(next, x, y);
-                break;
-            }
-            prev = next;
-            next = next.getCellAtDirection(dir);
-        } while ( next != null );
-        if (next == null) {
-            //reached the end of a tunnel in a given direction
-            super.setCurrentPosition(prev);
+        actorRectangle.rectangle.translate(dir, dxAbs, dyAbs);
+        if (actorRectangle.getCurrentPosition().getCellAtDirection(dir) == null)
             this.boundReached = true;
-        }
     }
 
     protected void move(int dx, int dy){

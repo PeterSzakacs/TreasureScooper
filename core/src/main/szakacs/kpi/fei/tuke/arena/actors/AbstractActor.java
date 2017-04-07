@@ -7,16 +7,37 @@ import szakacs.kpi.fei.tuke.intrfc.arena.actors.ActorBasic;
 import szakacs.kpi.fei.tuke.intrfc.arena.actors.ActorPrivileged;
 import szakacs.kpi.fei.tuke.intrfc.arena.game.world.GameWorldBasic;
 import szakacs.kpi.fei.tuke.intrfc.arena.proxies.ActorGameInterface;
+import szakacs.kpi.fei.tuke.intrfc.misc.ActorRectangle;
+import szakacs.kpi.fei.tuke.misc.GDXActorRectangle;
 
 /**
  * Created by developer on 7.12.2016.
  */
 public abstract class AbstractActor implements ActorPrivileged {
 
-    private int x;
-    private int y;
-    private TunnelCell currentPosition;
+    // A view of the actor rectangle to display to other classes that are
+    // not subclasses of AbstractActor (this view disables translate()).
+    protected class ActorRectangleImpl implements ActorRectangle {
+        protected final ActorRectangle rectangle;
+
+        protected ActorRectangleImpl(TunnelCell currentPosition, int width, int height){
+            this.rectangle = new GDXActorRectangle(currentPosition, width, height);
+        }
+
+        public int getRectangleX() { return rectangle.getRectangleX(); }
+        public int getRectangleY() { return rectangle.getRectangleY(); }
+        public int getWidth() { return rectangle.getWidth(); }
+        public int getHeight() { return rectangle.getHeight(); }
+        public int getCenterX() { return rectangle.getCenterX(); }
+        public int getCenterY() { return rectangle.getCenterY(); }
+        public boolean overlaps(ActorRectangle other) { return rectangle.overlaps(other); }
+        // for now, not throwing an exception if someone calls translate()
+        public void translate(Direction dir, int dxAbs, int dyAbs) {}
+        public TunnelCell getCurrentPosition() { return rectangle.getCurrentPosition(); }
+    };
+
     private Direction dir;
+    protected ActorRectangleImpl actorRectangle;
     protected final ActorType actorType;
     protected final ActorGameInterface gameInterface;
     protected final GameWorldBasic world;
@@ -36,13 +57,23 @@ public abstract class AbstractActor implements ActorPrivileged {
     }
 
     @Override
-    public int getX() {
-        return this.x;
+    public int getX(){
+        return actorRectangle.rectangle.getCenterX();
     }
 
     @Override
-    public int getY() {
-        return this.y;
+    public int getY(){
+        return actorRectangle.rectangle.getCenterY();
+    }
+
+    @Override
+    public TunnelCell getCurrentPosition(){
+        return actorRectangle.rectangle.getCurrentPosition();
+    }
+
+    @Override
+    public ActorRectangle getActorRectangle() {
+        return actorRectangle;
     }
 
     @Override
@@ -57,12 +88,7 @@ public abstract class AbstractActor implements ActorPrivileged {
 
     @Override
     public boolean intersects(ActorBasic other){
-        return other != null && other.getCurrentPosition() == this.currentPosition;
-    }
-
-    @Override
-    public TunnelCell getCurrentPosition(){
-        return this.currentPosition;
+        return actorRectangle.overlaps(other.getActorRectangle());
     }
 
     protected void setDirection(Direction direction) {
@@ -70,16 +96,15 @@ public abstract class AbstractActor implements ActorPrivileged {
     }
 
     protected void setCurrentPosition(TunnelCell currentPosition){
-        this.currentPosition = currentPosition;
-        this.x = currentPosition.getX();
-        this.y = currentPosition.getY();
+        this.actorRectangle = new ActorRectangleImpl(currentPosition, world.getOffsetX(), world.getOffsetY());
     }
 
     protected void setCurrentPosition(TunnelCell currentPosition, int x, int y){
         if (currentPosition.isWithinCell(x, y)){
-            this.currentPosition = currentPosition;
-            this.x = x;
-            this.y = y;
+            this.setCurrentPosition(currentPosition);
+            int dx = x - actorRectangle.getRectangleX();
+            int dy = y - actorRectangle.getRectangleY();
+            actorRectangle.rectangle.translate(Direction.getDirectionByDeltas(dx, dy), dx, dx);
         }
     }
 }

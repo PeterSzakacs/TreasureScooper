@@ -95,7 +95,7 @@ public class Pipe implements PipeBasic {
     
     @Override
     public PipeSegment calculateNextSegment(Direction dir) throws IllegalArgumentException {
-        System.out.println("calculating new segment: " + dir.name());
+        //System.out.println("calculating new segment: " + dir.name());
         switch (dir) {
             case LEFT:
             case RIGHT:
@@ -119,10 +119,10 @@ public class Pipe implements PipeBasic {
 
     @Override
     public boolean intersects(ActorBasic actor){
-        GameWorldBasic world = gameInterface.getGameWorld();
+        if (actor == null)
+            return false;
         for (PipeSegment seg : segmentStack){
-            if (Math.abs(seg.getX() - actor.getX()) <= world.getOffsetX() &&
-                    Math.abs(seg.getY() - actor.getY()) <= world.getOffsetY())
+            if (seg.intersects(actor))
                 return true;
         }
         return head.intersects(actor);

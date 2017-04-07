@@ -104,8 +104,8 @@ public class PlayerInfoRenderer extends AbstractGameRenderer {
         for (PipeBasic pipe : playerManager.getPipes()){
             bulletQueuePositions.put(pipe,
                     new QueuePosition(
-                            pipe.getHead().getX() + world.getOffsetX(),
-                            pipe.getHead().getY()
+                            pipe.getHead().getActorRectangle().getRectangleX() + world.getOffsetX(),
+                            pipe.getHead().getActorRectangle().getRectangleY()
                     )
             );
         }
