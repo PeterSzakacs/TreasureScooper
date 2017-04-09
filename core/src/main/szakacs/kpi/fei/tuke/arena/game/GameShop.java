@@ -12,7 +12,7 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * Created by developer on 6.2.2017.
+ * A class responsible for any purchases by the player during the game level.
  */
 public class GameShop {
 

@@ -7,8 +7,6 @@ import szakacs.kpi.fei.tuke.intrfc.arena.game.ResettableGameClass;
 import java.util.Map;
 
 /**
- * Created by developer on 29.1.2017.
- *
  * Extension of the "updatable" interface for the actor manager object.
  *
  * This interface is designed to be exposed only to game backend classes
@@ -17,9 +15,7 @@ import java.util.Map;
 public interface ActorManagerPrivileged extends ActorManagerUpdatable, GameUpdater, ResettableGameClass {
 
     /**
-     * Updates all game actors (including unregistered actors,
-     *
-     * @see this#getUnregisteredActors()
+     * Updates all game actors (except actors unregistered in the previous turn),
      */
     void update();
 
@@ -28,6 +24,8 @@ public interface ActorManagerPrivileged extends ActorManagerUpdatable, GameUpdat
      * anymore) and a value detailing for how many game loop iterations they have been
      * unregistered (only kept for N further iterations, where N is arbitrary).
      * Primarily, these values serve for effects rendering when an actor is removed.
+     *
+     * @return a mapping between unregistered actors and the number of turns since it was unregistered.
      */
     Map<ActorBasic, Integer> getUnregisteredActors();
 }

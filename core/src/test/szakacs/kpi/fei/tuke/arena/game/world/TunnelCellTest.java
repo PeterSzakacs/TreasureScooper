@@ -2,17 +2,27 @@ package szakacs.kpi.fei.tuke.arena.game.world;
 
 import org.junit.Assert;
 import org.junit.Test;
+import szakacs.kpi.fei.tuke.arena.actors.pipe.Pipe;
+import szakacs.kpi.fei.tuke.intrfc.arena.game.MethodCallAuthenticator;
+import szakacs.kpi.fei.tuke.intrfc.arena.game.gameLevel.GameLevelPrivileged;
 import szakacs.kpi.fei.tuke.intrfc.arena.game.world.GameWorldBasic;
+import szakacs.kpi.fei.tuke.intrfc.arena.game.world.GameWorldPrivileged;
+import szakacs.kpi.fei.tuke.misc.GameLevelInitializationException;
+import szakacs.kpi.fei.tuke.misc.configProcessors.gameValueObjects.DummyLevel;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * Created by developer on 18.2.2017.
  */
 public class TunnelCellTest {
 
-    private GameWorldBasic mock = new GameWorldBasic() {
+    private GameWorldPrivileged mock = new GameWorldPrivileged() {
+        public MethodCallAuthenticator getAuthenticator() {return null;}
+        public void onNuggetCollected(Pipe pipe, int val) {}
+        public void startNewGame(GameLevelPrivileged gameLevel, DummyLevel level) throws GameLevelInitializationException {}
         int offsetX = 128, offsetY = 128, width = 4096, height = 2048;
 
         public int getWidth() {return width;}
@@ -21,7 +31,7 @@ public class TunnelCellTest {
         public int getOffsetY() {return offsetY;}
         public int getNuggetCount() {return 0;}
         public Map<String, TunnelCell> getEntrances() {return null;}
-        public List<HorizontalTunnel> getTunnels() {return null;}
+        public Set<HorizontalTunnel> getTunnels() {return null;}
     };
 
     @Test

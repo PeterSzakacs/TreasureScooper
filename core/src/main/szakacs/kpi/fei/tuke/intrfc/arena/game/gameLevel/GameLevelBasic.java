@@ -4,13 +4,9 @@ import szakacs.kpi.fei.tuke.enums.GameState;
 import szakacs.kpi.fei.tuke.intrfc.arena.game.world.GameWorldBasic;
 
 /**
- * Created by developer on 25.1.2017.
- *
- * The base interface of a level in the game.
- *
- * This is the only game level interface which shall be exposed to the player.
- *
- * It enables querying the game for various data.
+ * <p>The base interface of a level in the game. This is
+ * the only game level interface which shall be exposed
+ * to the player. It enables querying the game level for various data.
  */
 public interface GameLevelBasic {
 

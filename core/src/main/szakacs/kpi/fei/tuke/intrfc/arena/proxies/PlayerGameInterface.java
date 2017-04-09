@@ -5,8 +5,6 @@ import szakacs.kpi.fei.tuke.intrfc.arena.game.gameLevel.GameLevelBasic;
 import szakacs.kpi.fei.tuke.intrfc.arena.game.playerManager.PlayerManagerBasic;
 
 /**
- * Created by developer on 1.12.2016.
- *
  * The interface to the game exposed to the player
  * (more accurately, the programmer of the player).
  *

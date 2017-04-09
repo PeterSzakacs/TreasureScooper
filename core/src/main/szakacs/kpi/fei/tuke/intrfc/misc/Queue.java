@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.function.Predicate;
 
 /**
- * Created by developer on 16.2.2017.
+ * The interface for a generic Queue collection whose elements are of type T.
  */
 public interface Queue<T> extends Iterable<T> {
 
@@ -39,12 +39,16 @@ public interface Queue<T> extends Iterable<T> {
     T rear();
 
     /**
-     * Self-explanatory
+     * Checks if queue contains no elements.
+     *
+     * @return boolean true, if the queue is empty | false otherwise.
      */
     boolean isEmpty();
 
     /**
-     * Self-explanatory
+     * Checks if the number of elements is equal to the current capacity of the queue.
+     *
+     * @return boolean true, if the queue is full | false otherwise.
      */
     boolean isFull();
 
@@ -69,6 +73,11 @@ public interface Queue<T> extends Iterable<T> {
      * that satisfy the criteria passed as argument to this function.
      * If the given criteria is null, it returns all elements in the queue,
      * ordered from front to rear.
+     *
+     * @param criteria a functional interface or lambda function
+     *                 used in evaluating whether an element should
+     *                 be included in the query results. If a null
+     *                 value is passed, all elements are returned.
      *
      * @return a List of queue elements satisfying the given criteria.
      */

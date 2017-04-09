@@ -8,7 +8,7 @@ import szakacs.kpi.fei.tuke.enums.PipeSegmentType;
 import szakacs.kpi.fei.tuke.intrfc.arena.proxies.ActorGameInterface;
 
 /**
- * Created by developer on 4.11.2016.
+ * The class representing a single segment of the collecting pipe.
  */
 public class PipeSegment extends AbstractActor {
     private PipeSegmentType segmentType;
@@ -25,10 +25,21 @@ public class PipeSegment extends AbstractActor {
 
     }
 
+    /**
+     * Gets the segment type enum value of this pipe segment.
+     *
+     * @see PipeSegmentType for further details about the values of this enum.
+     * @return the segment type value of this pipe segment.
+     */
     public PipeSegmentType getSegmentType() {
         return segmentType;
     }
 
+    /**
+     * Gets the direction of this pipe segment toward the bottom of the stack or pipe.
+     *
+     * @return the direction of this pipe segment away from the collection head.
+     */
     public Direction getDirectionFrom() {
         return from;
     }

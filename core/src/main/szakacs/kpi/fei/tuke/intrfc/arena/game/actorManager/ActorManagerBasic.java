@@ -6,8 +6,6 @@ import java.util.Set;
 import java.util.function.Predicate;
 
 /**
- * Created by developer on 25.1.2017.
- *
  * The basic interface for the class responsible for all game actors and all pipes
  * used by the players.
  *
@@ -23,7 +21,8 @@ public interface ActorManagerBasic {
      * (meaning actors whose act() method is
      * still called)
      *
-     * @return all game actors (except the PipeHead) as an unmodifiable set
+     * @return all game actors (except the pipe heads
+     * and pipe segments) as an unmodifiable set
      */
     Set<ActorBasic> getActors();
 

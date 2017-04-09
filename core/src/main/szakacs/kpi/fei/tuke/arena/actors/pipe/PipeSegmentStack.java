@@ -49,8 +49,6 @@ public class PipeSegmentStack extends ArrayStack<PipeSegment> {
      * Moves pipe as well as head one step back from its current position
      *
      * @return the removed pipe segment
-     * (in conformance with the return value definition of the pop() method
-     * for the ArrayStack ADT)
      */
     @Override
     public PipeSegment pop() {

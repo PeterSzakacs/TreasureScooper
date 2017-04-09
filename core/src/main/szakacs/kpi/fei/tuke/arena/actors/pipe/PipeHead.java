@@ -10,7 +10,7 @@ import szakacs.kpi.fei.tuke.intrfc.arena.proxies.ActorGameInterface;
 import szakacs.kpi.fei.tuke.intrfc.misc.Queue;
 
 /**
- * Created by developer on 4.11.2016.
+ * The collecting head of the pipe.
  */
 public class PipeHead extends AbstractMoveableActor implements GoldCollector {
 
@@ -31,6 +31,11 @@ public class PipeHead extends AbstractMoveableActor implements GoldCollector {
 
     }
 
+    /**
+     * Gets the weapon to be used by the player.
+     *
+     * @return the weapon to use by the player.
+     */
     public Weapon getWeapon(){
         return this.weapon;
     }

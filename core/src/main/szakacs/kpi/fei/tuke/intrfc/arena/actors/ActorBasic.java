@@ -6,41 +6,65 @@ import szakacs.kpi.fei.tuke.enums.ActorType;
 import szakacs.kpi.fei.tuke.intrfc.misc.ActorRectangle;
 
 /**
- * Created by developer on 6.11.2016.
- *
- * The interface implemented by all game actors
- *
- * A game actor is defined as any game object
- * implementing this interface and whose size
- * on the screen is offsetX * offsetY.
+ * The interface implemented by all game actors.
+ * This is a safe subset of actor functionality
+ * to be exposed to the player.
  */
 public interface ActorBasic {
 
+    /**
+     * Gets the horizontal coordinate of the actor.
+     *
+     * @return the horizontal coordinate of the actor.
+     */
     int getX();
+
+    /**
+     * Gets the vertical coordinate of the actor.
+     *
+     * @return the vertical coordinate of the actor.
+     */
     int getY();
+
+    /**
+     * Gets the tunnel cell where the actor is currently located.
+     *
+     * @return the tunnel cell where the actor is currently located.
+     */
     TunnelCell getCurrentPosition();
 
     /**
      * Returns an actorRectangle object which contains actor properties related to position.
+     *
+     * @return an unmodifiable view of the actor's rectangle object.
      */
     ActorRectangle getActorRectangle();
 
     /**
-     * Gets the type of the actor (note that this is not the actual class of the object,
-     * just an enum constant saying whether the actor is an Mole (multiple kinds possible)
-     * some kind of ammunition (multiple kinds possible) etc.
+     * Gets the general category of the actor. Note: this is not the actual class of an actor,
+     * just an enum constant grouping possibly multiple actor classes according to their role
+     * within the game (different Enemies, different calibers of Bullets etc.).
+     *
+     * @return The ActorType of the actor.
      */
     ActorType getType();
 
     /**
-     * Gets the current orientation of the actor relative to the screen
+     * Gets the current orientation of the actor relative to the screen (facing left, right, up, down).
+     * Possibly could be better named getOrientation().
+     *
+     * @return the {@link Direction} that the actor is facing in.
      */
     Direction getDirection();
 
     /**
-     * Returns true if the actor intersects the actor passed as parameter to this method.
+     * Returns true if this actor intersects the actor passed as parameter to this method.
      * Most commonly this means whether their current position, or TunnelCell objects are
-     * equal).
+     * equal, though if not, it checks if their rectangles touch or overlap at any point).
+     *
+     * @param other The actor to check if it intersects this actor.
+     *
+     * @return boolean true if the given actor is not null and intersects this actor | false otherwise.
      */
     boolean intersects(ActorBasic other);
 }

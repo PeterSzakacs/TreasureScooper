@@ -5,8 +5,6 @@ import szakacs.kpi.fei.tuke.intrfc.arena.game.gameLevel.GameLevelUpdatable;
 import szakacs.kpi.fei.tuke.intrfc.arena.game.playerManager.PlayerManagerUpdatable;
 
 /**
- * Created by developer on 2.12.2016.
- *
  * The interface to the game exposed to game actors
  *
  * This interface shall serve as a proxy object
@@ -23,12 +21,6 @@ import szakacs.kpi.fei.tuke.intrfc.arena.game.playerManager.PlayerManagerUpdatab
  * programmers who want to add new game actors not
  * to think of using said methods (basically, this
  * interface serves as a programmer contract).
- *
- * The game has exactly one instance of this object
- * which also serves as an authentication of sorts
- * for certain methods of actors which the player
- * should not call, since it would be considered
- * cheating.
  */
 public interface ActorGameInterface extends PlayerGameInterface, ActorManagerUpdatable, PlayerManagerUpdatable, GameLevelUpdatable {
 }

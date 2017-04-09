@@ -4,8 +4,6 @@ import szakacs.kpi.fei.tuke.intrfc.arena.actors.ActorBasic;
 import szakacs.kpi.fei.tuke.intrfc.arena.actors.ActorPrivileged;
 
 /**
- * Created by developer on 29.1.2017.
- *
  * Extension of the basic interface for the Actor manager object.
  *
  * This interface is designed to be exposed to game actors.

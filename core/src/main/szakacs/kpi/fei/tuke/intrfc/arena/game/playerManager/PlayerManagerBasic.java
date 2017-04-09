@@ -1,6 +1,5 @@
 package szakacs.kpi.fei.tuke.intrfc.arena.game.playerManager;
 
-import szakacs.kpi.fei.tuke.arena.actors.pipe.Pipe;
 import szakacs.kpi.fei.tuke.arena.game.GameShop;
 import szakacs.kpi.fei.tuke.intrfc.Player;
 import szakacs.kpi.fei.tuke.intrfc.arena.actors.pipe.PipeBasic;
@@ -10,11 +9,25 @@ import java.util.Set;
 
 /**
  * Created by developer on 7.3.2017.
+ *
+ * The interface representing the subset of Player manager functionality
+ * exposed to the player.
  */
 public interface PlayerManagerBasic {
 
+    /**
+     * Gets all pipes in the current game level.
+     *
+     * @return the (unmodifiable) set of all pipes in the current game level.
+     */
     Set<PipeBasic> getPipes();
 
+    /**
+     * Gets the scores of every player as a mapping of {@link Player} instances
+     * to {@link Integer} objects representing their scores.
+     *
+     * @return the scores for each player in the current game level.
+     */
     Map<Player, Integer> getPlayersAndScores();
 
     /**

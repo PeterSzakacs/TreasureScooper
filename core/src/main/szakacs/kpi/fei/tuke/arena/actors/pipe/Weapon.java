@@ -6,7 +6,7 @@ import szakacs.kpi.fei.tuke.intrfc.arena.proxies.ActorGameInterface;
 import szakacs.kpi.fei.tuke.misc.ArrayQueue;
 
 /**
- * Created by developer on 29.1.2017.
+ *
  */
 public class Weapon {
 
@@ -59,6 +59,12 @@ public class Weapon {
         this.world = world;
     }
 
+    /**
+     * Gets the {@link Queue} of {@link Bullet}s that represents the ammunition store of the weapon.
+     * Enqueueing and dequeing results in a bullet being loaded or fired, respectively.
+     *
+     * @return the ammunition store of the weapon.
+     */
     public Queue<Bullet> getBulletQueue(){
         return ammoQueue;
     }

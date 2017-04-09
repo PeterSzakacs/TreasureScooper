@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.function.Predicate;
 
 /**
- * Created by developer on 16.2.2017.
+ * The interface for a generic Stack collection whose elements are of type T.
  */
 public interface Stack<T> extends Iterable<T> {
 
@@ -32,12 +32,16 @@ public interface Stack<T> extends Iterable<T> {
     T top();
 
     /**
-     * Self-explanatory
+     * Checks if stack contains no elements.
+     *
+     * @return boolean true, if the stack is empty | false otherwise.
      */
     boolean isEmpty();
 
     /**
-     * Self-explanatory
+     * Checks if the number of elements is equal to the current capacity of the stack.
+     *
+     * @return boolean true, if the stack is full | false otherwise.
      */
     boolean isFull();
 
@@ -62,6 +66,11 @@ public interface Stack<T> extends Iterable<T> {
      * that satisfy the criteria passed as argument to this function.
      * If the given criteria is null, it returns all elements in the stack,
      * ordered from bottom to top.
+     *
+     * @param criteria a functional interface or lambda function
+     *                 used in evaluating whether an element should
+     *                 be included in the query results. If a null
+     *                 value is passed, all elements are returned.
      *
      * @return a List of stack elements satisfying the given criteria.
      */

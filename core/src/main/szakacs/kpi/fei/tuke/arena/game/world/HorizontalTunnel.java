@@ -10,7 +10,7 @@ import java.util.*;
 import java.util.function.Predicate;
 
 /**
- * Created by developer on 5.11.2016.
+ * A class representing a tunnel stretching from left to right on the screen.
  */
 public class HorizontalTunnel {
     private int x;
@@ -151,23 +151,58 @@ public class HorizontalTunnel {
      * begin public getters
      */
 
+    /**
+     * Gets the horizontal coordinate of this tunnel
+     * (it is defined as the horizontal coordinate
+     * of the tunnels leftmost cell).
+     *
+     * @return the horizontal coordinate of the tunnel.
+     */
     public int getX() {
         return x;
     }
 
+    /**
+     * Gets the vertical coordinate of this tunnel
+     * (it is defined as the vertical coordinate
+     * of all cells of this tunnel).
+     *
+     * @return the vertical coordinate of the tunnel.
+     */
     public int getY() {
         return y;
     }
 
+    /**
+     * Gets the number of remaining nuggets or pieces of treasure within this tunnel.
+     *
+     * @return the number of still uncollected nuggets remaining in this tunnel.
+     */
     public int getNuggetCount(){
         return this.nuggetCount;
     }
 
+    /**
+     * Returns all cells of this tunnel as an unmodifiable set.
+     *
+     * @return all cells that make up this tunnel.
+     */
     public Set<TunnelCell> getCells() {
         return Collections.unmodifiableSet(cells);
     }
 
+    /**
+     * Returns all cells of this tunnel that satisfy the criteria passed as argument.
+     *
+     * @param criteria a functional interface or lambda function
+     *                 used in evaluating whether a cell should
+     *                 be included in the query results. If null
+     *                 is passed, all cells are returned.
+     * @return a set of all tunnel cells satisfying the criteria specified.
+     */
     public Set<TunnelCell> getCellsBySearchCriteria(Predicate<TunnelCell> criteria){
+        if (criteria == null)
+            return Collections.unmodifiableSet(cells);
         searchResults.clear();
         for (TunnelCell cell : this.cells)
             if (criteria.test(cell))
