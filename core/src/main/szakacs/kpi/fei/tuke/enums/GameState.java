@@ -1,8 +1,31 @@
 package szakacs.kpi.fei.tuke.enums;
 
 /**
- * Created by developer on 8.11.2016.
+ * An enum representing the current state of a particular game level.
  */
 public enum GameState {
-    INITIALIZING, PLAYING, WON, LOST
+
+    /**
+     * The state before a new game level is fully started.
+     */
+    INITIALIZING,
+
+    /**
+     * The state when at least one player in the game level
+     * still has a pipe with a health value greater than 0.
+     */
+    PLAYING,
+
+    /**
+     * The state when all pieces of treasure are collected and
+     * at least one player still has a pipe with a health value
+     * greater than 0.
+     */
+    WON,
+
+    /**
+     * The state when at not all pieces of treasure are collected
+     * and no player has a pipe with a health value of 0.
+     */
+    LOST
 }

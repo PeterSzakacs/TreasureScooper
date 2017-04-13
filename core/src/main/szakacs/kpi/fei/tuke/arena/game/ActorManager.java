@@ -52,7 +52,7 @@ public class ActorManager implements ActorManagerPrivileged {
     @Override
     public void registerActor(ActorPrivileged actor, Runnable action) {
         if (actor != null) {
-            System.out.println("Registering: " + actor.toString());
+            //System.out.println("Registering: " + actor.toString());
             actorActionMap.put(actor, action);
         }
     }
@@ -60,7 +60,7 @@ public class ActorManager implements ActorManagerPrivileged {
     @Override
     public void unregisterActor(ActorBasic actor) {
         if (actor != null) {
-            System.out.println("Unregistering: " + actor.toString());
+            //System.out.println("Unregistering: " + actor.toString());
             this.unregisteredActors.put(actor, 0);
             Runnable action = actorActionMap.get(actor);
             if (action != null) {

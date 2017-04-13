@@ -1,8 +1,37 @@
 package szakacs.kpi.fei.tuke.enums;
 
 /**
- * Created by developer on 4.11.2016.
+ * An enum representing the type of the smallest segment of the collecting pipe.
  */
 public enum PipeSegmentType {
-    VERTICAL, HORIZONTAL, TOP_LEFT, TOP_RIGHT, BOTTOM_LEFT, BOTTOM_RIGHT
+
+    /**
+     * A straight segment from left to right or vice-versa.
+     */
+    VERTICAL,
+
+    /**
+     * A straight segment from top to bottom or vice-versa.
+     */
+    HORIZONTAL,
+
+    /**
+     * A bend in the pipe from top to left (or left to top).
+     */
+    TOP_LEFT,
+
+    /**
+     * A bend in the pipe from top to right (or right to top).
+     */
+    TOP_RIGHT,
+
+    /**
+     * A bend in the pipe from bottom to left (or left to bottom).
+     */
+    BOTTOM_LEFT,
+
+    /**
+     * A bend in the pipe from bottom to right (or right to bottom).
+     */
+    BOTTOM_RIGHT
 }

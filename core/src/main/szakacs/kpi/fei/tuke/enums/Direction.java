@@ -1,7 +1,8 @@
 package szakacs.kpi.fei.tuke.enums;
 
 /**
- * Created by developer on 4.11.2016.
+ * An enumerated type representing the four directions
+ * of allowed movement within the game.
  */
 public enum Direction {
     UP (0, 1),
@@ -25,18 +26,42 @@ public enum Direction {
         this.yStep = yStep;
     }
 
+    /**
+     * Gets the unit shift (step) in the horizontal coordinates for a given direction.
+     *
+     * @return the unit step in the horizontal coordinates for a given direction.
+     */
     public int getXStep(){
         return this.xStep;
     }
 
+    /**
+     * Gets the unit shift (step) in the vertical coordinates for a give direction.
+     *
+     * @return the unit step in the vertical coordinates for a given direction.
+     */
     public int getYStep(){
         return this.yStep;
     }
 
+    /**
+     * Gets the opposite direction to the current direction.
+     *
+     * @return the opposite direction to the current one.
+     */
     public Direction getOpposite(){
         return this.opposite;
     }
 
+    /**
+     * Calculates the direction based on the value of the horizontal
+     * and vertical shifts in position. Note: at least one of these
+     * has to be zero, otherwise an exception is thrown.
+     *
+     * @param dx the shift in the horizontal coordinates.
+     * @param dy the shift in the vertical coordinates.
+     * @return the direction that corresponds to the shifts in coordinates passed.
+     */
     public static Direction getDirectionByDeltas(int dx, int dy){
         if (dx + dy != dx && dx + dy != dy)
             throw new IllegalArgumentException("Illegal values of dx and dy. One has to be zero, the other nonzero!");

@@ -37,7 +37,7 @@ public class Bullet extends AbstractMoveableActor {
     }
 
     public void launch(TunnelCell position, Direction dir, ActorGameInterface gameInterface){
-        System.out.println("launching Bullet");
+        //System.out.println("launching Bullet");
         if (gameInterface != null && gameInterface.equals(super.gameInterface)) {
             super.setDirection(dir);
             super.setCurrentPosition(position);

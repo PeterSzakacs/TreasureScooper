@@ -97,6 +97,7 @@ public class TreasureScooperLevel implements GameLevelPrivileged {
 
     @Override
     public void startNewGame(DummyLevel level) throws GameLevelInitializationException {
+        this.state = GameState.INITIALIZING;
         gameWorld.startNewGame(this, level);
         actorManager.startNewGame(this, level);
         playerManager.startNewGame(this, level);
