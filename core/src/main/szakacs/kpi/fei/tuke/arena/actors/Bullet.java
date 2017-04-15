@@ -3,6 +3,7 @@ package szakacs.kpi.fei.tuke.arena.actors;
 import szakacs.kpi.fei.tuke.arena.game.world.TunnelCell;
 import szakacs.kpi.fei.tuke.enums.ActorType;
 import szakacs.kpi.fei.tuke.enums.Direction;
+import szakacs.kpi.fei.tuke.intrfc.arena.game.world.TunnelCellUpdatable;
 import szakacs.kpi.fei.tuke.intrfc.arena.proxies.ActorGameInterface;
 
 /**
@@ -36,7 +37,7 @@ public class Bullet extends AbstractMoveableActor {
         }
     }
 
-    public void launch(TunnelCell position, Direction dir, ActorGameInterface gameInterface){
+    public void launch(TunnelCellUpdatable position, Direction dir, ActorGameInterface gameInterface){
         //System.out.println("launching Bullet");
         if (gameInterface != null && gameInterface.equals(super.gameInterface)) {
             super.setDirection(dir);

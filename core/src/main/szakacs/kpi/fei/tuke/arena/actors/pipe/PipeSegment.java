@@ -3,8 +3,8 @@ package szakacs.kpi.fei.tuke.arena.actors.pipe;
 import szakacs.kpi.fei.tuke.arena.actors.AbstractActor;
 import szakacs.kpi.fei.tuke.enums.ActorType;
 import szakacs.kpi.fei.tuke.enums.Direction;
-import szakacs.kpi.fei.tuke.arena.game.world.TunnelCell;
 import szakacs.kpi.fei.tuke.enums.PipeSegmentType;
+import szakacs.kpi.fei.tuke.intrfc.arena.game.world.TunnelCellUpdatable;
 import szakacs.kpi.fei.tuke.intrfc.arena.proxies.ActorGameInterface;
 
 /**
@@ -14,7 +14,7 @@ public class PipeSegment extends AbstractActor {
     private PipeSegmentType segmentType;
     private Direction from;
 
-    PipeSegment(TunnelCell currentPosition, Direction from, Direction to, ActorGameInterface gameInterface) {
+    PipeSegment(TunnelCellUpdatable currentPosition, Direction from, Direction to, ActorGameInterface gameInterface) {
         super(currentPosition, ActorType.PIPE, to, gameInterface);
         this.from = from;
         this.setSegmentType(from, to);

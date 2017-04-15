@@ -3,6 +3,7 @@ package szakacs.kpi.fei.tuke.arena.actors;
 import szakacs.kpi.fei.tuke.arena.game.world.TunnelCell;
 import szakacs.kpi.fei.tuke.enums.ActorType;
 import szakacs.kpi.fei.tuke.enums.Direction;
+import szakacs.kpi.fei.tuke.intrfc.arena.game.world.TunnelCellUpdatable;
 import szakacs.kpi.fei.tuke.intrfc.arena.proxies.ActorGameInterface;
 
 /**
@@ -16,7 +17,7 @@ public abstract class AbstractMoveableActor extends AbstractActor {
         super(at, gameInterface);
     }
 
-    protected AbstractMoveableActor(TunnelCell currentPosition, ActorType type, Direction dir, ActorGameInterface gameInterface) {
+    protected AbstractMoveableActor(TunnelCellUpdatable currentPosition, ActorType type, Direction dir, ActorGameInterface gameInterface) {
         super(currentPosition, type, dir, gameInterface);
     }
 
@@ -31,7 +32,7 @@ public abstract class AbstractMoveableActor extends AbstractActor {
             setDirection(dir);
         }
         actorRectangle.rectangle.translate(dir, dxAbs, dyAbs);
-        if (actorRectangle.getCurrentPosition().getCellAtDirection(dir) == null)
+        if (actorRectangle.rectangle.getCurrentPosition().getCellAtDirection(dir) == null)
             this.boundReached = true;
     }
 

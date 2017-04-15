@@ -5,6 +5,8 @@ import szakacs.kpi.fei.tuke.enums.Direction;
 import szakacs.kpi.fei.tuke.arena.game.world.TunnelCell;
 import szakacs.kpi.fei.tuke.intrfc.PlayerToken;
 import szakacs.kpi.fei.tuke.intrfc.arena.actors.pipe.PipeBasic;
+import szakacs.kpi.fei.tuke.intrfc.arena.game.world.HorizontalTunnelBasic;
+import szakacs.kpi.fei.tuke.intrfc.arena.game.world.TunnelCellBasic;
 import szakacs.kpi.fei.tuke.intrfc.arena.proxies.PlayerGameInterface;
 import szakacs.kpi.fei.tuke.player.common.AbstractPlayer;
 
@@ -16,8 +18,8 @@ public abstract class PlayerNativeA extends AbstractPlayer {
     // again, this is all code the student can implement
 
     private Direction currentDir;
-    private TunnelCell currentPosition;
-    private HorizontalTunnel currentTunnel;
+    private TunnelCellBasic currentPosition;
+    private HorizontalTunnelBasic currentTunnel;
     private TunnelCell entrance;
 
     public PlayerNativeA() {

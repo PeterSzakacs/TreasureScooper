@@ -15,4 +15,6 @@ public interface Rectangle {
     int getWidth();
 
     int getHeight();
+
+    boolean overlaps(Rectangle other);
 }

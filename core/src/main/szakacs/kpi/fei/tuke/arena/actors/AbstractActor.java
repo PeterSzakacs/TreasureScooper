@@ -1,13 +1,14 @@
 package szakacs.kpi.fei.tuke.arena.actors;
 
-import szakacs.kpi.fei.tuke.arena.game.world.TunnelCell;
 import szakacs.kpi.fei.tuke.enums.Direction;
 import szakacs.kpi.fei.tuke.enums.ActorType;
 import szakacs.kpi.fei.tuke.intrfc.arena.actors.ActorBasic;
 import szakacs.kpi.fei.tuke.intrfc.arena.actors.ActorPrivileged;
 import szakacs.kpi.fei.tuke.intrfc.arena.game.world.GameWorldBasic;
+import szakacs.kpi.fei.tuke.intrfc.arena.game.world.TunnelCellUpdatable;
 import szakacs.kpi.fei.tuke.intrfc.arena.proxies.ActorGameInterface;
 import szakacs.kpi.fei.tuke.intrfc.misc.ActorRectangle;
+import szakacs.kpi.fei.tuke.intrfc.misc.Rectangle;
 import szakacs.kpi.fei.tuke.misc.GDXActorRectangle;
 
 /**
@@ -17,10 +18,10 @@ public abstract class AbstractActor implements ActorPrivileged {
 
     // A view of the actor rectangle to display to other classes that are
     // not subclasses of AbstractActor (this view disables translate()).
-    protected class ActorRectangleImpl implements ActorRectangle {
+    protected class ActorRectangleImpl implements Rectangle {
         protected final ActorRectangle rectangle;
 
-        protected ActorRectangleImpl(TunnelCell currentPosition, int width, int height){
+        protected ActorRectangleImpl(TunnelCellUpdatable currentPosition, int width, int height){
             this.rectangle = new GDXActorRectangle(currentPosition, width, height);
         }
 
@@ -30,10 +31,7 @@ public abstract class AbstractActor implements ActorPrivileged {
         public int getHeight() { return rectangle.getHeight(); }
         public int getCenterX() { return rectangle.getCenterX(); }
         public int getCenterY() { return rectangle.getCenterY(); }
-        public boolean overlaps(ActorRectangle other) { return rectangle.overlaps(other); }
-        // for now, not throwing an exception if someone calls translate()
-        public void translate(Direction dir, int dxAbs, int dyAbs) {}
-        public TunnelCell getCurrentPosition() { return rectangle.getCurrentPosition(); }
+        public boolean overlaps(Rectangle other) { return rectangle.overlaps(other); }
     };
 
     private Direction dir;
@@ -50,7 +48,7 @@ public abstract class AbstractActor implements ActorPrivileged {
         this.actorType = at;
     }
 
-    protected AbstractActor(TunnelCell currentPosition, ActorType type, Direction dir, ActorGameInterface gameInterface){
+    protected AbstractActor(TunnelCellUpdatable currentPosition, ActorType type, Direction dir, ActorGameInterface gameInterface){
         this(type, gameInterface);
         this.dir = dir;
         this.setCurrentPosition(currentPosition);
@@ -67,12 +65,12 @@ public abstract class AbstractActor implements ActorPrivileged {
     }
 
     @Override
-    public TunnelCell getCurrentPosition(){
+    public TunnelCellUpdatable getCurrentPosition(){
         return actorRectangle.rectangle.getCurrentPosition();
     }
 
     @Override
-    public ActorRectangle getActorRectangle() {
+    public Rectangle getActorRectangle() {
         return actorRectangle;
     }
 
@@ -95,11 +93,11 @@ public abstract class AbstractActor implements ActorPrivileged {
         this.dir = direction;
     }
 
-    protected void setCurrentPosition(TunnelCell currentPosition){
+    protected void setCurrentPosition(TunnelCellUpdatable currentPosition){
         this.actorRectangle = new ActorRectangleImpl(currentPosition, world.getOffsetX(), world.getOffsetY());
     }
 
-    protected void setCurrentPosition(TunnelCell currentPosition, int x, int y){
+    protected void setCurrentPosition(TunnelCellUpdatable currentPosition, int x, int y){
         if (currentPosition.isWithinCell(x, y)){
             this.setCurrentPosition(currentPosition);
             int dx = x - actorRectangle.getRectangleX();

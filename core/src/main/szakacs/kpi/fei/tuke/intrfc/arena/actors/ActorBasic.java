@@ -1,9 +1,9 @@
 package szakacs.kpi.fei.tuke.intrfc.arena.actors;
 
 import szakacs.kpi.fei.tuke.enums.Direction;
-import szakacs.kpi.fei.tuke.arena.game.world.TunnelCell;
 import szakacs.kpi.fei.tuke.enums.ActorType;
-import szakacs.kpi.fei.tuke.intrfc.misc.ActorRectangle;
+import szakacs.kpi.fei.tuke.intrfc.arena.game.world.TunnelCellBasic;
+import szakacs.kpi.fei.tuke.intrfc.misc.Rectangle;
 
 /**
  * The interface implemented by all game actors.
@@ -31,14 +31,14 @@ public interface ActorBasic {
      *
      * @return the tunnel cell where the actor is currently located.
      */
-    TunnelCell getCurrentPosition();
+    TunnelCellBasic getCurrentPosition();
 
     /**
-     * Returns an actorRectangle object which contains actor properties related to position.
+     * Returns a {@link Rectangle} object which contains actor properties related to position.
      *
-     * @return an unmodifiable view of the actor's rectangle object.
+     * @return the actor's rectangle object.
      */
-    ActorRectangle getActorRectangle();
+    Rectangle getActorRectangle();
 
     /**
      * Gets the general category of the actor. Note: this is not the actual class of an actor,

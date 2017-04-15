@@ -4,8 +4,8 @@ import szakacs.kpi.fei.tuke.arena.game.world.TunnelCell;
 import szakacs.kpi.fei.tuke.enums.ActorType;
 import szakacs.kpi.fei.tuke.enums.Direction;
 import szakacs.kpi.fei.tuke.intrfc.arena.actors.ActorBasic;
+import szakacs.kpi.fei.tuke.intrfc.arena.game.world.TunnelCellUpdatable;
 import szakacs.kpi.fei.tuke.intrfc.arena.proxies.ActorGameInterface;
-import szakacs.kpi.fei.tuke.intrfc.misc.ActorRectangle;
 
 import java.util.Set;
 
@@ -14,11 +14,11 @@ import java.util.Set;
  */
 public class Wall extends AbstractActor {
 
-    private TunnelCell neighbouringCell;
+    private TunnelCellUpdatable neighbouringCell;
 
     // TODO: Use the left cell as current position.
 
-    public Wall(TunnelCell cell, ActorGameInterface gameInterface) {
+    public Wall(TunnelCellUpdatable cell, ActorGameInterface gameInterface) {
         super(cell, ActorType.WALL, Direction.LEFT, gameInterface);
         this.actorRectangle = new ActorRectangleImpl(cell, 2*world.getOffsetX(), world.getOffsetY());
         this.neighbouringCell = cell.getCellAtDirection(Direction.RIGHT);
@@ -46,14 +46,14 @@ public class Wall extends AbstractActor {
                 || neighbouringCell.equals(actor.getCurrentPosition());
     }
 
-    private void disconnectCells(TunnelCell currentPosition){
+    private void disconnectCells(TunnelCellUpdatable currentPosition){
         this.neighbouringCell.setAtDirection(Direction.LEFT, null, gameInterface.getAuthenticator());
         currentPosition.setAtDirection(Direction.RIGHT, null, gameInterface.getAuthenticator());
     }
 
     public void reconnectCells(){
         //System.out.println("Wall.reconnectCells()");
-        TunnelCell cell = super.getCurrentPosition();
+        TunnelCellUpdatable cell = super.getCurrentPosition();
         cell.setAtDirection(Direction.RIGHT, this.neighbouringCell, gameInterface.getAuthenticator());
         this.neighbouringCell.setAtDirection(Direction.LEFT, cell, gameInterface.getAuthenticator());
     }

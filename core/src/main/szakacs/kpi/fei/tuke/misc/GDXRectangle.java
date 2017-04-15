@@ -1,5 +1,6 @@
 package szakacs.kpi.fei.tuke.misc;
 
+import szakacs.kpi.fei.tuke.intrfc.misc.ActorRectangle;
 import szakacs.kpi.fei.tuke.intrfc.misc.Rectangle;
 
 /**
@@ -33,19 +34,31 @@ public class GDXRectangle implements Rectangle {
         return centerY;
     }
 
+    @Override
     public int getRectangleX() {
         return x;
     }
 
+    @Override
     public int getRectangleY() {
         return y;
     }
 
+    @Override
     public int getWidth() {
         return width;
     }
 
+    @Override
     public int getHeight() {
         return height;
+    }
+
+    @Override
+    public boolean overlaps(Rectangle other) {
+        if (other == null)
+            return false;
+        else return x <= other.getRectangleX() + width && x + width >= other.getRectangleX()
+                && y <= other.getRectangleY() + height && y + height >= other.getRectangleY();
     }
 }

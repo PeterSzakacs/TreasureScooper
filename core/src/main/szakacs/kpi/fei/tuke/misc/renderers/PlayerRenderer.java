@@ -9,7 +9,7 @@ import szakacs.kpi.fei.tuke.arena.actors.pipe.PipeHead;
 import szakacs.kpi.fei.tuke.enums.PipeSegmentType;
 import szakacs.kpi.fei.tuke.intrfc.arena.actors.pipe.PipeBasic;
 import szakacs.kpi.fei.tuke.intrfc.arena.game.gameLevel.GameLevelPrivileged;
-import szakacs.kpi.fei.tuke.intrfc.misc.ActorRectangle;
+import szakacs.kpi.fei.tuke.intrfc.misc.Rectangle;
 
 import java.util.ArrayList;
 import java.util.EnumMap;
@@ -56,7 +56,7 @@ public class PlayerRenderer extends AbstractGameRenderer {
             elapsedTime += Gdx.graphics.getDeltaTime();
             PipeHead head = pipe.getHead();
             for (PipeSegment seg : pipe.getSegmentStack()) {
-                ActorRectangle segmentRectangle = seg.getActorRectangle();
+                Rectangle segmentRectangle = seg.getActorRectangle();
                 pipeSegmentSprites.get(seg.getSegmentType()).setPosition(
                         segmentRectangle.getRectangleX(),
                         segmentRectangle.getRectangleY()
@@ -78,7 +78,7 @@ public class PlayerRenderer extends AbstractGameRenderer {
                     break;
             }
             TextureRegion keyFrame = anim.getKeyFrame(elapsedTime, true);
-            ActorRectangle headRectangle = head.getActorRectangle();
+            Rectangle headRectangle = head.getActorRectangle();
             batch.draw(keyFrame, headRectangle.getRectangleX(), headRectangle.getRectangleY(),
                     keyFrame.getRegionWidth() / 2.0f, keyFrame.getRegionHeight() / 2.0f,
                     keyFrame.getRegionWidth(), keyFrame.getRegionHeight(),

@@ -58,7 +58,7 @@ public class SAXWorldParser extends DefaultHandler {
                     Map<String, DummyTunnel> dummyTunnels = world.getDummyTunnels();
                     DummyTunnel dt = dummyTunnels.get(attributes.getValue("from"));
                     dt.getConnectedTunnelsBelow().put(
-                            Integer.parseInt(attributes.getValue("x")),
+                            Integer.parseInt(attributes.getValue("x")) * world.getOffsetX(),
                             dummyTunnels.get(attributes.getValue("to"))
                     );
                 }

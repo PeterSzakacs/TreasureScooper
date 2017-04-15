@@ -4,6 +4,8 @@ import szakacs.kpi.fei.tuke.arena.actors.pipe.Pipe;
 import szakacs.kpi.fei.tuke.enums.Direction;
 import szakacs.kpi.fei.tuke.enums.TunnelCellType;
 import szakacs.kpi.fei.tuke.intrfc.arena.game.world.GameWorldPrivileged;
+import szakacs.kpi.fei.tuke.intrfc.arena.game.world.TunnelCellBasic;
+import szakacs.kpi.fei.tuke.intrfc.arena.game.world.TunnelCellUpdatable;
 
 import java.util.EnumMap;
 import java.util.Map;
@@ -11,16 +13,16 @@ import java.util.Map;
 /**
  * A class representing a cell of a horizontal or interconnecting tunnel in the game world.
  * Actors can only move in these cells and a single piece of treasure can only be found
- * within a tunnel cell,
+ * within a tunnel cell.
  */
-public class TunnelCell {
+public class TunnelCell implements TunnelCellUpdatable {
     private int x;
     private int y;
     private HorizontalTunnel tunnel;
     private GameWorldPrivileged world;
     private TunnelCellType tcType;
     private int nuggetValue;
-    private Map<Direction, TunnelCell> fourDirections;
+    private Map<Direction, TunnelCellUpdatable> fourDirections;
 
     public TunnelCell(int x, int y, TunnelCellType tcType, HorizontalTunnel tunnel, GameWorldPrivileged world) {
         this.x = x;
@@ -71,7 +73,7 @@ public class TunnelCell {
         return this.tunnel;
     }
 
-    public void setAtDirection(Direction dir, TunnelCell pos, Object authToken) {
+    public void setAtDirection(Direction dir, TunnelCellUpdatable pos, Object authToken) {
         if (world.getAuthenticator().authenticate(authToken)) {
             fourDirections.put(dir, pos);
         }
@@ -84,9 +86,11 @@ public class TunnelCell {
      * @param dir the direction to look at.
      * @return The adjacent cell in the direction given or null if there is a wall in that direction.
      */
-    public TunnelCell getCellAtDirection(Direction dir){
+    public TunnelCellUpdatable getCellAtDirection(Direction dir){
         return fourDirections.get(dir);
     }
+
+    public TunnelCellUpdatable getUpdatableCellAtDirection(Direction dir){return fourDirections.get(dir);}
 
     /**
      * Returns an enum value specifying the configuration of adjacent cells to this cell.

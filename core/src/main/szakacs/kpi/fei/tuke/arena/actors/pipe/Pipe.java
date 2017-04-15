@@ -1,13 +1,14 @@
 package szakacs.kpi.fei.tuke.arena.actors.pipe;
 
+import szakacs.kpi.fei.tuke.arena.game.world.TunnelCell;
 import szakacs.kpi.fei.tuke.enums.ActorType;
 import szakacs.kpi.fei.tuke.enums.Direction;
-import szakacs.kpi.fei.tuke.arena.game.world.TunnelCell;
 import szakacs.kpi.fei.tuke.intrfc.Player;
 import szakacs.kpi.fei.tuke.intrfc.arena.actors.ActorBasic;
 import szakacs.kpi.fei.tuke.intrfc.arena.actors.pipe.PipeBasic;
 import szakacs.kpi.fei.tuke.intrfc.arena.callbacks.OnStackUpdatedCallback;
 import szakacs.kpi.fei.tuke.intrfc.arena.game.world.GameWorldBasic;
+import szakacs.kpi.fei.tuke.intrfc.arena.game.world.TunnelCellUpdatable;
 import szakacs.kpi.fei.tuke.intrfc.misc.Stack;
 import szakacs.kpi.fei.tuke.intrfc.arena.proxies.ActorGameInterface;
 
@@ -67,7 +68,7 @@ public class Pipe implements PipeBasic {
     private ActorGameInterface gameInterface;
     private int healthPoints;
 
-    public Pipe(ActorGameInterface gameInterface, TunnelCell startPosition, Player controller) {
+    public Pipe(ActorGameInterface gameInterface, TunnelCellUpdatable startPosition, Player controller) {
         this.head = new PipeHead(Direction.DOWN, gameInterface, startPosition);
         this.controller = controller;
         this.gameInterface = gameInterface;

@@ -9,6 +9,8 @@ import szakacs.kpi.fei.tuke.arena.game.world.TunnelCell;
 import szakacs.kpi.fei.tuke.enums.Direction;
 import szakacs.kpi.fei.tuke.enums.TunnelCellType;
 import szakacs.kpi.fei.tuke.intrfc.arena.game.gameLevel.GameLevelPrivileged;
+import szakacs.kpi.fei.tuke.intrfc.arena.game.world.HorizontalTunnelBasic;
+import szakacs.kpi.fei.tuke.intrfc.arena.game.world.TunnelCellBasic;
 
 import java.util.*;
 
@@ -19,7 +21,7 @@ public class TunnelsRenderer extends AbstractGameRenderer {
 
     private Sprite nuggetSprite;
     private Map<TunnelCellType, Sprite> tunnelCellSprites;
-    private Set<TunnelCell> interconnections;
+    private Set<TunnelCellBasic> interconnections;
 
     public TunnelsRenderer(SpriteBatch batch, GameLevelPrivileged game) {
         super(batch, game);
@@ -39,13 +41,13 @@ public class TunnelsRenderer extends AbstractGameRenderer {
 
     @Override
     public void render() {
-        for (TunnelCell cell : interconnections) {
+        for (TunnelCellBasic cell : interconnections) {
             Sprite cellSprite = tunnelCellSprites.get(cell.getCellType());
             cellSprite.setPosition(cell.getX(), cell.getY());
             cellSprite.draw(batch);
         }
-        for(HorizontalTunnel tunnel : world.getTunnels()) {
-            for (TunnelCell cell : tunnel.getCells()){
+        for(HorizontalTunnelBasic tunnel : world.getTunnels()) {
+            for (TunnelCellBasic cell : tunnel.getCells()){
                 Sprite cellSprite = tunnelCellSprites.get(cell.getCellType());
                 cellSprite.setPosition(cell.getX(), cell.getY());
                 cellSprite.draw(batch);
@@ -70,18 +72,18 @@ public class TunnelsRenderer extends AbstractGameRenderer {
 
     private void initializeInterconnections(){
         interconnections.clear();
-        for (TunnelCell cell : world.getEntrances().values()) {
+        for (TunnelCellBasic cell : world.getEntrances().values()) {
             for ( ; cell.getCellType() != TunnelCellType.ENTRANCE;
                  cell = cell.getCellAtDirection(Direction.DOWN)) {
                 interconnections.add(cell);
             }
         }
-        for (HorizontalTunnel ht : world.getTunnels()){
-            Set<TunnelCell> exits = ht.getCellsBySearchCriteria(cell ->
+        for (HorizontalTunnelBasic ht : world.getTunnels()){
+            Set<TunnelCellBasic> exits = ht.getCellsBySearchCriteria(cell ->
                     cell.getCellType() == TunnelCellType.EXIT
             );
-            for (TunnelCell exitCell : exits){
-                for (TunnelCell cell = exitCell.getCellAtDirection(Direction.DOWN);
+            for (TunnelCellBasic exitCell : exits){
+                for (TunnelCellBasic cell = exitCell.getCellAtDirection(Direction.DOWN);
                      cell.getCellType() != TunnelCellType.ENTRANCE;
                      cell = cell.getCellAtDirection(Direction.DOWN)) {
                     interconnections.add(cell);

@@ -5,12 +5,11 @@ import org.junit.Test;
 import szakacs.kpi.fei.tuke.arena.actors.pipe.Pipe;
 import szakacs.kpi.fei.tuke.intrfc.arena.game.MethodCallAuthenticator;
 import szakacs.kpi.fei.tuke.intrfc.arena.game.gameLevel.GameLevelPrivileged;
-import szakacs.kpi.fei.tuke.intrfc.arena.game.world.GameWorldBasic;
 import szakacs.kpi.fei.tuke.intrfc.arena.game.world.GameWorldPrivileged;
+import szakacs.kpi.fei.tuke.intrfc.arena.game.world.HorizontalTunnelUpdatable;
 import szakacs.kpi.fei.tuke.misc.GameLevelInitializationException;
 import szakacs.kpi.fei.tuke.misc.configProcessors.gameValueObjects.DummyLevel;
 
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -31,7 +30,7 @@ public class TunnelCellTest {
         public int getOffsetY() {return offsetY;}
         public int getNuggetCount() {return 0;}
         public Map<String, TunnelCell> getEntrances() {return null;}
-        public Set<HorizontalTunnel> getTunnels() {return null;}
+        public Set<HorizontalTunnelUpdatable> getTunnelsUpdatable() {return null;}
     };
 
     @Test

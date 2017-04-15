@@ -9,6 +9,7 @@ import szakacs.kpi.fei.tuke.intrfc.arena.game.gameLevel.GameLevelPrivileged;
 import szakacs.kpi.fei.tuke.intrfc.arena.game.MethodCallAuthenticator;
 import szakacs.kpi.fei.tuke.intrfc.arena.game.playerManager.PlayerManagerPrivileged;
 import szakacs.kpi.fei.tuke.intrfc.arena.game.world.GameWorldBasic;
+import szakacs.kpi.fei.tuke.intrfc.arena.game.world.GameWorldUpdatable;
 import szakacs.kpi.fei.tuke.intrfc.misc.GameConfig;
 import szakacs.kpi.fei.tuke.misc.GameLevelInitializationException;
 import szakacs.kpi.fei.tuke.misc.configProcessors.gameValueObjects.DummyEntrance;
@@ -95,7 +96,7 @@ public class PlayerManager implements PlayerManagerPrivileged {
         playerTokenMap.clear();
         this.gameShop = new GameShop(gameLevel, scoreChangeCallback);
         Map<DummyEntrance, Class<? extends Player>> entranceToPlayerMap = level.getEntranceToPlayerMap();
-        GameWorldBasic gameWorld = gameLevel.getGameWorld();
+        GameWorldUpdatable gameWorld = gameLevel.getGameWorld();
         for (DummyEntrance de : entranceToPlayerMap.keySet()) {
             Class<? extends Player> playerCls = entranceToPlayerMap.get(de);
             Player player;
@@ -108,7 +109,7 @@ public class PlayerManager implements PlayerManagerPrivileged {
             player.setPlayerToken(token);
             Pipe pipe = new Pipe(
                     gameLevel.getActorInterface(),
-                    gameWorld.getEntrances().get(de.getId()),
+                    gameWorld.getEntrancesUpdatable().get(de.getId()),
                     player
             );
             pipes.add(pipe);

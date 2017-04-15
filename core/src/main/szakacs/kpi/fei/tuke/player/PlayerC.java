@@ -1,11 +1,13 @@
 package szakacs.kpi.fei.tuke.player;
 
+import szakacs.kpi.fei.tuke.arena.game.world.TunnelCell;
 import szakacs.kpi.fei.tuke.enums.Direction;
 import szakacs.kpi.fei.tuke.enums.TunnelCellType;
 import szakacs.kpi.fei.tuke.arena.game.world.HorizontalTunnel;
-import szakacs.kpi.fei.tuke.arena.game.world.TunnelCell;
 import szakacs.kpi.fei.tuke.intrfc.PlayerToken;
 import szakacs.kpi.fei.tuke.intrfc.arena.actors.pipe.PipeBasic;
+import szakacs.kpi.fei.tuke.intrfc.arena.game.world.HorizontalTunnelBasic;
+import szakacs.kpi.fei.tuke.intrfc.arena.game.world.TunnelCellBasic;
 import szakacs.kpi.fei.tuke.intrfc.arena.proxies.PlayerGameInterface;
 import szakacs.kpi.fei.tuke.player.common.AbstractPlayer;
 
@@ -28,9 +30,9 @@ public class PlayerC extends AbstractPlayer {
 
     private State state;
     private Direction currentDir;
-    private TunnelCell currentPosition;
-    private HorizontalTunnel currentTunnel;
-    private TunnelCell entrance;
+    private TunnelCellBasic currentPosition;
+    private HorizontalTunnelBasic currentTunnel;
+    private TunnelCellBasic entrance;
 
     @Override
     public void initialize(PlayerGameInterface gameInterface, PipeBasic pipe, PlayerToken token) {
@@ -107,14 +109,14 @@ public class PlayerC extends AbstractPlayer {
         }
     }
 
-    private TunnelCell findNearestExit() {
-        Set<TunnelCell> exits = this.currentTunnel.getCellsBySearchCriteria((cell) ->
+    private TunnelCellBasic findNearestExit() {
+        Set<TunnelCellBasic> exits = this.currentTunnel.getCellsBySearchCriteria((cell) ->
                 cell.getCellType() == TunnelCellType.EXIT
         );
         if ( ! exits.isEmpty() ) {
-            TunnelCell nearest = exits.iterator().next();
+            TunnelCellBasic nearest = exits.iterator().next();
             int nearest_diff = Math.abs(nearest.getX() - head.getX()), diff_x;
-            for (TunnelCell cell : exits) {
+            for (TunnelCellBasic cell : exits) {
                 diff_x = Math.abs(head.getX() - cell.getX());
                 if (diff_x < nearest_diff)
                     nearest = cell;
@@ -140,7 +142,7 @@ public class PlayerC extends AbstractPlayer {
         if (pipe.getHead().getCurrentPosition().equals(this.entrance)) {
             if (currentTunnel.getNuggetCount() == 0) {
                 this.state = State.ENTERTUNNEL;
-                TunnelCell exit = this.findNearestExit();
+                TunnelCellBasic exit = this.findNearestExit();
                 if (exit == null) {
                     this.state = State.FINISH;
                 } else if (head.getX() < exit.getX())

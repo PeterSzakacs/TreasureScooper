@@ -3,10 +3,11 @@ package szakacs.kpi.fei.tuke.arena.game.updaters;
 import szakacs.kpi.fei.tuke.arena.actors.Mole;
 import szakacs.kpi.fei.tuke.arena.actors.pipe.Pipe;
 import szakacs.kpi.fei.tuke.arena.game.world.HorizontalTunnel;
-import szakacs.kpi.fei.tuke.arena.game.world.TunnelCell;
 import szakacs.kpi.fei.tuke.enums.Direction;
 import szakacs.kpi.fei.tuke.enums.TunnelCellType;
 import szakacs.kpi.fei.tuke.intrfc.arena.game.gameLevel.GameLevelPrivileged;
+import szakacs.kpi.fei.tuke.intrfc.arena.game.world.HorizontalTunnelUpdatable;
+import szakacs.kpi.fei.tuke.intrfc.arena.game.world.TunnelCellUpdatable;
 import szakacs.kpi.fei.tuke.misc.configProcessors.gameValueObjects.DummyLevel;
 
 import java.util.ArrayList;
@@ -35,12 +36,12 @@ public class GameUpdaterEnemies extends AbstractGameUpdater {
 
     // list of all previous positions where an enemy actor was put,
     // serves to prevent creating enemies always at the same position
-    private List<TunnelCell> previousPositions;
+    private List<TunnelCellUpdatable> previousPositions;
 
     // list of all positions where to put an enemy Actor,
     // basically all LEFT_EDGE and RIGHT_EDGE positions
     // of all tunnels in the game gameInterface,
-    private List<TunnelCell> eligiblePositions;
+    private List<TunnelCellUpdatable> eligiblePositions;
 
     public GameUpdaterEnemies(){
         super();
@@ -77,8 +78,8 @@ public class GameUpdaterEnemies extends AbstractGameUpdater {
         eligiblePositions.clear();
         createdEnemiesCount = 0;
         turnCounter = 0;
-        for (HorizontalTunnel ht : gameWorld.getTunnels()){
-            eligiblePositions.addAll(ht.getCellsBySearchCriteria(
+        for (HorizontalTunnelUpdatable ht : gameWorld.getTunnelsUpdatable()){
+            eligiblePositions.addAll(ht.getUpdatableCellsBySearchCriteria(
                     (cell) ->
                             cell.getCellType() == TunnelCellType.LEFT_EDGE
                                     || cell.getCellType() == TunnelCellType.RIGHT_EDGE
@@ -111,11 +112,11 @@ public class GameUpdaterEnemies extends AbstractGameUpdater {
      */
     private void createNewEnemy() {
         // pick a random position that was not selected before
-        List<TunnelCell> pipeHeadPositions = new ArrayList<>(playerManager.getPipes().size());
+        List<TunnelCellUpdatable> pipeHeadPositions = new ArrayList<>(playerManager.getPipes().size());
         for (Pipe pipe : playerManager.getPipesUpdatable()) {
             pipeHeadPositions.add(pipe.getHead().getCurrentPosition());
         }
-        TunnelCell cell; Random rand = new Random();
+        TunnelCellUpdatable cell; Random rand = new Random();
         if (previousPositions.size() == enemyCountMax)
             previousPositions.clear();
         do {

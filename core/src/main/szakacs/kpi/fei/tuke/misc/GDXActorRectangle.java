@@ -1,7 +1,7 @@
 package szakacs.kpi.fei.tuke.misc;
 
-import szakacs.kpi.fei.tuke.arena.game.world.TunnelCell;
 import szakacs.kpi.fei.tuke.enums.Direction;
+import szakacs.kpi.fei.tuke.intrfc.arena.game.world.TunnelCellUpdatable;
 import szakacs.kpi.fei.tuke.intrfc.misc.ActorRectangle;
 
 /**
@@ -9,14 +9,14 @@ import szakacs.kpi.fei.tuke.intrfc.misc.ActorRectangle;
  */
 public class GDXActorRectangle extends GDXRectangle implements ActorRectangle {
 
-    private TunnelCell currentPosition;
+    private TunnelCellUpdatable currentPosition;
 
-    public GDXActorRectangle(TunnelCell currentPosition, int width, int height){
+    public GDXActorRectangle(TunnelCellUpdatable currentPosition, int width, int height){
         super(currentPosition.getX(), currentPosition.getY(), width, height);
         this.currentPosition = currentPosition;
     }
 
-    @Override
+/*    @Override
     public boolean overlaps(ActorRectangle other) {
         if (other == null)
             return false;
@@ -24,7 +24,7 @@ public class GDXActorRectangle extends GDXRectangle implements ActorRectangle {
             return true;
         return x <= other.getRectangleX() + width && x + width >= other.getRectangleX()
                 && y <= other.getRectangleY() + height && y + height >= other.getRectangleY();
-    }
+    }*/
 
     @Override
     public void translate(Direction dir, int dxAbs, int dyAbs) {
@@ -34,7 +34,7 @@ public class GDXActorRectangle extends GDXRectangle implements ActorRectangle {
         int y = this.y + dy;
         int centerX = this.centerX + dx;
         int centerY = this.centerY + dy;
-        TunnelCell prev, next;
+        TunnelCellUpdatable prev, next;
         prev = next = getCurrentPosition();
         do {
             if (next.isWithinCell(x, y)) {
@@ -60,7 +60,7 @@ public class GDXActorRectangle extends GDXRectangle implements ActorRectangle {
     }
 
     @Override
-    public TunnelCell getCurrentPosition() {
+    public TunnelCellUpdatable getCurrentPosition() {
         return currentPosition;
     }
 }

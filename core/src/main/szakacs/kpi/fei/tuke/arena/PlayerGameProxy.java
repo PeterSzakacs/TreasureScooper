@@ -1,8 +1,6 @@
 package szakacs.kpi.fei.tuke.arena;
 
-import szakacs.kpi.fei.tuke.arena.actors.pipe.Pipe;
 import szakacs.kpi.fei.tuke.arena.game.GameShop;
-import szakacs.kpi.fei.tuke.arena.game.world.HorizontalTunnel;
 import szakacs.kpi.fei.tuke.arena.game.world.TunnelCell;
 import szakacs.kpi.fei.tuke.enums.GameState;
 import szakacs.kpi.fei.tuke.intrfc.Player;
@@ -13,6 +11,8 @@ import szakacs.kpi.fei.tuke.intrfc.arena.game.actorManager.ActorManagerPrivilege
 import szakacs.kpi.fei.tuke.intrfc.arena.game.playerManager.PlayerManagerPrivileged;
 import szakacs.kpi.fei.tuke.intrfc.arena.game.world.GameWorldPrivileged;
 import szakacs.kpi.fei.tuke.intrfc.arena.game.world.GameWorldBasic;
+import szakacs.kpi.fei.tuke.intrfc.arena.game.world.HorizontalTunnelBasic;
+import szakacs.kpi.fei.tuke.intrfc.arena.game.world.TunnelCellBasic;
 import szakacs.kpi.fei.tuke.intrfc.arena.proxies.PlayerGameInterface;
 
 import java.util.Map;
@@ -36,8 +36,8 @@ public class PlayerGameProxy implements PlayerGameInterface {
         public int getOffsetX() { return gameWorld.getOffsetX(); }
         public int getOffsetY() { return gameWorld.getOffsetY(); }
         public int getNuggetCount() { return gameWorld.getNuggetCount(); }
-        public Map<String, TunnelCell> getEntrances() { return gameWorld.getEntrances(); }
-        public Set<HorizontalTunnel> getTunnels() { return gameWorld.getTunnels(); }
+        public Map<String, TunnelCellBasic> getEntrances() { return gameWorld.getEntrances(); }
+        public Set<HorizontalTunnelBasic> getTunnels() { return gameWorld.getTunnels(); }
     };
 
     protected GameLevelPrivileged game;

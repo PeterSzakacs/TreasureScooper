@@ -2,6 +2,7 @@ package szakacs.kpi.fei.tuke.intrfc.arena.actors.pipe;
 
 import szakacs.kpi.fei.tuke.arena.actors.pipe.PipeHead;
 import szakacs.kpi.fei.tuke.arena.actors.pipe.PipeSegment;
+import szakacs.kpi.fei.tuke.arena.game.world.TunnelCell;
 import szakacs.kpi.fei.tuke.enums.Direction;
 import szakacs.kpi.fei.tuke.intrfc.Player;
 import szakacs.kpi.fei.tuke.intrfc.arena.actors.ActorBasic;
@@ -48,7 +49,7 @@ public interface PipeBasic {
 
     /**
      * <p>Checks if there is a wall in front of the pipe head (it just checks if the adjacent
-     * {@link szakacs.kpi.fei.tuke.arena.game.world.TunnelCell}) in the specified {@link Direction}
+     * {@link TunnelCell}) in the specified {@link Direction}
      * from the head is null or not.</p>
      *
      * @param dir the direction to check in.

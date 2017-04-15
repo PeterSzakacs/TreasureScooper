@@ -4,11 +4,14 @@ import szakacs.kpi.fei.tuke.arena.actors.Wall;
 import szakacs.kpi.fei.tuke.arena.actors.pipe.Pipe;
 import szakacs.kpi.fei.tuke.arena.actors.pipe.PipeSegment;
 import szakacs.kpi.fei.tuke.arena.game.world.HorizontalTunnel;
+import szakacs.kpi.fei.tuke.arena.game.world.TunnelCell;
 import szakacs.kpi.fei.tuke.enums.Direction;
 import szakacs.kpi.fei.tuke.enums.TunnelCellType;
-import szakacs.kpi.fei.tuke.arena.game.world.TunnelCell;
 import szakacs.kpi.fei.tuke.intrfc.arena.actors.ActorBasic;
+import szakacs.kpi.fei.tuke.intrfc.arena.actors.ActorUpdatable;
 import szakacs.kpi.fei.tuke.intrfc.arena.game.gameLevel.GameLevelPrivileged;
+import szakacs.kpi.fei.tuke.intrfc.arena.game.world.HorizontalTunnelUpdatable;
+import szakacs.kpi.fei.tuke.intrfc.arena.game.world.TunnelCellUpdatable;
 import szakacs.kpi.fei.tuke.misc.configProcessors.gameValueObjects.DummyLevel;
 
 import java.util.ArrayList;
@@ -37,12 +40,12 @@ public class GameUpdaterWalls extends AbstractGameUpdater {
 
     // list of all previous positions where a wall actor was put,
     // serves to prevent creating walls always at the same position
-    private List<TunnelCell> previousPositions;
+    private List<TunnelCellUpdatable> previousPositions;
 
     // list of all positions where to put a wall Actor,
     // basically all TUNNEL type positions of all tunnels
     // in the game gameInterface,
-    private List<TunnelCell> eligiblePositions;
+    private List<TunnelCellUpdatable> eligiblePositions;
 
     public GameUpdaterWalls(){
         Random rand = new Random();
@@ -78,8 +81,8 @@ public class GameUpdaterWalls extends AbstractGameUpdater {
         eligiblePositions.clear();
         createdWallsCount = 0;
         turnCounter = 0;
-        for (HorizontalTunnel ht : gameWorld.getTunnels()){
-            eligiblePositions.addAll(ht.getCellsBySearchCriteria(
+        for (HorizontalTunnelUpdatable ht : gameWorld.getTunnelsUpdatable()){
+            eligiblePositions.addAll(ht.getUpdatableCellsBySearchCriteria(
                     (cell) ->
                             cell.getCellType() == TunnelCellType.TUNNEL
                                     && cell.getCellAtDirection(Direction.RIGHT).getCellType() == TunnelCellType.TUNNEL
@@ -112,7 +115,7 @@ public class GameUpdaterWalls extends AbstractGameUpdater {
      */
     private void addWall() {
         // get all positions, where the pipe is located, including the head
-        List<TunnelCell> positions = new ArrayList<>();
+        List<TunnelCellUpdatable> positions = new ArrayList<>();
         for (Pipe pipe : playerManager.getPipesUpdatable()) {
             List<PipeSegment> segmentStack = pipe.getSegmentStack().getElementsByCriteria(null);
             for (PipeSegment seg : segmentStack) {
@@ -121,7 +124,7 @@ public class GameUpdaterWalls extends AbstractGameUpdater {
             positions.add(pipe.getHead().getCurrentPosition());
         }
         // pick a random TunnelCell where to put the new wall actor
-        TunnelCell cell; Random rand = new Random();
+        TunnelCellUpdatable cell; Random rand = new Random();
         if (previousPositions.size() == wallCountMax)
             previousPositions.clear();
         do {
@@ -144,7 +147,7 @@ public class GameUpdaterWalls extends AbstractGameUpdater {
      *
      * @param wall the wall to remove (the caller basically)
      */
-    private void removeWall(ActorBasic wall){
+    private void removeWall(ActorUpdatable wall){
         this.createdWallsCount--;
         this.previousPositions.remove(wall.getCurrentPosition());
     }

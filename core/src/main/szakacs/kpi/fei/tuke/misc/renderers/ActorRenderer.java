@@ -8,6 +8,7 @@ import szakacs.kpi.fei.tuke.intrfc.arena.actors.ActorBasic;
 import szakacs.kpi.fei.tuke.intrfc.arena.game.gameLevel.GameLevelPrivileged;
 import szakacs.kpi.fei.tuke.intrfc.misc.ActorRectangle;
 import szakacs.kpi.fei.tuke.intrfc.misc.GameConfig;
+import szakacs.kpi.fei.tuke.intrfc.misc.Rectangle;
 
 import java.util.EnumMap;
 import java.util.HashMap;
@@ -43,7 +44,7 @@ public class ActorRenderer extends AbstractGameRenderer {
 
     @Override
     public void render() {
-        ActorRectangle actorRectangle;
+        Rectangle actorRectangle;
         for (ActorBasic actor : actorManager.getActors()){
             actorRectangle = actor.getActorRectangle();
             Sprite actorSprite = actorSprites.get(actor.getClass()).get(actor.getDirection());

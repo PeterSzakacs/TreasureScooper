@@ -1,6 +1,5 @@
 package szakacs.kpi.fei.tuke.intrfc.arena.game.world;
 
-import szakacs.kpi.fei.tuke.arena.game.world.HorizontalTunnel;
 import szakacs.kpi.fei.tuke.arena.game.world.TunnelCell;
 
 import java.util.Map;
@@ -56,12 +55,12 @@ public interface GameWorldBasic {
      *
      * @return an unmodifiable map of entrance IDs to their {@link TunnelCell} entrance.
      */
-    Map<String, TunnelCell> getEntrances();
+    Map<String, TunnelCellBasic> getEntrances();
 
     /**
-     * Gets a set of all {@link HorizontalTunnel}s in the game world (no sorting order).
+     * Gets a set of all {@link HorizontalTunnelBasic} in the game world (no sorting order).
      *
      * @return all horizontal tunnels of the game world as an unmodifiable set.
      */
-    Set<HorizontalTunnel> getTunnels();
+    Set<HorizontalTunnelBasic> getTunnels();
 }
