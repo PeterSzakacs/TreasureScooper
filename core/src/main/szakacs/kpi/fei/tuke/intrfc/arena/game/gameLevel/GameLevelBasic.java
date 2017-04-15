@@ -6,7 +6,7 @@ import szakacs.kpi.fei.tuke.intrfc.arena.game.world.GameWorldBasic;
 /**
  * <p>The base interface of a level in the game. This is
  * the only game level interface which shall be exposed
- * to the player. It enables querying the game level for various data.
+ * to the player. It enables querying the game level for various data.</p>
  */
 public interface GameLevelBasic {
 

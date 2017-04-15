@@ -6,12 +6,7 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * The interface for the game gameInterface of a particular level
- *
- * Since so far none of the properties of the game gameInterface are modifiable
- * (e.g. the worlds dimensions and tunnels can't change once instantiated)
- * this interface does not have separate "Updatable" or "Privileged"
- * subinterfaces for any hypothetical methods which would modify them.
+ * The interface for the game world of a particular level
  */
 public interface GameWorldBasic {
 

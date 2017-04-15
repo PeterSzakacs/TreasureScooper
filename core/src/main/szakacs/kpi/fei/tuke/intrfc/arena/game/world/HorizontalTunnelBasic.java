@@ -4,11 +4,11 @@ import java.util.Set;
 import java.util.function.Predicate;
 
 /**
- * The base interface for a class representing a tunnel
- * stretching from left to right on the screen.
+ * <p>The base interface for a class representing a tunnel
+ * stretching from left to right on the screen.</p>
  *
- * This is the interface of such a class that is exposed
- * to the player.
+ * <p>This is the interface of such a class that is exposed
+ * to the player.</p>
  */
 public interface HorizontalTunnelBasic {
 

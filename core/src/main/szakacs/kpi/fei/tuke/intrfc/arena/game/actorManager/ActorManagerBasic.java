@@ -6,20 +6,20 @@ import java.util.Set;
 import java.util.function.Predicate;
 
 /**
- * The basic interface for the class responsible for all game actors and all pipes
- * used by the players.
+ * <p>The basic interface for the class responsible for all game actors and all pipes
+ * used by the players.</p>
  *
- * This interface defines methods enabling querying to get information about actors
- * in the game.
+ * <p>This interface defines methods enabling querying to get information about actors
+ * in the game.</p>
  *
- * This interface is to be the only actor manager interface exposed to the player.
+ * <p>This interface is to be the only actor manager interface exposed to the player.</p>
  */
 public interface ActorManagerBasic {
 
     /**
      * Gets all currently active game actors
      * (meaning actors whose act() method is
-     * still called)
+     * still called).
      *
      * @return all game actors (except the pipe heads
      * and pipe segments) as an unmodifiable set
@@ -27,10 +27,10 @@ public interface ActorManagerBasic {
     Set<ActorBasic> getActors();
 
     /**
-     * Queries the set of all currently active
-     * game actors (meaning actors whose act()
+     * Queries the set of all currently active game actors (meaning actors whose act()
      * method is still called) and returns a subset of them satisfying the criteria
-     * passed as argument. If no criteria is passed (null is passed) it returns all game actors
+     * passed as argument. If no criteria is passed (null is passed) it returns all
+     * game actors.
      *
      * @param criteria a functional interface or lambda function
      *                 used in evaluating whether the actor should

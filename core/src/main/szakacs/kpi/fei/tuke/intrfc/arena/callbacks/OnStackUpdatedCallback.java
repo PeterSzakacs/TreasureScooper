@@ -1,7 +1,8 @@
 package szakacs.kpi.fei.tuke.intrfc.arena.callbacks;
 
 /**
- * Created by developer on 15.2.2017.
+ * An interface for defining tasks to execute when an element
+ * is added to or removed from a stack collection.
  */
 public interface OnStackUpdatedCallback<T> {
 

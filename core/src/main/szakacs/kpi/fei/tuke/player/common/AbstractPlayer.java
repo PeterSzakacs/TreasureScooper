@@ -10,8 +10,6 @@ import szakacs.kpi.fei.tuke.intrfc.arena.proxies.PlayerGameInterface;
 import szakacs.kpi.fei.tuke.intrfc.misc.Stack;
 
 /**
- * Created by developer on 10.3.2017.
- *
  * An abstract superclass implementing the {@link Player} interface.
  * This class contains code code and data which is presumed to be
  * common across all player classes and so you can skip directly

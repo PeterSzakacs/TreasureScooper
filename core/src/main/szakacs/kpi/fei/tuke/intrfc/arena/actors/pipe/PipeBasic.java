@@ -9,8 +9,9 @@ import szakacs.kpi.fei.tuke.intrfc.arena.actors.ActorBasic;
 import szakacs.kpi.fei.tuke.intrfc.misc.Stack;
 
 /**
- * The interface for the pipe implementation that is currently exposed to the player
- * to use for collecting treasures.
+ * The interface for the pipe exposed to the player
+ * to use for collecting treasures (their collection
+ * happens automatically as the pipe moves).
  */
 public interface PipeBasic {
 
@@ -23,11 +24,10 @@ public interface PipeBasic {
     PipeHead getHead();
 
     /**
-     * <p>Returns a modifiable stack of {@link PipeSegment}s representing
-     * the pipe in the direction from the base of the pipe (stack bottom)
-     * to the segment connecting to the pipe head (stack top). This stack
-     * is modifiable via {@link Stack#push(Object)} and {@link Stack#pop()}.
-     * and changing the stack this way causes the pipe head to move.</p>
+     * <p>Returns a modifiable stack of pipe segments representing the pipe from the base
+     * of the pipe (stack bottom) to the segment connecting to the pipe head (stack top).
+     * This stack is modifiable via {@link Stack#push(Object)} and {@link Stack#pop()} and
+     * changing the stack this way causes the pipe head to move.</p>
      * 
      * @return The stack of {@link PipeSegment}s representing the pipe.
      */
@@ -35,7 +35,7 @@ public interface PipeBasic {
     
     /**
      * <p>A method to calculate the segment to push onto the segment stack
-     * according to the {@link Direction} the player wants to move to.</p>
+     * according to the Direction the player wants to move in.</p>
      *
      * <p>This method is made purely for convenience purposes,
      * to unburden the person calling {@link Stack#push(Object)}
@@ -43,14 +43,15 @@ public interface PipeBasic {
      *
      * @param dir the direction the player wishes to move the head to
      * @return the pipe segment required to move the pipe head in the specified direction
-     * @throws IllegalArgumentException if null or an unknown Direction enum value is passed as parameter
+     * @throws IllegalArgumentException if null or an unknown Direction enum value
+     *         is passed as parameter
      */
     PipeSegment calculateNextSegment(Direction dir) throws IllegalArgumentException;
 
     /**
      * <p>Checks if there is a wall in front of the pipe head (it just checks if the adjacent
-     * {@link TunnelCell}) in the specified {@link Direction}
-     * from the head is null or not.</p>
+     * {@link TunnelCell}) in the specified Direction from the heads current position is null
+     * or not.</p>
      *
      * @param dir the direction to check in.
      * @return boolean true if the adjacent cell is null | false otherwise.

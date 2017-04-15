@@ -1,12 +1,9 @@
-szakacs.kpi.fei.tuke.arena
 szakacs.kpi.fei.tuke.arena.actors.pipe
 szakacs.kpi.fei.tuke.arena.game
-szakacs.kpi.fei.tuke.arena.game.world
 szakacs.kpi.fei.tuke.enums
 szakacs.kpi.fei.tuke.intrfc
 szakacs.kpi.fei.tuke.intrfc.arena.actors
 szakacs.kpi.fei.tuke.intrfc.arena.actors.pipe
-szakacs.kpi.fei.tuke.intrfc.arena.callbacks
 szakacs.kpi.fei.tuke.intrfc.arena.game.actorManager
 szakacs.kpi.fei.tuke.intrfc.arena.game.gameLevel
 szakacs.kpi.fei.tuke.intrfc.arena.game.playerManager

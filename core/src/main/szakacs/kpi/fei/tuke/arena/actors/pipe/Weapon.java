@@ -6,7 +6,7 @@ import szakacs.kpi.fei.tuke.intrfc.misc.Queue;
 import szakacs.kpi.fei.tuke.misc.ArrayQueue;
 
 /**
- *
+ * A class representing the weapon wielded by the player.
  */
 public class Weapon {
 
@@ -60,8 +60,10 @@ public class Weapon {
     }
 
     /**
-     * Gets the {@link Queue} of {@link Bullet}s that represents the ammunition store of the weapon.
-     * Enqueueing and dequeing results in a bullet being loaded or fired, respectively.
+     * <p>Gets the {@link Queue} of {@link Bullet}s that represents the ammunition store
+     * of the weapon.</p>
+     *
+     * <p>Enqueueing and dequeing results in a bullet being loaded or fired, respectively.</p>
      *
      * @return the ammunition store of the weapon.
      */
@@ -69,10 +71,22 @@ public class Weapon {
         return ammoQueue;
     }
 
+    /**
+     * Returns the array index of the element at the front of the queue.
+     * Only used for rendering.
+     *
+     * @return the array index of the queue front.
+     */
     public int getFrontIndex() {
         return ammoQueue.frontIndex;
     }
 
+    /**
+     * Returns the array index of the element at the rear of the queue.
+     * Only used for rendering.
+     *
+     * @return the array index of the queue rear.
+     */
     public int getRearIndex(){
         return ammoQueue.rearIndex;
     }

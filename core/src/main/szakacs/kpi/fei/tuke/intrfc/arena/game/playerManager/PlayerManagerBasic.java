@@ -8,10 +8,8 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * Created by developer on 7.3.2017.
- *
- * The interface representing the subset of Player manager functionality
- * exposed to the player.
+ * <p>The interface representing the subset of Player manager functionality
+ * exposed to the player.</p>
  */
 public interface PlayerManagerBasic {
 
@@ -23,8 +21,8 @@ public interface PlayerManagerBasic {
     Set<PipeBasic> getPipes();
 
     /**
-     * Gets the scores of every player as a mapping of {@link Player} instances
-     * to {@link Integer} objects representing their scores.
+     * Gets the scores of every player as a mapping of Player instances
+     * to Integer objects representing their scores.
      *
      * @return the scores for each player in the current game level.
      */

@@ -6,12 +6,12 @@ package szakacs.kpi.fei.tuke.enums;
 public enum PipeSegmentType {
 
     /**
-     * A straight segment from left to right or vice-versa.
+     * A straight segment from top to bottom or vice-versa.
      */
     VERTICAL,
 
     /**
-     * A straight segment from top to bottom or vice-versa.
+     * A straight segment from left to right or vice-versa.
      */
     HORIZONTAL,
 
