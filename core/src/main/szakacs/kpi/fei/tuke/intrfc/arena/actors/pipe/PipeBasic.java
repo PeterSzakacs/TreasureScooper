@@ -16,7 +16,7 @@ public interface PipeBasic {
 
     /**
      * <p>Returns the head of the pipe which automatically collects treasure
-     * when it moves and possesses a weapon.</p>
+     * when it moves and which possesses a weapon.</p>
      *
      * @return The head of the pipe.
      */

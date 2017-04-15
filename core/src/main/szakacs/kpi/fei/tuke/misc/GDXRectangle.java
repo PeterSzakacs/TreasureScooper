@@ -1,6 +1,5 @@
 package szakacs.kpi.fei.tuke.misc;
 
-import szakacs.kpi.fei.tuke.intrfc.misc.ActorRectangle;
 import szakacs.kpi.fei.tuke.intrfc.misc.Rectangle;
 
 /**

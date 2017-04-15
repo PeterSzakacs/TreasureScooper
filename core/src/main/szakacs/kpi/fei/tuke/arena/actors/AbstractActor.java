@@ -1,7 +1,7 @@
 package szakacs.kpi.fei.tuke.arena.actors;
 
-import szakacs.kpi.fei.tuke.enums.Direction;
 import szakacs.kpi.fei.tuke.enums.ActorType;
+import szakacs.kpi.fei.tuke.enums.Direction;
 import szakacs.kpi.fei.tuke.intrfc.arena.actors.ActorBasic;
 import szakacs.kpi.fei.tuke.intrfc.arena.actors.ActorPrivileged;
 import szakacs.kpi.fei.tuke.intrfc.arena.game.world.GameWorldBasic;
@@ -32,7 +32,7 @@ public abstract class AbstractActor implements ActorPrivileged {
         public int getCenterX() { return rectangle.getCenterX(); }
         public int getCenterY() { return rectangle.getCenterY(); }
         public boolean overlaps(Rectangle other) { return rectangle.overlaps(other); }
-    };
+    }
 
     private Direction dir;
     protected ActorRectangleImpl actorRectangle;

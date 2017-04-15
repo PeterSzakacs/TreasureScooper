@@ -2,8 +2,8 @@ package szakacs.kpi.fei.tuke.arena.game;
 
 import szakacs.kpi.fei.tuke.enums.GameState;
 import szakacs.kpi.fei.tuke.intrfc.arena.actors.pipe.PipeBasic;
-import szakacs.kpi.fei.tuke.intrfc.arena.game.gameLevel.GameLevelPrivileged;
 import szakacs.kpi.fei.tuke.intrfc.arena.game.GameStateTester;
+import szakacs.kpi.fei.tuke.intrfc.arena.game.gameLevel.GameLevelPrivileged;
 import szakacs.kpi.fei.tuke.intrfc.arena.game.playerManager.PlayerManagerPrivileged;
 import szakacs.kpi.fei.tuke.intrfc.arena.game.world.GameWorldBasic;
 import szakacs.kpi.fei.tuke.misc.configProcessors.gameValueObjects.DummyLevel;

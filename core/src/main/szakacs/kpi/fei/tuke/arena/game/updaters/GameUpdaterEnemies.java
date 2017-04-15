@@ -2,7 +2,6 @@ package szakacs.kpi.fei.tuke.arena.game.updaters;
 
 import szakacs.kpi.fei.tuke.arena.actors.Mole;
 import szakacs.kpi.fei.tuke.arena.actors.pipe.Pipe;
-import szakacs.kpi.fei.tuke.arena.game.world.HorizontalTunnel;
 import szakacs.kpi.fei.tuke.enums.Direction;
 import szakacs.kpi.fei.tuke.enums.TunnelCellType;
 import szakacs.kpi.fei.tuke.intrfc.arena.game.gameLevel.GameLevelPrivileged;

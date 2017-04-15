@@ -1,10 +1,9 @@
 package szakacs.kpi.fei.tuke.arena.game.updaters;
 
-import szakacs.kpi.fei.tuke.intrfc.arena.game.gameLevel.GameLevelPrivileged;
-import szakacs.kpi.fei.tuke.intrfc.arena.game.actorManager.ActorManagerPrivileged;
 import szakacs.kpi.fei.tuke.intrfc.arena.game.GameUpdater;
+import szakacs.kpi.fei.tuke.intrfc.arena.game.actorManager.ActorManagerPrivileged;
+import szakacs.kpi.fei.tuke.intrfc.arena.game.gameLevel.GameLevelPrivileged;
 import szakacs.kpi.fei.tuke.intrfc.arena.game.playerManager.PlayerManagerPrivileged;
-import szakacs.kpi.fei.tuke.intrfc.arena.game.world.GameWorldBasic;
 import szakacs.kpi.fei.tuke.intrfc.arena.game.world.GameWorldPrivileged;
 import szakacs.kpi.fei.tuke.misc.configProcessors.gameValueObjects.DummyLevel;
 

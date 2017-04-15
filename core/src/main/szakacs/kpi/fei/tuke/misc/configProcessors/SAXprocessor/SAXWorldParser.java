@@ -1,14 +1,14 @@
 package szakacs.kpi.fei.tuke.misc.configProcessors.SAXprocessor;
 
-import szakacs.kpi.fei.tuke.intrfc.misc.GameWorldPrototype;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
+import szakacs.kpi.fei.tuke.intrfc.misc.GameWorldPrototype;
 import szakacs.kpi.fei.tuke.misc.configProcessors.gameValueObjects.DummyEntrance;
 import szakacs.kpi.fei.tuke.misc.configProcessors.gameValueObjects.DummyTunnel;
 import szakacs.kpi.fei.tuke.misc.configProcessors.gameValueObjects.DummyWorld;
 
-import java.util.*;
+import java.util.Map;
 
 /**
  * Created by developer on 2.2.2017.

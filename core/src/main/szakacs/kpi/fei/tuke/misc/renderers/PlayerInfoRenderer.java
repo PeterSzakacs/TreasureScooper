@@ -7,7 +7,6 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import szakacs.kpi.fei.tuke.arena.actors.Bullet;
-import szakacs.kpi.fei.tuke.arena.actors.pipe.Pipe;
 import szakacs.kpi.fei.tuke.arena.actors.pipe.Weapon;
 import szakacs.kpi.fei.tuke.intrfc.arena.actors.pipe.PipeBasic;
 import szakacs.kpi.fei.tuke.intrfc.arena.game.gameLevel.GameLevelPrivileged;

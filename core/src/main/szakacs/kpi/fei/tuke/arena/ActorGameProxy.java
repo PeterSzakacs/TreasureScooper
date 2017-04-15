@@ -1,18 +1,13 @@
 package szakacs.kpi.fei.tuke.arena;
 
 import szakacs.kpi.fei.tuke.arena.actors.pipe.Pipe;
-import szakacs.kpi.fei.tuke.arena.game.world.TunnelCell;
 import szakacs.kpi.fei.tuke.intrfc.arena.actors.ActorBasic;
 import szakacs.kpi.fei.tuke.intrfc.arena.actors.ActorPrivileged;
 import szakacs.kpi.fei.tuke.intrfc.arena.game.MethodCallAuthenticator;
 import szakacs.kpi.fei.tuke.intrfc.arena.game.gameLevel.GameLevelPrivileged;
-import szakacs.kpi.fei.tuke.intrfc.arena.game.world.GameWorldBasic;
 import szakacs.kpi.fei.tuke.intrfc.arena.game.world.GameWorldUpdatable;
-import szakacs.kpi.fei.tuke.intrfc.arena.game.world.HorizontalTunnelBasic;
-import szakacs.kpi.fei.tuke.intrfc.arena.game.world.HorizontalTunnelUpdatable;
 import szakacs.kpi.fei.tuke.intrfc.arena.proxies.ActorGameInterface;
 
-import java.util.Map;
 import java.util.Set;
 
 /**

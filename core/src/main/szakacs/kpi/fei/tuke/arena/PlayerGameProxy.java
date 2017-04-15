@@ -1,16 +1,15 @@
 package szakacs.kpi.fei.tuke.arena;
 
 import szakacs.kpi.fei.tuke.arena.game.GameShop;
-import szakacs.kpi.fei.tuke.arena.game.world.TunnelCell;
 import szakacs.kpi.fei.tuke.enums.GameState;
 import szakacs.kpi.fei.tuke.intrfc.Player;
 import szakacs.kpi.fei.tuke.intrfc.arena.actors.ActorBasic;
 import szakacs.kpi.fei.tuke.intrfc.arena.actors.pipe.PipeBasic;
-import szakacs.kpi.fei.tuke.intrfc.arena.game.gameLevel.GameLevelPrivileged;
 import szakacs.kpi.fei.tuke.intrfc.arena.game.actorManager.ActorManagerPrivileged;
+import szakacs.kpi.fei.tuke.intrfc.arena.game.gameLevel.GameLevelPrivileged;
 import szakacs.kpi.fei.tuke.intrfc.arena.game.playerManager.PlayerManagerPrivileged;
-import szakacs.kpi.fei.tuke.intrfc.arena.game.world.GameWorldPrivileged;
 import szakacs.kpi.fei.tuke.intrfc.arena.game.world.GameWorldBasic;
+import szakacs.kpi.fei.tuke.intrfc.arena.game.world.GameWorldPrivileged;
 import szakacs.kpi.fei.tuke.intrfc.arena.game.world.HorizontalTunnelBasic;
 import szakacs.kpi.fei.tuke.intrfc.arena.game.world.TunnelCellBasic;
 import szakacs.kpi.fei.tuke.intrfc.arena.proxies.PlayerGameInterface;

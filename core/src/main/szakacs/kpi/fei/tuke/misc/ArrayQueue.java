@@ -6,7 +6,7 @@ import java.util.*;
 import java.util.function.Predicate;
 
 /**
- * Created by developer on 14.2.2017.
+ * An array-based implementation of the {@link Queue} collection interface.
  */
 @SuppressWarnings("unchecked")
 public class ArrayQueue<T> implements Queue<T> {
@@ -76,7 +76,6 @@ public class ArrayQueue<T> implements Queue<T> {
         if (rear == capacity)
             rear = 0;
         this.elements[rear] = element;
-        //return true;
     }
 
     public T dequeue() {
@@ -120,11 +119,18 @@ public class ArrayQueue<T> implements Queue<T> {
         return numElements;
     }
 
-    public List<T> getElementsByCriteria(Predicate<T> criteria){
+    public List<T> getElements() {
+        List<T> list = new ArrayList<>(elements.length);
+        T[] elements = (T[]) this.elements;
+        for (int idx = front, count = 0; count < numElements; idx++, count++) {
+            list.add(elements[idx % capacity]);
+        }
+        return list;
+    }
 
-        // if no criteria are specified, all elements from the queue are returned
+    public List<T> getElementsByCriteria(Predicate<T> criteria){
         if (criteria == null){
-            criteria = t -> true;
+            return getElements();
         }
         searchResults.clear();
         T[] elements = (T[]) this.elements;

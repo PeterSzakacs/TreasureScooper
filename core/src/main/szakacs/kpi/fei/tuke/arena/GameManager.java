@@ -2,8 +2,8 @@ package szakacs.kpi.fei.tuke.arena;
 
 import szakacs.kpi.fei.tuke.arena.game.TreasureScooperLevel;
 import szakacs.kpi.fei.tuke.intrfc.Player;
-import szakacs.kpi.fei.tuke.intrfc.misc.GameConfig;
 import szakacs.kpi.fei.tuke.intrfc.arena.game.gameLevel.GameLevelPrivileged;
+import szakacs.kpi.fei.tuke.intrfc.misc.GameConfig;
 import szakacs.kpi.fei.tuke.intrfc.misc.GameResults;
 import szakacs.kpi.fei.tuke.misc.ConfigProcessingException;
 import szakacs.kpi.fei.tuke.misc.GameLevelInitializationException;

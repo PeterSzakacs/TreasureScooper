@@ -2,9 +2,7 @@ package szakacs.kpi.fei.tuke.misc.configProcessors.gameValueObjects;
 
 import szakacs.kpi.fei.tuke.intrfc.misc.GameWorldPrototype;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 /**

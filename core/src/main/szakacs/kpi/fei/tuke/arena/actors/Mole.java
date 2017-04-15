@@ -1,7 +1,6 @@
 package szakacs.kpi.fei.tuke.arena.actors;
 
 import szakacs.kpi.fei.tuke.arena.actors.pipe.Pipe;
-import szakacs.kpi.fei.tuke.arena.game.world.TunnelCell;
 import szakacs.kpi.fei.tuke.enums.ActorType;
 import szakacs.kpi.fei.tuke.enums.Direction;
 import szakacs.kpi.fei.tuke.intrfc.arena.game.world.TunnelCellUpdatable;

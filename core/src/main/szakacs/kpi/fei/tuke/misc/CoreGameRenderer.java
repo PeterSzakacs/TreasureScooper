@@ -3,17 +3,18 @@ package szakacs.kpi.fei.tuke.misc;
 import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.g2d.*;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.GdxRuntimeException;
-import szakacs.kpi.fei.tuke.enums.GameState;
 import szakacs.kpi.fei.tuke.arena.GameManager;
+import szakacs.kpi.fei.tuke.enums.GameState;
 import szakacs.kpi.fei.tuke.intrfc.arena.game.gameLevel.GameLevelPrivileged;
 import szakacs.kpi.fei.tuke.intrfc.arena.game.world.GameWorldBasic;
 import szakacs.kpi.fei.tuke.intrfc.misc.GameConfig;
 import szakacs.kpi.fei.tuke.intrfc.misc.GameRenderer;
 import szakacs.kpi.fei.tuke.misc.renderers.*;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by developer on 2.12.2016.

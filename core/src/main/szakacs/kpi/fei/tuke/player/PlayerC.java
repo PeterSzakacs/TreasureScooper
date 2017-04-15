@@ -1,9 +1,7 @@
 package szakacs.kpi.fei.tuke.player;
 
-import szakacs.kpi.fei.tuke.arena.game.world.TunnelCell;
 import szakacs.kpi.fei.tuke.enums.Direction;
 import szakacs.kpi.fei.tuke.enums.TunnelCellType;
-import szakacs.kpi.fei.tuke.arena.game.world.HorizontalTunnel;
 import szakacs.kpi.fei.tuke.intrfc.PlayerToken;
 import szakacs.kpi.fei.tuke.intrfc.arena.actors.pipe.PipeBasic;
 import szakacs.kpi.fei.tuke.intrfc.arena.game.world.HorizontalTunnelBasic;
@@ -15,8 +13,6 @@ import java.util.Set;
 
 /**
  * Created by developer on 5.11.2016.
- *
- * GameLevelQueryable API quality at current stage is still NOT guaranteed. :P
  */
 public class PlayerC extends AbstractPlayer {
 
@@ -46,38 +42,8 @@ public class PlayerC extends AbstractPlayer {
         }
     }
 
-    /**
-     * again, this is a method called on each iteration of the game loop
-     * (at each turn in the game) that the student has to implement.
-     *
-     * This is just an example solution of update() implemented as a state machine.
-     * states are student defined in this case
-     */
-
-    // Still stuff to debug remains
-
-    // what has changed:
-    // the underground tunnel maze is now represented as a graph of cells,
-    // enabling reduction of background code complexity and allowing more
-    // options for tunnel network design, such as gameInterface that do not stretch
-    // from one end of the screen to the next (not tested yet)
-    //
-    // also it should make the programming API easier for students to use
-    // for implementing their solutions to win the game.
-
-    // Just for reference, the player destroys enemies by eating them.
-
     @Override
     public void act(PlayerToken token) {
-        // TODO: Investigate ways to prevent access to private member variables
-        /*try {
-            Field f = Pipe.class.getDeclaredField("gameInterface");
-            f.setAccessible(true); //Very important, this allows the setting to work.
-            ActorGameInterface value = (ActorGameInterface) f.get(pipe);
-            System.out.println(value);
-        } catch (Exception e){
-            e.printStackTrace();
-        }*/
         if (!super.getToken().validate(token))
             return;
         switch(this.state) {

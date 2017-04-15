@@ -1,7 +1,6 @@
 package szakacs.kpi.fei.tuke.intrfc.arena.actors;
 
 import szakacs.kpi.fei.tuke.intrfc.arena.game.world.TunnelCellUpdatable;
-import szakacs.kpi.fei.tuke.intrfc.misc.ActorRectangle;
 
 /**
  * Created by developer on 14.4.2017.

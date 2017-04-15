@@ -5,16 +5,20 @@ import szakacs.kpi.fei.tuke.enums.Direction;
 import szakacs.kpi.fei.tuke.enums.TunnelCellType;
 import szakacs.kpi.fei.tuke.intrfc.arena.game.world.GameWorldPrivileged;
 import szakacs.kpi.fei.tuke.intrfc.arena.game.world.HorizontalTunnelUpdatable;
+import szakacs.kpi.fei.tuke.intrfc.arena.game.world.TunnelCellBasic;
 import szakacs.kpi.fei.tuke.intrfc.arena.game.world.TunnelCellUpdatable;
 import szakacs.kpi.fei.tuke.misc.configProcessors.gameValueObjects.DummyTunnel;
 
-import java.util.*;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.function.Predicate;
 
 /**
  * A class representing a tunnel stretching from left to right on the screen.
  */
 public class HorizontalTunnel implements HorizontalTunnelUpdatable {
+
     private int x;
     private int y;
     private int nuggetCount;
@@ -22,9 +26,7 @@ public class HorizontalTunnel implements HorizontalTunnelUpdatable {
     private Set<TunnelCellUpdatable> searchResults;
     private GameWorldPrivileged world;
 
-    /*
-     * begin builder methods
-     */
+
 
     public HorizontalTunnel(DummyTunnel dt, GameWorldPrivileged world){
         this.x = dt.getX();
@@ -74,6 +76,41 @@ public class HorizontalTunnel implements HorizontalTunnelUpdatable {
         prevCell.setAtDirection(Direction.RIGHT, rightmost, world.getAuthenticator());
     }
 
+    // HorizontalTunnelBasic methods
+
+    @Override
+    public int getX() {
+        return x;
+    }
+
+    @Override
+    public int getY() {
+        return y;
+    }
+
+    @Override
+    public int getNuggetCount(){
+        return nuggetCount;
+    }
+
+    @Override
+    public Set<TunnelCellBasic> getCells() {
+        return Collections.unmodifiableSet(cells);
+    }
+
+    @Override
+    public Set<TunnelCellBasic> getCellsBySearchCriteria(Predicate<TunnelCellBasic> criteria){
+        if (criteria == null)
+            return Collections.unmodifiableSet(cells);
+        searchResults.clear();
+        for (TunnelCellUpdatable cell : this.cells)
+            if (criteria.test(cell))
+                searchResults.add(cell);
+        return Collections.unmodifiableSet(searchResults);
+    }
+
+    // HorizontalTunnelUpdatable methods
+
     @Override
     public Set<TunnelCellUpdatable> getUpdatableCells() {
         return cells;
@@ -90,93 +127,10 @@ public class HorizontalTunnel implements HorizontalTunnelUpdatable {
         return searchResults;
     }
 
-
-
-    /*
-     * end builder methods
-     */
-    /*
-     * begin public getters
-     */
-
-    /**
-     * Gets the horizontal coordinate of this tunnel
-     * (it is defined as the horizontal coordinate
-     * of the tunnels leftmost cell).
-     *
-     * @return the horizontal coordinate of the tunnel.
-     */
-    @Override
-    public int getX() {
-        return x;
-    }
-
-    /**
-     * Gets the vertical coordinate of this tunnel
-     * (it is defined as the vertical coordinate
-     * of all cells of this tunnel).
-     *
-     * @return the vertical coordinate of the tunnel.
-     */
-    @Override
-    public int getY() {
-        return y;
-    }
-
-    /**
-     * Gets the number of remaining nuggets or pieces of treasure within this tunnel.
-     *
-     * @return the number of still uncollected nuggets remaining in this tunnel.
-     */
-    @Override
-    public int getNuggetCount(){
-        return nuggetCount;
-    }
-
-    /**
-     * Returns all cells of this tunnel as an unmodifiable set.
-     *
-     * @return all cells that make up this tunnel.
-     */
-    @Override
-    public Set<szakacs.kpi.fei.tuke.intrfc.arena.game.world.TunnelCellBasic> getCells() {
-        return Collections.unmodifiableSet(cells);
-    }
-
-    /**
-     * Returns all cells of this tunnel that satisfy the criteria passed as argument.
-     *
-     * @param criteria a functional interface or lambda function
-     *                 used in evaluating whether a cell should
-     *                 be included in the query results. If null
-     *                 is passed, all cells are returned.
-     * @return a set of all tunnel cells satisfying the criteria specified.
-     */
-    @Override
-    public Set<szakacs.kpi.fei.tuke.intrfc.arena.game.world.TunnelCellBasic> getCellsBySearchCriteria(Predicate<szakacs.kpi.fei.tuke.intrfc.arena.game.world.TunnelCellBasic> criteria){
-        if (criteria == null)
-            return Collections.unmodifiableSet(cells);
-        searchResults.clear();
-        for (TunnelCellUpdatable cell : this.cells)
-            if (criteria.test(cell))
-                searchResults.add(cell);
-        return Collections.unmodifiableSet(searchResults);
-    }
-
-
-    /*
-     * end public getters
-     */
-    /*
-     * begin tunnel manipulation methods
-     */
+    // tunnel manipulation methods
 
     void onNuggetCollected(Pipe pipe, int nuggetValue){
         nuggetCount--;
         world.onNuggetCollected(pipe, nuggetValue);
     }
-
-    /*
-     * end tunnel manipulation methods
-     */
 }

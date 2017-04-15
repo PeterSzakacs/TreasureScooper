@@ -1,6 +1,5 @@
 package szakacs.kpi.fei.tuke.arena.actors.pipe;
 
-import szakacs.kpi.fei.tuke.arena.game.world.TunnelCell;
 import szakacs.kpi.fei.tuke.enums.ActorType;
 import szakacs.kpi.fei.tuke.enums.Direction;
 import szakacs.kpi.fei.tuke.intrfc.Player;
@@ -9,8 +8,8 @@ import szakacs.kpi.fei.tuke.intrfc.arena.actors.pipe.PipeBasic;
 import szakacs.kpi.fei.tuke.intrfc.arena.callbacks.OnStackUpdatedCallback;
 import szakacs.kpi.fei.tuke.intrfc.arena.game.world.GameWorldBasic;
 import szakacs.kpi.fei.tuke.intrfc.arena.game.world.TunnelCellUpdatable;
-import szakacs.kpi.fei.tuke.intrfc.misc.Stack;
 import szakacs.kpi.fei.tuke.intrfc.arena.proxies.ActorGameInterface;
+import szakacs.kpi.fei.tuke.intrfc.misc.Stack;
 
 import java.util.Set;
 

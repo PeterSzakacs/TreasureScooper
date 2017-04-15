@@ -1,11 +1,12 @@
 package szakacs.kpi.fei.tuke.intrfc.arena.game.world;
 
-import szakacs.kpi.fei.tuke.arena.game.world.HorizontalTunnel;
 import szakacs.kpi.fei.tuke.enums.Direction;
 import szakacs.kpi.fei.tuke.enums.TunnelCellType;
 
 /**
- * Created by developer on 14.4.2017.
+ * An interface of a cell of a horizontal or interconnecting tunnel in the game world.
+ * Actors can only move in these cells and a single piece of treasure can only be found
+ * within a tunnel cell. This is the interface of such a class exposed to the player.
  */
 public interface TunnelCellBasic {
 

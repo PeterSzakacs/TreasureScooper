@@ -1,8 +1,7 @@
 package szakacs.kpi.fei.tuke.player;
 
-import szakacs.kpi.fei.tuke.arena.game.world.HorizontalTunnel;
-import szakacs.kpi.fei.tuke.enums.Direction;
 import szakacs.kpi.fei.tuke.arena.game.world.TunnelCell;
+import szakacs.kpi.fei.tuke.enums.Direction;
 import szakacs.kpi.fei.tuke.intrfc.PlayerToken;
 import szakacs.kpi.fei.tuke.intrfc.arena.actors.pipe.PipeBasic;
 import szakacs.kpi.fei.tuke.intrfc.arena.game.world.HorizontalTunnelBasic;

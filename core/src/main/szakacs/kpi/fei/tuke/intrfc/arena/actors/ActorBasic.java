@@ -1,7 +1,7 @@
 package szakacs.kpi.fei.tuke.intrfc.arena.actors;
 
-import szakacs.kpi.fei.tuke.enums.Direction;
 import szakacs.kpi.fei.tuke.enums.ActorType;
+import szakacs.kpi.fei.tuke.enums.Direction;
 import szakacs.kpi.fei.tuke.intrfc.arena.game.world.TunnelCellBasic;
 import szakacs.kpi.fei.tuke.intrfc.misc.Rectangle;
 

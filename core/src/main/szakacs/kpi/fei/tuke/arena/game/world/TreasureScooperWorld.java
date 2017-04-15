@@ -86,19 +86,6 @@ public class TreasureScooperWorld implements GameWorldPrivileged {
         }
         // Connect the tunnels with each other
         addInterconnects(dummyTunnels, tunnelMap);
-
-        // Connect the tunnels with each other
-/*        for (DummyTunnel dt : dummyTunnels.values()) {
-
-            HorizontalTunnel ht = tunnelMap.get(dt.getId());
-            Map<Integer, DummyTunnel> tunnelsBelowDt = dt.getConnectedTunnelsBelow();
-            for (Integer xIndex : tunnelsBelowDt.keySet()) {
-                addInterconnect(
-                        xIndex * this.offsetX,
-                        tunnelMap.get(tunnelsBelowDt.get(xIndex).getId())
-                );
-            }
-        }*/
     }
 
     private void addInterconnects(Map<String, DummyTunnel> dummyTunnelsMap, Map<String, HorizontalTunnel> tunnelsMap) {
@@ -138,42 +125,6 @@ public class TreasureScooperWorld implements GameWorldPrivileged {
                 }
                 setEntrance(exitTunnel, prevCell);
             }
-/*            getCellsBySearchCriteria(
-                    (cell) -> cell.getCellType() == TunnelCellType.TUNNEL
-                            && cell.isWithinCell(x, this.y)
-            );
-            if (!searchResults.isEmpty()) {
-                // Remove previous TUNNEL cell and add a new EXIT cell in its place
-                TunnelCellUpdatable removed = searchResults.iterator().next();
-                TunnelCell added = new TunnelCell(
-                        removed.getX(), removed.getY(),
-                        TunnelCellType.EXIT,
-                        this, world
-                );
-                cells.remove(removed);
-                cells.add(added);
-
-                // Connect the new EXIT cell with the previous TUNNEL cell's neighbors
-                TunnelCellUpdatable left = removed.getUpdatableCellAtDirection(Direction.LEFT);
-                TunnelCellUpdatable right = removed.getUpdatableCellAtDirection(Direction.RIGHT);
-                added.setAtDirection(Direction.LEFT, left, world.getAuthenticator());
-                added.setAtDirection(Direction.RIGHT, right, world.getAuthenticator());
-                left.setAtDirection(Direction.RIGHT, added, world.getAuthenticator());
-                right.setAtDirection(Direction.LEFT, added, world.getAuthenticator());
-
-                // Create new cells until the specified exit tunnel is reached
-                TunnelCell prevCell = added, nextCell;
-                for (int y = this.y + world.getOffsetY() * Direction.DOWN.getYStep();
-                     y > exitTunnel.getY();
-                     y += world.getOffsetY() * Direction.DOWN.getYStep()) {
-                    nextCell = new TunnelCell(added.getX(), y, TunnelCellType.INTERCONNECT, null, world);
-                    nextCell.setAtDirection(Direction.UP, prevCell, world.getAuthenticator());
-                    prevCell.setAtDirection(Direction.DOWN, nextCell, world.getAuthenticator());
-                    prevCell = nextCell;
-                }
-                // Tell the exit tunnel to create an entrance
-                exitTunnel.setEntrance(prevCell);
-            }*/
         }
     }
 
@@ -181,33 +132,28 @@ public class TreasureScooperWorld implements GameWorldPrivileged {
         TunnelCellUpdatable previous = exitTunnel.getUpdatableCellsBySearchCriteria(
                 (cell) -> cell.isWithinCell(entranceCell.getX(), cell.getY())
         ).iterator().next();
-
-        /*if (entranceCell == null)
-            return;*/
-        /*getCellsBySearchCriteria(
-                (cell) -> cell.getCellType() == TunnelCellType.TUNNEL
-                        && cell.isWithinCell(entranceCell.getX(), this.y)
-        );*/
-        /*TunnelCellUpdatable previous =
-        if ( !searchResults.isEmpty() ) {
-            TunnelCellUpdatable previous = searchResults.iterator().next();*/
-            TunnelCellUpdatable newCell = new TunnelCell(
-                    previous.getX(), previous.getY(),
-                    TunnelCellType.ENTRANCE,
-                    exitTunnel, this
-            );
-            exitTunnel.getUpdatableCells().remove(previous);
-            exitTunnel.getUpdatableCells().add(newCell);
-            TunnelCellUpdatable left = previous.getCellAtDirection(Direction.LEFT);
-            TunnelCellUpdatable right = previous.getCellAtDirection(Direction.RIGHT);
-            left.setAtDirection(Direction.RIGHT, newCell, authenticator);
-            right.setAtDirection(Direction.LEFT, newCell, authenticator);
-            newCell.setAtDirection(Direction.LEFT, left, authenticator);
-            newCell.setAtDirection(Direction.RIGHT, right, authenticator);
-            newCell.setAtDirection(Direction.UP, entranceCell, authenticator);
-            entranceCell.setAtDirection(Direction.DOWN, newCell, authenticator);
-        //}
+        TunnelCellUpdatable newCell = new TunnelCell(
+                previous.getX(), previous.getY(),
+                TunnelCellType.ENTRANCE,
+                exitTunnel, this
+        );
+        exitTunnel.getUpdatableCells().remove(previous);
+        exitTunnel.getUpdatableCells().add(newCell);
+        TunnelCellUpdatable left = previous.getCellAtDirection(Direction.LEFT);
+        TunnelCellUpdatable right = previous.getCellAtDirection(Direction.RIGHT);
+        left.setAtDirection(Direction.RIGHT, newCell, authenticator);
+        right.setAtDirection(Direction.LEFT, newCell, authenticator);
+        newCell.setAtDirection(Direction.LEFT, left, authenticator);
+        newCell.setAtDirection(Direction.RIGHT, right, authenticator);
+        newCell.setAtDirection(Direction.UP, entranceCell, authenticator);
+        entranceCell.setAtDirection(Direction.DOWN, newCell, authenticator);
     }
+
+
+
+    // GameWorldBasic methods
+
+
 
     @Override
     public int getWidth() {
@@ -244,6 +190,12 @@ public class TreasureScooperWorld implements GameWorldPrivileged {
         return Collections.unmodifiableSet(tunnels);
     }
 
+
+
+    // GameWorldUpdatable methods
+
+
+
     @Override
     public Set<HorizontalTunnelUpdatable> getTunnelsUpdatable() {
         return Collections.unmodifiableSet(tunnels);
@@ -254,18 +206,15 @@ public class TreasureScooperWorld implements GameWorldPrivileged {
         return Collections.unmodifiableMap(entrances);
     }
 
+
+
+    // GameWorldPrivileged methods
+
+
+
     @Override
     public MethodCallAuthenticator getAuthenticator() {
         return authenticator;
-    }
-
-    @Override
-    public void startNewGame(GameLevelPrivileged gameLevel, DummyLevel level) {
-        tunnels.clear();
-        entrances.clear();
-        nuggetCount = 0;
-        this.initialize(level.getGameWorldPrototype());
-        this.playerManager = gameLevel.getPlayerManager();
     }
 
     @Override
@@ -274,5 +223,16 @@ public class TreasureScooperWorld implements GameWorldPrivileged {
         Player player = pipe.getController();
         int score = playerManager.getPlayersAndScores().get(player);
         playerManager.getScoreChangeCallback().onScoreEvent(score + val, player);
+    }
+
+    //// ResettableGameClass methods
+
+    @Override
+    public void startNewGame(GameLevelPrivileged gameLevel, DummyLevel level) {
+        tunnels.clear();
+        entrances.clear();
+        nuggetCount = 0;
+        this.initialize(level.getGameWorldPrototype());
+        this.playerManager = gameLevel.getPlayerManager();
     }
 }

@@ -6,7 +6,7 @@ import java.util.*;
 import java.util.function.Predicate;
 
 /**
- * Created by developer on 14.2.2017.
+ * An array-based implementation of the {@link Stack} collection interface.
  */
 @SuppressWarnings("unchecked")
 public class ArrayStack<T> implements Stack<T> {
@@ -101,23 +101,18 @@ public class ArrayStack<T> implements Stack<T> {
         return top + 1;
     }
 
-    /**
-     * Returns an unmodifiable list representing the stack
-     * to enable read-only access to all stack elements
-     *
-     * @return read-only List of elements stored in the queue
-     */
-/*    public List<T> getElements() {
-        return Collections.unmodifiableList(Arrays.asList((T) elements));
-    }*/
+    public List<T> getElements() {
+        return Collections.unmodifiableList(
+                Arrays.asList((T[])
+                        Arrays.copyOf(elements, getNumElements())
+                )
+        );
+    }
 
     public List<T> getElementsByCriteria(Predicate<T> criteria) {
-
-        // if no criteria are specified, all elements from the stack are returned
         if (criteria == null){
-            criteria = t -> true;
+            return getElements();
         }
-
         searchResults.clear();
         T[] elements = (T[]) this.elements;
         for (int idx = 0; idx <= top; idx++) {

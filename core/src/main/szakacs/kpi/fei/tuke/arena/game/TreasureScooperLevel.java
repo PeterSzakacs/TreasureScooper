@@ -5,11 +5,11 @@ import szakacs.kpi.fei.tuke.arena.PlayerGameProxy;
 import szakacs.kpi.fei.tuke.arena.game.world.TreasureScooperWorld;
 import szakacs.kpi.fei.tuke.enums.GameState;
 import szakacs.kpi.fei.tuke.intrfc.Player;
-import szakacs.kpi.fei.tuke.intrfc.arena.game.gameLevel.GameLevelPrivileged;
 import szakacs.kpi.fei.tuke.intrfc.arena.game.GameStateTester;
+import szakacs.kpi.fei.tuke.intrfc.arena.game.GameUpdater;
 import szakacs.kpi.fei.tuke.intrfc.arena.game.MethodCallAuthenticator;
 import szakacs.kpi.fei.tuke.intrfc.arena.game.actorManager.ActorManagerPrivileged;
-import szakacs.kpi.fei.tuke.intrfc.arena.game.GameUpdater;
+import szakacs.kpi.fei.tuke.intrfc.arena.game.gameLevel.GameLevelPrivileged;
 import szakacs.kpi.fei.tuke.intrfc.arena.game.playerManager.PlayerManagerPrivileged;
 import szakacs.kpi.fei.tuke.intrfc.arena.game.world.GameWorldPrivileged;
 import szakacs.kpi.fei.tuke.intrfc.arena.proxies.ActorGameInterface;
@@ -19,7 +19,8 @@ import szakacs.kpi.fei.tuke.misc.ConfigProcessingException;
 import szakacs.kpi.fei.tuke.misc.GameLevelInitializationException;
 import szakacs.kpi.fei.tuke.misc.configProcessors.gameValueObjects.DummyLevel;
 
-import java.util.*;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Created by developer on 25.1.2017.

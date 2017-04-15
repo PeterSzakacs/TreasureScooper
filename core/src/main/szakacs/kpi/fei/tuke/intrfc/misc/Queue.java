@@ -64,9 +64,19 @@ public interface Queue<T> extends Iterable<T> {
     /**
      * Returns the current number of elements stored in the queue.
      *
-     * @return the number of elements in the queue
+     * @return the number of elements in the queue.
      */
     int getNumElements();
+
+    /**
+     * Returns a list view of all elements of the queue,
+     * ordered from front to rear of the queue. Changes
+     * to this view are NOT reflected in the original
+     * queue.
+     *
+     * @return a list view of all elements of the queue.
+     */
+    List<T> getElements();
 
     /**
      * Returns a list of elements, ordered from front to rear of the queue,
@@ -79,7 +89,7 @@ public interface Queue<T> extends Iterable<T> {
      *                 be included in the query results. If a null
      *                 value is passed, all elements are returned.
      *
-     * @return a List of queue elements satisfying the given criteria.
+     * @return a list of queue elements satisfying the given criteria.
      */
     List<T> getElementsByCriteria(Predicate<T> criteria);
 }
