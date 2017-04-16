@@ -15,7 +15,10 @@ test.doFirst {
     workingDir = new File("assets")
 }
 
-task libGen (type: Exec) {
+// Since we are postponing the possible implementation of a C language game API,
+// it would be a waste to recompile the native sources at each build.
+// Uncomment the next lines only when restarting development on the native API.
+/*task libGen (type: Exec) {
     workingDir "$projectDir/src/native"
     if (System.getProperty('os.name').toLowerCase().contains('windows')) {
         commandLine 'cmd', '/c', './script.bat'
@@ -24,7 +27,4 @@ task libGen (type: Exec) {
     }
 }
 
-// Since we are postponing the possible implementation of a C language game API,
-// it would be a waste to recompile the native sources at each build.
-// Uncomment the next line only when restarting development on the native API.
-//compileJava.dependsOn libGen
+compileJava.dependsOn libGen*/
