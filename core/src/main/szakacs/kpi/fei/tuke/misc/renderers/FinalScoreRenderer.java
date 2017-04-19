@@ -1,9 +1,11 @@
 package szakacs.kpi.fei.tuke.misc.renderers;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import szakacs.kpi.fei.tuke.intrfc.Player;
 import szakacs.kpi.fei.tuke.intrfc.arena.game.gameLevel.GameLevelPrivileged;
 import szakacs.kpi.fei.tuke.intrfc.misc.GameRenderer;
@@ -26,16 +28,29 @@ public class FinalScoreRenderer implements GameRenderer {
         private final int height;
 
         private RenderingVars(SpriteBatch batch, int width, int height){
+            FreeTypeFontGenerator generator = new FreeTypeFontGenerator(
+                    Gdx.files.internal("fonts/UbuntuMono-B.ttf")
+            );
+            FreeTypeFontGenerator.FreeTypeFontParameter param =
+                    new FreeTypeFontGenerator.FreeTypeFontParameter();
+            param.color = Color.GOLD;
+            param.shadowColor = Color.CORAL;
+            param.shadowOffsetX = 5;
+            param.shadowOffsetY = 5;
+            param.size = 90;
+            this.totalScoreFont = generator.generateFont(param);
+            param.size = 64;
+            this.levelScoreFont = generator.generateFont(param);
+            generator.dispose();
             this.batch = batch;
-            this.totalScoreFont = new BitmapFont();
-            this.levelScoreFont = new BitmapFont();
             this.glyphLayout = new GlyphLayout();
-            totalScoreFont.setColor(Color.WHITE);
-            totalScoreFont.getData().setScale(5);
-            levelScoreFont.setColor(Color.WHITE);
-            levelScoreFont.getData().setScale(4);
             this.width = width;
             this.height = height;
+        }
+
+        private void dispose(){
+            totalScoreFont.dispose();
+            levelScoreFont.dispose();
         }
     }
 
@@ -59,7 +74,7 @@ public class FinalScoreRenderer implements GameRenderer {
 
     @Override
     public void dispose() {
-        renderingVars.totalScoreFont.dispose();
+        renderingVars.dispose();
     }
 
     @Override
@@ -86,7 +101,7 @@ public class FinalScoreRenderer implements GameRenderer {
     private void renderLevelScores(){
         scoreStringBuilder.append("Per level scores:\n");
         for (int i = 0; i < levelScores.size(); i++) {
-            scoreStringBuilder.append("    Level").append(i+1).append("\n");
+            scoreStringBuilder.append("    Level ").append(i+1).append("\n");
             Map<Class<? extends Player>, Integer> levelScore = levelScores.get(i);
             for (Class clazz : levelScore.keySet()) {
                 scoreStringBuilder.append("        ").append(clazz.getSimpleName())

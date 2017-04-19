@@ -10,16 +10,20 @@ import szakacs.kpi.fei.tuke.enums.PipeSegmentType;
 import szakacs.kpi.fei.tuke.intrfc.arena.actors.pipe.PipeBasic;
 import szakacs.kpi.fei.tuke.intrfc.arena.game.gameLevel.GameLevelPrivileged;
 import szakacs.kpi.fei.tuke.intrfc.misc.Rectangle;
+import szakacs.kpi.fei.tuke.misc.renderers.helpers.PlayerSoundsManager;
+import szakacs.kpi.fei.tuke.misc.renderers.helpers.WeaponRenderer;
 
-import java.util.ArrayList;
-import java.util.EnumMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created by developer on 24.1.2017.
  */
 public class PlayerRenderer extends AbstractGameRenderer {
+
+    private WeaponRenderer weaponRenderer;
+    private PlayerSoundsManager soundsManager;
+
+    // TODO: create better quality sounds for push and pop.
 
     private List<TextureAtlas> textures;
     private Map<Direction, Animation<TextureRegion>> pipeHeadSprites;
@@ -29,6 +33,8 @@ public class PlayerRenderer extends AbstractGameRenderer {
     public PlayerRenderer(SpriteBatch batch, GameLevelPrivileged game) {
         super(batch, game);
         this.initializeSprites();
+        this.weaponRenderer = new WeaponRenderer(batch, game);
+        this.soundsManager = new PlayerSoundsManager(game);
     }
 
     private void initializeSprites(){
@@ -74,7 +80,6 @@ public class PlayerRenderer extends AbstractGameRenderer {
                     break;
                 case DOWN:
                     rotation = -90;
-
                     break;
             }
             TextureRegion keyFrame = anim.getKeyFrame(elapsedTime, true);
@@ -83,6 +88,8 @@ public class PlayerRenderer extends AbstractGameRenderer {
                     keyFrame.getRegionWidth() / 2.0f, keyFrame.getRegionHeight() / 2.0f,
                     keyFrame.getRegionWidth(), keyFrame.getRegionHeight(),
                     1, 1, rotation);
+            weaponRenderer.renderWeapon(pipe);
+            soundsManager.playSounds(pipe);
         }
     }
 
@@ -93,5 +100,14 @@ public class PlayerRenderer extends AbstractGameRenderer {
         }
         for (Sprite spr : pipeSegmentSprites.values())
             spr.getTexture().dispose();
+        weaponRenderer.dispose();
+        soundsManager.dispose();
+    }
+
+    @Override
+    public void reset(GameLevelPrivileged game) {
+        super.reset(game);
+        weaponRenderer.reset(game);
+        soundsManager.reset(game);
     }
 }

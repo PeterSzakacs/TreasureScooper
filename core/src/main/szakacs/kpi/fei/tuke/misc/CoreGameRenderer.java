@@ -40,11 +40,10 @@ public class CoreGameRenderer implements ApplicationListener {
     public void create() {
         this.batch = new SpriteBatch();
         this.renderers = new ArrayList<>();
-        this.renderers.add(new BackgroundRenderer(batch, currentGameLevel));
-        this.renderers.add(new TunnelsRenderer(batch, currentGameLevel));
-        this.renderers.add(new ActorRenderer(batch, currentGameLevel, config));
-        this.renderers.add(new PlayerRenderer(batch, currentGameLevel));
-        this.renderers.add(new PlayerInfoRenderer(batch, currentGameLevel));
+        renderers.add(new BackgroundRenderer(batch, currentGameLevel));
+        renderers.add(new TunnelsRenderer(batch, currentGameLevel));
+        renderers.add(new ActorRenderer(batch, currentGameLevel, config));
+        renderers.add(new PlayerRenderer(batch, currentGameLevel));
         this.config = null;
     }
 
