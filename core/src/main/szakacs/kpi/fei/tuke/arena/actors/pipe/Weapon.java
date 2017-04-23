@@ -69,6 +69,13 @@ public class Weapon {
      *
      * <p>Enqueueing and dequeing results in a bullet being loaded or fired, respectively.</p>
      *
+     * @param token the token of the player owning this weapon.
+     *              If a value of null or an invalid token is
+     *              passed, this method returns an unmodifiable
+     *              view of the actual queue, meaning queuing
+     *              and dequeuing results in an exception being
+     *              thrown.
+     *
      * @return the ammunition store of the weapon.
      */
     public Queue<Bullet> getBulletQueue(PlayerToken token){

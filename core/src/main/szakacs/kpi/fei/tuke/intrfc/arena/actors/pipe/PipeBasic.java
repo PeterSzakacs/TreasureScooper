@@ -28,7 +28,13 @@ public interface PipeBasic {
      * of the pipe (stack bottom) to the segment connecting to the pipe head (stack top).
      * This stack is modifiable via {@link Stack#push(Object)} and {@link Stack#pop()} and
      * changing the stack this way causes the pipe head to move.</p>
-     * 
+     *
+     * @param token the token of the player owning this pipe.
+     *              If a value of null or an invalid token is
+     *              passed, this method returns an unmodifiable
+     *              view of the actual stack, meaning push() and
+     *              pop() result in an exception being thrown.
+     *
      * @return The stack of {@link PipeSegment}s representing the pipe.
      */
     Stack<PipeSegment> getSegmentStack(PlayerToken token);

@@ -9,10 +9,22 @@ import java.util.List;
 import java.util.function.Predicate;
 
 /**
- * Created by developer on 21.4.2017.
+ * A class providing custom read-only wrapper views of our custom
+ * {@link Stack} and {@link Queue} collections.
  */
 public class CollectionsCustom {
 
+    /**
+     * <p>Returns an unmodifiable view of the stack
+     * passed to it as argument.</p>
+     *
+     * <p>Calling push() or pop() on this view causes
+     * an UnsupportedOperationException to be thrown.</p>
+     *
+     * @param stack the stack for which to create a read-only view.
+     * @param <T> the type of elements in the original stack and the read-only view.
+     * @return a read-only view of the stack passed as argument.
+     */
     public static <T> Stack<T> unmodifiableStack(Stack<T> stack){
         return new UnmodifiableStack<>(stack);
     }
@@ -47,9 +59,17 @@ public class CollectionsCustom {
     }
 
 
-
-
-
+    /**
+     * <p>Returns an unmodifiable view of the queue
+     * passed to it as argument.</p>
+     *
+     * <p>Calling enqueue() or dequeue() on this view causes
+     * an UnsupportedOperationException to be thrown.</p>
+     *
+     * @param queue the queue for which to create a read-only view.
+     * @param <T> the type of elements in the original queue and the read-only view.
+     * @return a read-only view of the queue passed as argument.
+     */
     public static <T> Queue<T> unmodifiableQueue(Queue<T> queue) {
         return new UnmodifiableQueue<>(queue);
     }
