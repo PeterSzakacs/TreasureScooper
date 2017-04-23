@@ -4,7 +4,6 @@ import szakacs.kpi.fei.tuke.arena.ActorGameProxy;
 import szakacs.kpi.fei.tuke.arena.PlayerGameProxy;
 import szakacs.kpi.fei.tuke.arena.game.world.TreasureScooperWorld;
 import szakacs.kpi.fei.tuke.enums.GameState;
-import szakacs.kpi.fei.tuke.intrfc.Player;
 import szakacs.kpi.fei.tuke.intrfc.arena.game.GameStateTester;
 import szakacs.kpi.fei.tuke.intrfc.arena.game.GameUpdater;
 import szakacs.kpi.fei.tuke.intrfc.arena.game.MethodCallAuthenticator;
@@ -125,16 +124,6 @@ public class TreasureScooperLevel implements GameLevelPrivileged {
             updater.update();
         if (state == GameState.PLAYING) {
             state = stateTester.testGameState();
-            switch (state) {
-                case PLAYING:
-                case WON:
-                    break;
-                case LOST:
-                    for (Player player : playerManager.getPlayersAndScores().keySet()) {
-                        player.deallocate();
-                    }
-                    break;
-            }
         }
     }
 

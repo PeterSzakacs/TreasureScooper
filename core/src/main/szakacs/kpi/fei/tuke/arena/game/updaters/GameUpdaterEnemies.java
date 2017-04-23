@@ -111,8 +111,8 @@ public class GameUpdaterEnemies extends AbstractGameUpdater {
      */
     private void createNewEnemy() {
         // pick a random position that was not selected before
-        List<TunnelCellUpdatable> pipeHeadPositions = new ArrayList<>(playerManager.getPipes().size());
-        for (Pipe pipe : playerManager.getPipesUpdatable()) {
+        List<TunnelCellUpdatable> pipeHeadPositions = new ArrayList<>(playerManager.getPipesUpdatable().size());
+        for (Pipe pipe : playerManager.getPipesUpdatable().values()) {
             pipeHeadPositions.add(pipe.getHead().getCurrentPosition());
         }
         TunnelCellUpdatable cell; Random rand = new Random();

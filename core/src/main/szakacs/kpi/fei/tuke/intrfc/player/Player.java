@@ -1,4 +1,4 @@
-package szakacs.kpi.fei.tuke.intrfc;
+package szakacs.kpi.fei.tuke.intrfc.player;
 
 import szakacs.kpi.fei.tuke.intrfc.arena.actors.pipe.PipeBasic;
 import szakacs.kpi.fei.tuke.intrfc.arena.proxies.PlayerGameInterface;
@@ -7,7 +7,7 @@ import szakacs.kpi.fei.tuke.intrfc.arena.proxies.PlayerGameInterface;
  * The interface for all player classes which contains code
  * that the student can implement.
  */
-public interface Player {
+public interface Player extends BasePlayer {
 
     /**
      * <p>Called as first thing after player instantiation</p>

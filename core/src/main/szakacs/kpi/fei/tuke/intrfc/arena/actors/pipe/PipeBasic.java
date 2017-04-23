@@ -4,7 +4,7 @@ import szakacs.kpi.fei.tuke.arena.actors.pipe.PipeHead;
 import szakacs.kpi.fei.tuke.arena.actors.pipe.PipeSegment;
 import szakacs.kpi.fei.tuke.arena.game.world.TunnelCell;
 import szakacs.kpi.fei.tuke.enums.Direction;
-import szakacs.kpi.fei.tuke.intrfc.Player;
+import szakacs.kpi.fei.tuke.intrfc.player.PlayerToken;
 import szakacs.kpi.fei.tuke.intrfc.arena.actors.ActorBasic;
 import szakacs.kpi.fei.tuke.intrfc.misc.Stack;
 
@@ -31,7 +31,7 @@ public interface PipeBasic {
      * 
      * @return The stack of {@link PipeSegment}s representing the pipe.
      */
-    Stack<PipeSegment> getSegmentStack();
+    Stack<PipeSegment> getSegmentStack(PlayerToken token);
     
     /**
      * <p>A method to calculate the segment to push onto the segment stack
@@ -72,11 +72,4 @@ public interface PipeBasic {
      * @return the current degree to which the pipe is undamaged as a percentage. 
      */
     int getHealth();
-
-    /**
-     * <p>Returns the player who controls the pipe.</p>
-     *
-     * @return the player controlling the pipe.
-     */
-    Player getController();
 }

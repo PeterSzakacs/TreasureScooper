@@ -2,9 +2,8 @@ package szakacs.kpi.fei.tuke.arena;
 
 import szakacs.kpi.fei.tuke.arena.game.GameShop;
 import szakacs.kpi.fei.tuke.enums.GameState;
-import szakacs.kpi.fei.tuke.intrfc.Player;
 import szakacs.kpi.fei.tuke.intrfc.arena.actors.ActorBasic;
-import szakacs.kpi.fei.tuke.intrfc.arena.actors.pipe.PipeBasic;
+import szakacs.kpi.fei.tuke.intrfc.player.PlayerInfo;
 import szakacs.kpi.fei.tuke.intrfc.arena.game.actorManager.ActorManagerPrivileged;
 import szakacs.kpi.fei.tuke.intrfc.arena.game.gameLevel.GameLevelPrivileged;
 import szakacs.kpi.fei.tuke.intrfc.arena.game.playerManager.PlayerManagerPrivileged;
@@ -72,13 +71,8 @@ public class PlayerGameProxy implements PlayerGameInterface {
     }
 
     @Override
-    public Set<PipeBasic> getPipes() {
-        return playerManager.getPipes();
-    }
-
-    @Override
-    public Map<Player, Integer> getPlayersAndScores() {
-        return playerManager.getPlayersAndScores();
+    public Set<PlayerInfo> getPlayerInfo() {
+        return playerManager.getPlayerInfo();
     }
 
     @Override

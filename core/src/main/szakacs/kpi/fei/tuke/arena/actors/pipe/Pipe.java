@@ -2,7 +2,7 @@ package szakacs.kpi.fei.tuke.arena.actors.pipe;
 
 import szakacs.kpi.fei.tuke.enums.ActorType;
 import szakacs.kpi.fei.tuke.enums.Direction;
-import szakacs.kpi.fei.tuke.intrfc.Player;
+import szakacs.kpi.fei.tuke.intrfc.player.PlayerToken;
 import szakacs.kpi.fei.tuke.intrfc.arena.actors.ActorBasic;
 import szakacs.kpi.fei.tuke.intrfc.arena.actors.pipe.PipeBasic;
 import szakacs.kpi.fei.tuke.intrfc.arena.callbacks.OnStackUpdatedCallback;
@@ -10,6 +10,7 @@ import szakacs.kpi.fei.tuke.intrfc.arena.game.world.GameWorldBasic;
 import szakacs.kpi.fei.tuke.intrfc.arena.game.world.TunnelCellUpdatable;
 import szakacs.kpi.fei.tuke.intrfc.arena.proxies.ActorGameInterface;
 import szakacs.kpi.fei.tuke.intrfc.misc.Stack;
+import szakacs.kpi.fei.tuke.misc.CollectionsCustom;
 
 import java.util.Set;
 
@@ -57,19 +58,21 @@ public class Pipe implements PipeBasic {
         }
     };
 
-    private PipeSegmentStack segmentStack;
     /**
      * For convenience, the head is stored in a separate reference
      * and is not an element of the list (it is not the top of segmentStack).
      */
     private PipeHead head;
-    private Player controller;
+    private PipeSegmentStack segmentStack;
+    private PlayerToken token;
     private ActorGameInterface gameInterface;
     private int healthPoints;
 
-    public Pipe(ActorGameInterface gameInterface, TunnelCellUpdatable startPosition, Player controller) {
-        this.head = new PipeHead(Direction.DOWN, gameInterface, startPosition);
-        this.controller = controller;
+
+
+    public Pipe(ActorGameInterface gameInterface, TunnelCellUpdatable startPosition, PlayerToken token) {
+        this.head = new PipeHead(Direction.DOWN, gameInterface, startPosition, token);
+        this.token = token;
         this.gameInterface = gameInterface;
         this.healthPoints = 100;
         this.segmentStack = new PipeSegmentStack(
@@ -77,11 +80,16 @@ public class Pipe implements PipeBasic {
                 true,
                 1,
                 3,
-                segmentStackCallback
+                segmentStackCallback,
+                gameInterface
         );
     }
 
+
+
     // PipeBasic methods
+
+
 
     @Override
     public PipeHead getHead(){
@@ -89,8 +97,14 @@ public class Pipe implements PipeBasic {
     }
     
     @Override
-    public Stack<PipeSegment> getSegmentStack(){
-        return segmentStack;
+    public Stack<PipeSegment> getSegmentStack(PlayerToken token){
+        if (this.token.validate(token)) {
+            // Only the player owning this pipe is allowed to modify this stack
+            return segmentStack;
+        } else {
+            // Anyone else can only view its contents and info, but not modify it
+            return CollectionsCustom.unmodifiableStack(segmentStack);
+        }
     }
     
     @Override
@@ -108,7 +122,10 @@ public class Pipe implements PipeBasic {
         if (isWall(dir)) {
             return null;
         } else {
-            return new PipeSegment(head.getCurrentPosition(), head.getDirection().getOpposite(), dir, gameInterface);
+            PipeSegment toPush = new PipeSegment(head.getCurrentPosition(),
+                    head.getDirection().getOpposite(), dir, gameInterface);
+            segmentStack.setSegmentToPush(toPush);
+            return toPush;
         }
     }
     
@@ -133,18 +150,11 @@ public class Pipe implements PipeBasic {
         return healthPoints;
     }
 
-    @Override
-    public Player getController() {
-        return controller;
-    }
+
 
     // helper methods
-    
-    public void setPlayer(Player controller) {
-        if (this.controller == null) {
-            this.controller = controller;
-        }
-    }
+
+
 
     public void allowMovement(Object authToken) {
         if (gameInterface.getAuthenticator().authenticate(authToken)) {

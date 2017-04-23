@@ -1,4 +1,4 @@
-package szakacs.kpi.fei.tuke.intrfc;
+package szakacs.kpi.fei.tuke.intrfc.player;
 
 /**
  * The interface for a token that is unique for each player
@@ -9,8 +9,8 @@ package szakacs.kpi.fei.tuke.intrfc;
 public interface PlayerToken {
 
     /**
-     * A method which check if the token passed to it is valid
-     * (it basically checks if it is the same instance).
+     * Check if the token passed to it is valid
+     * (basically checks if it is the same instance).
      *
      * @param token the token passed to the method in which validate()
      *              is called and which needs to be checked.

@@ -6,7 +6,7 @@ import kpi.openlab.arena.impl.BotImpl;
 import kpi.openlab.arena.impl.BotResultImpl;
 import kpi.openlab.arena.interfaces.Bot;
 import kpi.openlab.arena.interfaces.BotResult;
-import szakacs.kpi.fei.tuke.intrfc.Player;
+import szakacs.kpi.fei.tuke.intrfc.player.Player;
 import szakacs.kpi.fei.tuke.intrfc.misc.GameConfig;
 import szakacs.kpi.fei.tuke.intrfc.misc.GameConfigProcessor;
 import szakacs.kpi.fei.tuke.intrfc.misc.GameResults;

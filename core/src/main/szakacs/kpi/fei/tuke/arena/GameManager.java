@@ -1,7 +1,8 @@
 package szakacs.kpi.fei.tuke.arena;
 
 import szakacs.kpi.fei.tuke.arena.game.TreasureScooperLevel;
-import szakacs.kpi.fei.tuke.intrfc.Player;
+import szakacs.kpi.fei.tuke.intrfc.player.Player;
+import szakacs.kpi.fei.tuke.intrfc.player.PlayerInfo;
 import szakacs.kpi.fei.tuke.intrfc.arena.game.gameLevel.GameLevelPrivileged;
 import szakacs.kpi.fei.tuke.intrfc.misc.GameConfig;
 import szakacs.kpi.fei.tuke.intrfc.misc.GameResults;
@@ -84,12 +85,13 @@ public class GameManager {
     private void archiveScores(){
         // Archive the scores of players for the previous level
         Map<Class<? extends Player>, Integer> playerClassScores = results.levelScores.get(nextLevelIndex);
-        Map<Player, Integer> playerScores = currentGameLevel.getPlayerManager().getPlayersAndScores();
-        for (Player player : playerScores.keySet()) {
-            Class<? extends Player> playerCls = player.getClass();
-            playerClassScores.put(playerCls, playerScores.get(player));
+        Set<PlayerInfo> playerScores = currentGameLevel.getPlayerManager().getPlayerInfo();
+        for (PlayerInfo info : playerScores) {
+            // Casting in the current context is safe.
+            Class<? extends Player> playerCls = ((Player)info.getPlayer()).getClass();
+            playerClassScores.put(playerCls, info.getScore());
             results.totalGameScores.put(playerCls,
-                    results.totalGameScores.get(playerCls) + playerScores.get(player)
+                    results.totalGameScores.get(playerCls) + info.getScore()
             );
         }
     }

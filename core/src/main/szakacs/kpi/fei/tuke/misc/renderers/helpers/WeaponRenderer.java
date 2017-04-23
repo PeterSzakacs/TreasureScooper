@@ -6,10 +6,13 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import szakacs.kpi.fei.tuke.arena.actors.Bullet;
+import szakacs.kpi.fei.tuke.arena.actors.pipe.Pipe;
 import szakacs.kpi.fei.tuke.arena.actors.pipe.Weapon;
+import szakacs.kpi.fei.tuke.intrfc.player.PlayerToken;
 import szakacs.kpi.fei.tuke.intrfc.arena.actors.pipe.PipeBasic;
 import szakacs.kpi.fei.tuke.intrfc.arena.game.gameLevel.GameLevelPrivileged;
 import szakacs.kpi.fei.tuke.intrfc.misc.Queue;
+import szakacs.kpi.fei.tuke.intrfc.misc.Rectangle;
 import szakacs.kpi.fei.tuke.misc.renderers.AbstractGameRenderer;
 
 import java.util.HashMap;
@@ -23,9 +26,10 @@ public class WeaponRenderer extends AbstractGameRenderer {
     private final class BulletQueuePosition {
         private int x;
         private int y;
+        private PlayerToken token;
 
-        private BulletQueuePosition(int x, int y){
-            this.x = x; this.y = y;
+        private BulletQueuePosition(int x, int y, PlayerToken token){
+            this.x = x; this.y = y; this.token = token;
         }
     }
 
@@ -39,7 +43,7 @@ public class WeaponRenderer extends AbstractGameRenderer {
         this.queue = new Sprite(new Texture(
                 Gdx.files.internal("images/Weapon/QUEUE.png")
         ));
-        this.bulletQueuePositions = new HashMap<>(playerManager.getPipes().size());
+        this.bulletQueuePositions = new HashMap<>(3);
         this.reset(game);
     }
 
@@ -48,7 +52,7 @@ public class WeaponRenderer extends AbstractGameRenderer {
         queue.setPosition(queueInfo.x, queueInfo.y);
         queue.draw(batch);
         Weapon weapon = pipe.getHead().getWeapon();
-        Queue<Bullet> bulletQueue = weapon.getBulletQueue();
+        Queue<Bullet> bulletQueue = weapon.getBulletQueue(queueInfo.token);
         if ( ! bulletQueue.isEmpty() ) {
             int front = weapon.getFrontIndex();
             int rear = weapon.getRearIndex();
@@ -71,7 +75,7 @@ public class WeaponRenderer extends AbstractGameRenderer {
 
     @Override
     public void render() {
-        for (PipeBasic pipe : playerManager.getPipes()) {
+        for (PipeBasic pipe : playerManager.getPipesUpdatable().values()) {
             renderWeapon(pipe);
         }
     }
@@ -85,11 +89,15 @@ public class WeaponRenderer extends AbstractGameRenderer {
     @Override
     public void reset(GameLevelPrivileged game) {
         super.reset(game);
-        for (PipeBasic pipe : playerManager.getPipes()){
+        Map<PlayerToken, Pipe> pipeMap = playerManager.getPipesUpdatable();
+        for (PlayerToken token : pipeMap.keySet()){
+            PipeBasic pipe = pipeMap.get(token);
+            Rectangle headRectangle = pipe.getHead().getActorRectangle();
             bulletQueuePositions.put(pipe,
                     new BulletQueuePosition(
-                            pipe.getHead().getActorRectangle().getRectangleX() + world.getOffsetX(),
-                            pipe.getHead().getActorRectangle().getRectangleY()
+                            headRectangle.getRectangleX() + world.getOffsetX(),
+                            headRectangle.getRectangleY(),
+                            token
                     )
             );
         }

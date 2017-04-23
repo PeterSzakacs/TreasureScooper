@@ -2,7 +2,9 @@ package szakacs.kpi.fei.tuke.misc.renderers.helpers;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Sound;
+import szakacs.kpi.fei.tuke.arena.actors.pipe.Pipe;
 import szakacs.kpi.fei.tuke.arena.actors.pipe.Weapon;
+import szakacs.kpi.fei.tuke.intrfc.player.PlayerToken;
 import szakacs.kpi.fei.tuke.intrfc.arena.actors.pipe.PipeBasic;
 import szakacs.kpi.fei.tuke.intrfc.arena.game.gameLevel.GameLevelPrivileged;
 
@@ -15,14 +17,21 @@ import java.util.Map;
 public class PlayerSoundsManager {
 
     private class PipeInfo {
+        private PlayerToken token;
+
+        private int frontIndex;
+        private int rearIndex;
+
         private int numSegments = 0;
         private long pushSoundId = -1;
         private long popSoundId = -1;
         private boolean isPushPlaying = false;
         private boolean isPopPlaying = false;
 
-        private int frontIndex;
-        private int rearIndex;
+        private PipeInfo(int frontIndex, int rearIndex, PlayerToken token){
+            this.frontIndex = frontIndex; this.rearIndex = rearIndex;
+            this.token = token;
+        }
     }
     private Map<PipeBasic, PipeInfo> infos;
 
@@ -43,7 +52,7 @@ public class PlayerSoundsManager {
 
     public void playSounds(PipeBasic pipe){
         PipeInfo info = infos.get(pipe);
-        playPipeSound(info, pipe.getSegmentStack().getNumElements());
+        playPipeSound(info, pipe.getSegmentStack(info.token).getNumElements());
         playWeaponSound(info, pipe.getHead().getWeapon());
     }
 
@@ -92,12 +101,15 @@ public class PlayerSoundsManager {
 
     private void resetPipesInfo(GameLevelPrivileged game){
         infos.clear();
-        for (PipeBasic pipe : game.getPlayerManager().getPipes()){
-            PipeInfo pipeInfo = new PipeInfo();
+        Map<PlayerToken, Pipe> pipesMap = game.getPlayerManager().getPipesUpdatable();
+        for (PlayerToken token : pipesMap.keySet()){
+            Pipe pipe = pipesMap.get(token);
             Weapon weapon = pipe.getHead().getWeapon();
-            pipeInfo.frontIndex = weapon.getFrontIndex();
-            pipeInfo.rearIndex = weapon.getRearIndex();
-            infos.put(pipe, pipeInfo);
+            infos.put(pipe, new PipeInfo(
+                    weapon.getFrontIndex(),
+                    weapon.getRearIndex(),
+                    token)
+            );
         }
     }
 

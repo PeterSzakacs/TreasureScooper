@@ -4,7 +4,7 @@ import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 import szakacs.kpi.fei.tuke.enums.Direction;
-import szakacs.kpi.fei.tuke.intrfc.Player;
+import szakacs.kpi.fei.tuke.intrfc.player.Player;
 import szakacs.kpi.fei.tuke.intrfc.arena.actors.ActorBasic;
 import szakacs.kpi.fei.tuke.intrfc.arena.game.GameUpdater;
 import szakacs.kpi.fei.tuke.intrfc.misc.GameConfig;
@@ -55,6 +55,7 @@ public class SAXGameParser extends DefaultHandler implements GameConfig {
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
         switch (this.state) {
             case INITIALIZING:
@@ -72,7 +73,7 @@ public class SAXGameParser extends DefaultHandler implements GameConfig {
                     Class<? extends Player> playerCls;
                     try {
                         playerCls = (Class<? extends Player>) Class.forName(className);
-                    } catch (ClassNotFoundException e) {
+                    } catch (ClassNotFoundException | ClassCastException e) {
                         throw new SAXException("Could not locate player class: " + className, e);
                     }
                     gameClasses.playerClasses.put(attributes.getValue("id"), playerCls);
@@ -84,7 +85,7 @@ public class SAXGameParser extends DefaultHandler implements GameConfig {
                     Class<? extends GameUpdater> updaterCls;
                     try {
                         updaterCls = (Class<? extends GameUpdater>) Class.forName(className);
-                    } catch (ClassNotFoundException e) {
+                    } catch (ClassNotFoundException | ClassCastException e) {
                         throw new SAXException("Could not locate updater class: " + className, e);
                     }
                     gameClasses.updaterClasses.put(attributes.getValue("id"), updaterCls);
@@ -96,7 +97,7 @@ public class SAXGameParser extends DefaultHandler implements GameConfig {
                     Class<? extends ActorBasic> actorCls;
                     try {
                         actorCls = (Class<? extends ActorBasic>) Class.forName(className);
-                    } catch (ClassNotFoundException e) {
+                    } catch (ClassNotFoundException | ClassCastException e) {
                         throw new SAXException("Could not locate class for actor: " + className, e);
                     }
                     Set<Direction> dirs = new HashSet<>(Direction.values().length);

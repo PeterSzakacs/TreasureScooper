@@ -5,6 +5,7 @@ import szakacs.kpi.fei.tuke.arena.actors.pipe.Pipe;
 import szakacs.kpi.fei.tuke.arena.actors.pipe.PipeSegment;
 import szakacs.kpi.fei.tuke.enums.Direction;
 import szakacs.kpi.fei.tuke.enums.TunnelCellType;
+import szakacs.kpi.fei.tuke.intrfc.player.PlayerToken;
 import szakacs.kpi.fei.tuke.intrfc.arena.actors.ActorUpdatable;
 import szakacs.kpi.fei.tuke.intrfc.arena.game.gameLevel.GameLevelPrivileged;
 import szakacs.kpi.fei.tuke.intrfc.arena.game.world.HorizontalTunnelUpdatable;
@@ -14,6 +15,7 @@ import szakacs.kpi.fei.tuke.misc.configProcessors.gameValueObjects.DummyLevel;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 
 /**
@@ -114,8 +116,10 @@ public class GameUpdaterWalls extends AbstractGameUpdater {
     private void addWall() {
         // get all positions, where the pipe is located, including the head
         List<TunnelCellUpdatable> positions = new ArrayList<>();
-        for (Pipe pipe : playerManager.getPipesUpdatable()) {
-            Stack<PipeSegment> segmentStack = pipe.getSegmentStack();
+        Map<PlayerToken, Pipe> pipeTokenMap = playerManager.getPipesUpdatable();
+        for (PlayerToken token : pipeTokenMap.keySet()) {
+            Pipe pipe = pipeTokenMap.get(token);
+            Stack<PipeSegment> segmentStack = pipe.getSegmentStack(token);
             for (PipeSegment seg : segmentStack) {
                 positions.add(seg.getCurrentPosition());
             }

@@ -1,14 +1,16 @@
 package szakacs.kpi.fei.tuke.arena;
 
 import szakacs.kpi.fei.tuke.arena.actors.pipe.Pipe;
+import szakacs.kpi.fei.tuke.intrfc.player.PlayerToken;
 import szakacs.kpi.fei.tuke.intrfc.arena.actors.ActorBasic;
 import szakacs.kpi.fei.tuke.intrfc.arena.actors.ActorPrivileged;
 import szakacs.kpi.fei.tuke.intrfc.arena.game.MethodCallAuthenticator;
+import szakacs.kpi.fei.tuke.intrfc.player.PlayerInfo;
 import szakacs.kpi.fei.tuke.intrfc.arena.game.gameLevel.GameLevelPrivileged;
 import szakacs.kpi.fei.tuke.intrfc.arena.game.world.GameWorldUpdatable;
 import szakacs.kpi.fei.tuke.intrfc.arena.proxies.ActorGameInterface;
 
-import java.util.Set;
+import java.util.Map;
 
 /**
  * Created by developer on 28.1.2017.
@@ -35,8 +37,13 @@ public class ActorGameProxy extends PlayerGameProxy implements ActorGameInterfac
     }
 
     @Override
-    public Set<Pipe> getPipesUpdatable() {
+    public Map<PlayerToken, Pipe> getPipesUpdatable() {
         return playerManager.getPipesUpdatable();
+    }
+
+    @Override
+    public Map<PlayerToken, PlayerInfo> getPlayerTokenMap() {
+        return playerManager.getPlayerTokenMap();
     }
 
     @Override

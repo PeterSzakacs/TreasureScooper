@@ -7,13 +7,19 @@ import szakacs.kpi.fei.tuke.arena.actors.pipe.PipeHead;
 import szakacs.kpi.fei.tuke.arena.actors.pipe.PipeSegment;
 import szakacs.kpi.fei.tuke.enums.Direction;
 import szakacs.kpi.fei.tuke.enums.PipeSegmentType;
+import szakacs.kpi.fei.tuke.intrfc.player.PlayerToken;
 import szakacs.kpi.fei.tuke.intrfc.arena.actors.pipe.PipeBasic;
+import szakacs.kpi.fei.tuke.intrfc.player.PlayerInfo;
 import szakacs.kpi.fei.tuke.intrfc.arena.game.gameLevel.GameLevelPrivileged;
-import szakacs.kpi.fei.tuke.intrfc.misc.Rectangle;
+import szakacs.kpi.fei.tuke.intrfc.misc.*;
+import szakacs.kpi.fei.tuke.intrfc.misc.Stack;
 import szakacs.kpi.fei.tuke.misc.renderers.helpers.PlayerSoundsManager;
 import szakacs.kpi.fei.tuke.misc.renderers.helpers.WeaponRenderer;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.EnumMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Created by developer on 24.1.2017.
@@ -58,10 +64,14 @@ public class PlayerRenderer extends AbstractGameRenderer {
 
     @Override
     public void render() {
-        for (PipeBasic pipe : playerManager.getPipes()) {
+        Map<PlayerToken, PlayerInfo> playerInfoMap = playerManager.getPlayerTokenMap();
+        for (PlayerToken token : playerInfoMap.keySet()) {
+            PlayerInfo info = playerInfoMap.get(token);
+            PipeBasic pipe = info.getPipe();
             elapsedTime += Gdx.graphics.getDeltaTime();
             PipeHead head = pipe.getHead();
-            for (PipeSegment seg : pipe.getSegmentStack()) {
+            Stack<PipeSegment> segmentStack = pipe.getSegmentStack(token);
+            for (PipeSegment seg : pipe.getSegmentStack(token)) {
                 Rectangle segmentRectangle = seg.getActorRectangle();
                 pipeSegmentSprites.get(seg.getSegmentType()).setPosition(
                         segmentRectangle.getRectangleX(),

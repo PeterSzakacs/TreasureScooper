@@ -3,7 +3,7 @@ package szakacs.kpi.fei.tuke.desktop;
 import kpi.openlab.arena.StartArena;
 import kpi.openlab.arena.interfaces.Bot;
 import szakacs.kpi.fei.tuke.arena.TreasureScooperArenaAdapter;
-import szakacs.kpi.fei.tuke.intrfc.Player;
+import szakacs.kpi.fei.tuke.intrfc.player.Player;
 import szakacs.kpi.fei.tuke.misc.ConfigProcessingException;
 import szakacs.kpi.fei.tuke.misc.GameLevelInitializationException;
 

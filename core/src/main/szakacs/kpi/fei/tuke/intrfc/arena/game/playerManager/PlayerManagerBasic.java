@@ -1,10 +1,8 @@
 package szakacs.kpi.fei.tuke.intrfc.arena.game.playerManager;
 
 import szakacs.kpi.fei.tuke.arena.game.GameShop;
-import szakacs.kpi.fei.tuke.intrfc.Player;
-import szakacs.kpi.fei.tuke.intrfc.arena.actors.pipe.PipeBasic;
+import szakacs.kpi.fei.tuke.intrfc.player.PlayerInfo;
 
-import java.util.Map;
 import java.util.Set;
 
 /**
@@ -14,19 +12,14 @@ import java.util.Set;
 public interface PlayerManagerBasic {
 
     /**
-     * Gets all pipes in the current game level.
+     * Gets a set of all players in the current level and
+     * any info associated with them, such as the pipe
+     * assigned to them and their current score.
      *
-     * @return the (unmodifiable) set of all pipes in the current game level.
+     * @return a set of {@link PlayerInfo} containing
+     *         the player and associated info.
      */
-    Set<PipeBasic> getPipes();
-
-    /**
-     * Gets the scores of every player as a mapping of Player instances
-     * to Integer objects representing their scores.
-     *
-     * @return the scores for each player in the current game level.
-     */
-    Map<Player, Integer> getPlayersAndScores();
+    Set<PlayerInfo> getPlayerInfo();
 
     /**
      * Gets an object which is responsible for anything the player buys while playing

@@ -3,8 +3,9 @@ package szakacs.kpi.fei.tuke.arena.game.world;
 import szakacs.kpi.fei.tuke.arena.actors.pipe.Pipe;
 import szakacs.kpi.fei.tuke.enums.Direction;
 import szakacs.kpi.fei.tuke.enums.TunnelCellType;
-import szakacs.kpi.fei.tuke.intrfc.Player;
+import szakacs.kpi.fei.tuke.intrfc.player.PlayerToken;
 import szakacs.kpi.fei.tuke.intrfc.arena.game.MethodCallAuthenticator;
+import szakacs.kpi.fei.tuke.intrfc.player.PlayerInfo;
 import szakacs.kpi.fei.tuke.intrfc.arena.game.gameLevel.GameLevelPrivileged;
 import szakacs.kpi.fei.tuke.intrfc.arena.game.playerManager.PlayerManagerPrivileged;
 import szakacs.kpi.fei.tuke.intrfc.arena.game.world.*;
@@ -220,9 +221,16 @@ public class TreasureScooperWorld implements GameWorldPrivileged {
     @Override
     public void onNuggetCollected(Pipe pipe, int val) {
         nuggetCount--;
-        Player player = pipe.getController();
-        int score = playerManager.getPlayersAndScores().get(player);
-        playerManager.getScoreChangeCallback().onScoreEvent(score + val, player);
+        Map<PlayerToken, Pipe> pipeMap = playerManager.getPipesUpdatable();
+        for (PlayerToken token : pipeMap.keySet()){
+            Pipe potentialPipe = pipeMap.get(token);
+            if (potentialPipe.equals(pipe)){
+                PlayerInfo info = playerManager.getPlayerTokenMap().get(token);
+                playerManager.getScoreChangeCallback().onScoreEvent(
+                        info.getScore() + val, token);
+                break;
+            }
+        }
     }
 
     //// ResettableGameClass methods

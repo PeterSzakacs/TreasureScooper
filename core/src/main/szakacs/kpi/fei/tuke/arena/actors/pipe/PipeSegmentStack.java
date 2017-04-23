@@ -1,7 +1,13 @@
 package szakacs.kpi.fei.tuke.arena.actors.pipe;
 
+import szakacs.kpi.fei.tuke.enums.Direction;
+import szakacs.kpi.fei.tuke.enums.TunnelCellType;
 import szakacs.kpi.fei.tuke.intrfc.arena.callbacks.OnStackUpdatedCallback;
+import szakacs.kpi.fei.tuke.intrfc.arena.proxies.ActorGameInterface;
 import szakacs.kpi.fei.tuke.misc.ArrayStack;
+
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Created by developer on 15.2.2017.
@@ -15,17 +21,30 @@ public class PipeSegmentStack extends ArrayStack<PipeSegment> {
     private int popLimit;
     private int pushCounter;
     private int popCounter;
+    private PipeSegment segmentToPush;
+    private PipeSegment randomSegment;
     private final OnStackUpdatedCallback<PipeSegment> callback;
 
 
 
     PipeSegmentStack(int capacity, boolean dynamic, int pushLimit, int popLimit,
-                     OnStackUpdatedCallback<PipeSegment> callback){
+                     OnStackUpdatedCallback<PipeSegment> callback, ActorGameInterface gameInterface){
         super(capacity, dynamic);
         this.pushLimit = pushLimit;
         this.popLimit = popLimit;
         this.pushCounter = 0;
         this.popCounter = 0;
+        this.randomSegment = new PipeSegment(
+                // Simply: find a LEFT_EDGE cell of some tunnel;
+                gameInterface.getGameWorld().getTunnelsUpdatable().iterator().next()
+                        .getUpdatableCellsBySearchCriteria(
+                                cell -> cell.getCellType() == TunnelCellType.LEFT_EDGE
+                        ).iterator().next(),
+                Direction.LEFT,
+                Direction.RIGHT,
+                gameInterface
+        );
+        this.segmentToPush = randomSegment;
         this.callback = callback;
     }
 
@@ -38,7 +57,7 @@ public class PipeSegmentStack extends ArrayStack<PipeSegment> {
      */
     @Override
     public void push(PipeSegment segment) {
-        if (pushCounter < pushLimit) {
+        if (pushCounter < pushLimit && segmentToPush.equals(segment)) {
             super.push(segment);
             pushCounter++;
             callback.onPush();
@@ -58,12 +77,16 @@ public class PipeSegmentStack extends ArrayStack<PipeSegment> {
             callback.onPop(popped);
             return popped;
         } else {
-            return null;
+            return top();
         }
     }
 
     void unlock(){
         this.pushCounter = 0;
         this.popCounter = 0;
+    }
+
+    void setSegmentToPush(PipeSegment segmentToPush){
+        this.segmentToPush = segmentToPush;
     }
 }

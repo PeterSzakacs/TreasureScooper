@@ -1,13 +1,17 @@
 package szakacs.kpi.fei.tuke.intrfc.arena.game.playerManager;
 
 import szakacs.kpi.fei.tuke.arena.actors.pipe.Pipe;
+import szakacs.kpi.fei.tuke.intrfc.player.PlayerToken;
+import szakacs.kpi.fei.tuke.intrfc.player.PlayerInfo;
 
-import java.util.Set;
+import java.util.Map;
 
 /**
  *
  */
 public interface PlayerManagerUpdatable extends PlayerManagerBasic {
     
-    Set<Pipe> getPipesUpdatable();
+    Map<PlayerToken, Pipe> getPipesUpdatable();
+
+    Map<PlayerToken, PlayerInfo> getPlayerTokenMap();
 }

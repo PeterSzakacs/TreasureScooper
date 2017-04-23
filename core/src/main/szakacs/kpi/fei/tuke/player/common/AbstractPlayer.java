@@ -2,9 +2,11 @@ package szakacs.kpi.fei.tuke.player.common;
 
 import szakacs.kpi.fei.tuke.arena.actors.pipe.PipeHead;
 import szakacs.kpi.fei.tuke.arena.actors.pipe.PipeSegment;
+import szakacs.kpi.fei.tuke.arena.actors.pipe.Weapon;
+import szakacs.kpi.fei.tuke.arena.game.GameShop;
 import szakacs.kpi.fei.tuke.enums.GameState;
-import szakacs.kpi.fei.tuke.intrfc.Player;
-import szakacs.kpi.fei.tuke.intrfc.PlayerToken;
+import szakacs.kpi.fei.tuke.intrfc.player.Player;
+import szakacs.kpi.fei.tuke.intrfc.player.PlayerToken;
 import szakacs.kpi.fei.tuke.intrfc.arena.actors.pipe.PipeBasic;
 import szakacs.kpi.fei.tuke.intrfc.arena.proxies.PlayerGameInterface;
 import szakacs.kpi.fei.tuke.intrfc.misc.Stack;
@@ -36,15 +38,26 @@ public abstract class AbstractPlayer implements Player {
      */
     protected PipeBasic pipe;
     /**
-     * The {@link Stack} object representing
-     * the pipe passed on initialization to the player.
+     * The {@link Stack} of {@link PipeSegment}s of the pipe pipe passed on initialization
+     * to the player. Same as pipe.getSegmentStack().
      */
     protected Stack<PipeSegment> segmentStack;
     /**
      * The {@link PipeHead} object representing the collecting head
-     * of the pipe passed on initialization to the player.
+     * of the pipe passed on initialization to the player. Same as
+     * pipe.getHead().
      */
     protected PipeHead head;
+    /**
+     * The {@link Weapon} the player wields. Same as pipe.getHead().getWeapon().
+     */
+    protected Weapon weapon;
+
+    /**
+     * The {@link GameShop} object used for in-game purchases.
+     * Same as gameInterface.getGameShop().
+     */
+    protected GameShop gameShop;
 
     @Override
     public final void setPlayerToken(PlayerToken token){
@@ -58,8 +71,10 @@ public abstract class AbstractPlayer implements Player {
         if (this.token.validate(token)) {
             this.gameInterface = gameInterface;
             this.pipe = pipe;
-            this.segmentStack = pipe.getSegmentStack();
+            this.segmentStack = pipe.getSegmentStack(token);
             this.head = pipe.getHead();
+            this.weapon = head.getWeapon();
+            this.gameShop = gameInterface.getGameShop();
         }
     }
 

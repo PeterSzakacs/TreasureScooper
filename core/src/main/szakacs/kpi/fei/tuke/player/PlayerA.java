@@ -2,7 +2,7 @@ package szakacs.kpi.fei.tuke.player;
 
 import szakacs.kpi.fei.tuke.enums.Direction;
 import szakacs.kpi.fei.tuke.enums.TunnelCellType;
-import szakacs.kpi.fei.tuke.intrfc.PlayerToken;
+import szakacs.kpi.fei.tuke.intrfc.player.PlayerToken;
 import szakacs.kpi.fei.tuke.intrfc.arena.actors.pipe.PipeBasic;
 import szakacs.kpi.fei.tuke.intrfc.arena.game.world.HorizontalTunnelBasic;
 import szakacs.kpi.fei.tuke.intrfc.arena.game.world.TunnelCellBasic;
@@ -123,13 +123,13 @@ public class PlayerA extends AbstractPlayer {
     }
 
     private void handleClear() {
-        head.getWeapon().getBulletQueue().enqueue(gameInterface.getGameShop().buyBullet(this));
+        weapon.getBulletQueue(getToken()).enqueue(gameInterface.getGameShop().buyBullet(getToken()));
         segmentStack.push(pipe.calculateNextSegment(currentDir));
         if (pipe.isWall(currentDir)){
             TunnelCellType cellType = head.getCurrentPosition().getCellType();
             if (cellType != TunnelCellType.LEFT_EDGE
                     && cellType != TunnelCellType.RIGHT_EDGE)
-                head.getWeapon().getBulletQueue().dequeue();
+                weapon.getBulletQueue(getToken()).dequeue();
             else
                 this.state = State.RETURN;
         }

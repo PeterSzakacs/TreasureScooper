@@ -1,6 +1,6 @@
 package szakacs.kpi.fei.tuke.intrfc.arena.callbacks;
 
-import szakacs.kpi.fei.tuke.intrfc.Player;
+import szakacs.kpi.fei.tuke.intrfc.player.PlayerToken;
 
 /**
  * Created by developer on 7.3.2017.
@@ -21,7 +21,7 @@ public interface OnScoreEventCallback {
      * The callback method
      *
      * @param newScore the new score value for the player.
-     * @param affectedPlayer the player whom the score change affects.
+     * @param token the token identifying the player whom the score change affects.
      */
-    void onScoreEvent(int newScore, Player affectedPlayer);
+    void onScoreEvent(int newScore, PlayerToken token);
 }

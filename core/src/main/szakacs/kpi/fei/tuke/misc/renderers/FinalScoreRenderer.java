@@ -6,7 +6,7 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
-import szakacs.kpi.fei.tuke.intrfc.Player;
+import szakacs.kpi.fei.tuke.intrfc.player.Player;
 import szakacs.kpi.fei.tuke.intrfc.arena.game.gameLevel.GameLevelPrivileged;
 import szakacs.kpi.fei.tuke.intrfc.misc.GameRenderer;
 import szakacs.kpi.fei.tuke.intrfc.misc.GameResults;
@@ -105,7 +105,7 @@ public class FinalScoreRenderer implements GameRenderer {
             Map<Class<? extends Player>, Integer> levelScore = levelScores.get(i);
             for (Class clazz : levelScore.keySet()) {
                 scoreStringBuilder.append("        ").append(clazz.getSimpleName())
-                        .append(": ").append(totalScores.get(clazz).intValue())
+                        .append(": ").append(levelScore.get(clazz).intValue())
                         .append(" points\n");
             }
             renderingVars.glyphLayout.setText(renderingVars.levelScoreFont, scoreStringBuilder.toString());

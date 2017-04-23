@@ -6,6 +6,7 @@ import szakacs.kpi.fei.tuke.enums.Direction;
 import szakacs.kpi.fei.tuke.intrfc.arena.game.world.TunnelCellUpdatable;
 import szakacs.kpi.fei.tuke.intrfc.arena.proxies.ActorGameInterface;
 
+import java.util.Collection;
 import java.util.Set;
 
 /**
@@ -13,7 +14,7 @@ import java.util.Set;
  */
 public class Mole extends AbstractMoveableActor {
 
-    private Set<Pipe> pipes;
+    private Collection<Pipe> pipes;
     private Pipe intersectingPipe;
     private int xDelta;
     private int yDelta;
@@ -23,7 +24,7 @@ public class Mole extends AbstractMoveableActor {
         super(currentPosition, ActorType.ENEMY, direction, gameInterface);
         this.xDelta = gameInterface.getGameWorld().getOffsetX()/4;
         this.yDelta = gameInterface.getGameWorld().getOffsetY()/4;
-        this.pipes = gameInterface.getPipesUpdatable();
+        this.pipes = gameInterface.getPipesUpdatable().values();
         this.moving = true;
     }
 

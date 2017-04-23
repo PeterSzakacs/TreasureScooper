@@ -24,7 +24,7 @@ Both of these are generic collections with a type parameter determining the type
 
 The API is currently still developed, so we present here only a brief overiview and some methods likely to be used in most or every solution and unlikely to be significantly refactored in the near- to mid-term future.
 
-First the place, where the programmer implements his/her solution for the game is any class implementing the following interface: **[`szakacs.kpi.fei.tuke.intrfc.Player`](core/src/main/szakacs/kpi/fei/tuke/intrfc/Player.java)**. 
+First the place, where the programmer implements his/her solution for the game is any class implementing the following interface: **[`szakacs.kpi.fei.tuke.intrfc.player.Player`](core/src/main/szakacs/kpi/fei/tuke/intrfc/Player.java)**. 
 Additionally, any such class must reside in the package `szakacs.kpi.fei.tuke.player` The interface is defined as follows:
 
 ```java

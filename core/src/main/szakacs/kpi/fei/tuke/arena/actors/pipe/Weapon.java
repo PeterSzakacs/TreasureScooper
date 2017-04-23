@@ -3,7 +3,9 @@ package szakacs.kpi.fei.tuke.arena.actors.pipe;
 import szakacs.kpi.fei.tuke.arena.actors.Bullet;
 import szakacs.kpi.fei.tuke.intrfc.arena.proxies.ActorGameInterface;
 import szakacs.kpi.fei.tuke.intrfc.misc.Queue;
+import szakacs.kpi.fei.tuke.intrfc.player.PlayerToken;
 import szakacs.kpi.fei.tuke.misc.ArrayQueue;
+import szakacs.kpi.fei.tuke.misc.CollectionsCustom;
 
 /**
  * A class representing the weapon wielded by the player.
@@ -50,13 +52,15 @@ public class Weapon {
     private BulletQueue ammoQueue;
     private ActorGameInterface world;
     private PipeHead head;
+    private PlayerToken token;
 
 
 
-    Weapon(int capacity, PipeHead head, ActorGameInterface world){
+    Weapon(int capacity, PipeHead head, ActorGameInterface world, PlayerToken token){
         this.ammoQueue = new BulletQueue(capacity);
         this.head = head;
         this.world = world;
+        this.token = token;
     }
 
     /**
@@ -67,8 +71,12 @@ public class Weapon {
      *
      * @return the ammunition store of the weapon.
      */
-    public Queue<Bullet> getBulletQueue(){
-        return ammoQueue;
+    public Queue<Bullet> getBulletQueue(PlayerToken token){
+        if (this.token.validate(token)) {
+            return ammoQueue;
+        } else {
+            return CollectionsCustom.unmodifiableQueue(ammoQueue);
+        }
     }
 
     /**

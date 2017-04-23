@@ -1,6 +1,6 @@
 package szakacs.kpi.fei.tuke.intrfc.misc;
 
-import szakacs.kpi.fei.tuke.intrfc.Player;
+import szakacs.kpi.fei.tuke.intrfc.player.Player;
 
 import java.util.List;
 import java.util.Map;
