@@ -6,9 +6,6 @@ import szakacs.kpi.fei.tuke.intrfc.arena.callbacks.OnStackUpdatedCallback;
 import szakacs.kpi.fei.tuke.intrfc.arena.proxies.ActorGameInterface;
 import szakacs.kpi.fei.tuke.misc.ArrayStack;
 
-import java.util.HashSet;
-import java.util.Set;
-
 /**
  * Created by developer on 15.2.2017.
  *
@@ -37,8 +34,9 @@ public class PipeSegmentStack extends ArrayStack<PipeSegment> {
         this.randomSegment = new PipeSegment(
                 // Simply: find a LEFT_EDGE cell of some tunnel;
                 gameInterface.getGameWorld().getTunnelsUpdatable().iterator().next()
-                        .getUpdatableCellsBySearchCriteria(
-                                cell -> cell.getCellType() == TunnelCellType.LEFT_EDGE
+                        .getCellsBySearchCriteria(
+                                cell -> cell.getCellType() == TunnelCellType.LEFT_EDGE,
+                                gameInterface.getAuthenticator()
                         ).iterator().next(),
                 Direction.LEFT,
                 Direction.RIGHT,
@@ -61,11 +59,12 @@ public class PipeSegmentStack extends ArrayStack<PipeSegment> {
             super.push(segment);
             pushCounter++;
             callback.onPush();
+            segmentToPush = randomSegment;
         }
     }
 
     /**
-     * Moves pipe as well as head one step back from its current position
+     * Moves pipe as well as head one step back from its current position.
      *
      * @return the removed pipe segment
      */

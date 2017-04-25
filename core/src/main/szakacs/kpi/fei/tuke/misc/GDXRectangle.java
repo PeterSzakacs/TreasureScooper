@@ -57,7 +57,7 @@ public class GDXRectangle implements Rectangle {
     public boolean overlaps(Rectangle other) {
         if (other == null)
             return false;
-        else return x <= other.getRectangleX() + width && x + width >= other.getRectangleX()
-                && y <= other.getRectangleY() + height && y + height >= other.getRectangleY();
+        else return x < other.getRectangleX() + width && x + width > other.getRectangleX()
+                && y < other.getRectangleY() + height && y + height > other.getRectangleY();
     }
 }

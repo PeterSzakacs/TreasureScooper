@@ -23,7 +23,6 @@ public class HorizontalTunnel implements HorizontalTunnelUpdatable {
     private int y;
     private int nuggetCount;
     private Set<TunnelCellUpdatable> cells;
-    private Set<TunnelCellUpdatable> searchResults;
     private GameWorldPrivileged world;
 
 
@@ -34,7 +33,6 @@ public class HorizontalTunnel implements HorizontalTunnelUpdatable {
         this.world = world;
         int numCells = dt.getNumCells();
         this.cells = new HashSet<>(numCells);
-        this.searchResults = new HashSet<>(numCells);
         this.buildTunnel(dt.getNumCells());
         this.nuggetCount = numCells;
     }
@@ -102,7 +100,7 @@ public class HorizontalTunnel implements HorizontalTunnelUpdatable {
     public Set<TunnelCellBasic> getCellsBySearchCriteria(Predicate<TunnelCellBasic> criteria){
         if (criteria == null)
             return Collections.unmodifiableSet(cells);
-        searchResults.clear();
+        Set<TunnelCellBasic> searchResults = new HashSet<>(cells.size());
         for (TunnelCellUpdatable cell : this.cells)
             if (criteria.test(cell))
                 searchResults.add(cell);
@@ -112,19 +110,27 @@ public class HorizontalTunnel implements HorizontalTunnelUpdatable {
     // HorizontalTunnelUpdatable methods
 
     @Override
-    public Set<TunnelCellUpdatable> getUpdatableCells() {
-        return cells;
+    public Set<TunnelCellUpdatable> getCells(Object authToken) {
+        if (world.getAuthenticator().authenticate(authToken)) {
+            return cells;
+        } else {
+            return null;
+        }
     }
 
     @Override
-    public Set<TunnelCellUpdatable> getUpdatableCellsBySearchCriteria(Predicate<TunnelCellUpdatable> criteria) {
-        if (criteria == null)
-            return cells;
-        searchResults.clear();
-        for (TunnelCellUpdatable cell : this.cells)
-            if (criteria.test(cell))
-                searchResults.add(cell);
-        return searchResults;
+    public Set<TunnelCellUpdatable> getCellsBySearchCriteria(Predicate<TunnelCellUpdatable> criteria, Object authToken) {
+        if (world.getAuthenticator().authenticate(authToken)) {
+            if (criteria == null)
+                return cells;
+            Set<TunnelCellUpdatable> searchResults = new HashSet<>(cells.size());
+            for (TunnelCellUpdatable cell : this.cells)
+                if (criteria.test(cell))
+                    searchResults.add(cell);
+            return searchResults;
+        } else {
+            return null;
+        }
     }
 
     // tunnel manipulation methods

@@ -19,8 +19,7 @@ import szakacs.kpi.fei.tuke.intrfc.misc.Stack;
  * implement only the {@link Player#act(PlayerToken)} method or,
  * if you need to set some more member variables on initialization
  * or do some cleanup, you can simply override the other 2 methods
- * {@link Player#initialize(PlayerGameInterface, PipeBasic, PlayerToken)}
- * and {@link Player#deallocate()}, respectively.
+ * {@code initialize} or {@code deallocate}, respectively.
  */
 public abstract class AbstractPlayer implements Player {
 

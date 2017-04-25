@@ -16,11 +16,9 @@ import szakacs.kpi.fei.tuke.intrfc.misc.Queue;
 public class PipeHead extends AbstractMoveableActor implements GoldCollector {
 
     private Weapon weapon;
-    private PlayerToken token;
 
     PipeHead(Direction direction, ActorGameInterface gameInterface, TunnelCellUpdatable startPosition, PlayerToken token) {
         super(startPosition, ActorType.PIPE, direction, gameInterface);
-        this.token = token;
         this.weapon = new Weapon(10, this, gameInterface, token);
         Queue<Bullet> weaponQueue = weapon.getBulletQueue(token);
         int capacity = weaponQueue.getCapacity();

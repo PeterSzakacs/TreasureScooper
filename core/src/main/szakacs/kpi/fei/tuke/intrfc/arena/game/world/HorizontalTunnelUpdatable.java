@@ -8,7 +8,7 @@ import java.util.function.Predicate;
  */
 public interface HorizontalTunnelUpdatable extends HorizontalTunnelBasic {
 
-    Set<TunnelCellUpdatable> getUpdatableCells();
+    Set<TunnelCellUpdatable> getCells(Object authToken);
 
-    Set<TunnelCellUpdatable> getUpdatableCellsBySearchCriteria(Predicate<TunnelCellUpdatable> criteria);
+    Set<TunnelCellUpdatable> getCellsBySearchCriteria(Predicate<TunnelCellUpdatable> criteria, Object authToken);
 }

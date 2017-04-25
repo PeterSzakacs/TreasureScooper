@@ -82,10 +82,11 @@ public class GameUpdaterWalls extends AbstractGameUpdater {
         createdWallsCount = 0;
         turnCounter = 0;
         for (HorizontalTunnelUpdatable ht : gameWorld.getTunnelsUpdatable()){
-            eligiblePositions.addAll(ht.getUpdatableCellsBySearchCriteria(
+            eligiblePositions.addAll(ht.getCellsBySearchCriteria(
                     (cell) ->
                             cell.getCellType() == TunnelCellType.TUNNEL
-                                    && cell.getCellAtDirection(Direction.RIGHT).getCellType() == TunnelCellType.TUNNEL
+                                    && cell.getCellAtDirection(Direction.RIGHT).getCellType() == TunnelCellType.TUNNEL,
+                    gameLevel.getAuthenticator()
                     )
             );
         }

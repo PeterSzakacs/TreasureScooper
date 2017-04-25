@@ -11,6 +11,7 @@ import szakacs.kpi.fei.tuke.intrfc.arena.proxies.ActorGameInterface;
  * The class representing a single segment of the collecting pipe.
  */
 public class PipeSegment extends AbstractActor {
+
     private PipeSegmentType segmentType;
     private Direction from;
 

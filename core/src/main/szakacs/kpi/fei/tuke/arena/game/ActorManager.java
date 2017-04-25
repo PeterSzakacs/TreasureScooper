@@ -17,15 +17,12 @@ public class ActorManager implements ActorManagerPrivileged {
 
     private Map<ActorPrivileged, Runnable> actorActionMap;
     private Map<ActorBasic, Integer> unregisteredActors;
-    private Set<ActorBasic> searchResults;
-
     private MethodCallAuthenticator authenticator;
 
     ActorManager(MethodCallAuthenticator authenticator){
         this.authenticator = authenticator;
         this.actorActionMap = new HashMap<>(20);
         this.unregisteredActors = new HashMap<>();
-        this.searchResults = new HashSet<>();
     }
 
     // ActorManagerBasic methods (only queries)
@@ -39,7 +36,7 @@ public class ActorManager implements ActorManagerPrivileged {
     public Set<ActorBasic> getActorsBySearchCriteria(Predicate<ActorBasic> predicate){
         if (predicate == null)
             return Collections.unmodifiableSet(actorActionMap.keySet());
-        searchResults.clear();
+        Set<ActorBasic> searchResults = new HashSet<>(actorActionMap.size());
         for (ActorBasic actor : actorActionMap.keySet()){
             if (predicate.test(actor))
                 searchResults.add(actor);
@@ -98,7 +95,6 @@ public class ActorManager implements ActorManagerPrivileged {
     @Override
     public void startNewGame(GameLevelPrivileged gameLevel, DummyLevel level){
         actorActionMap.clear();
-        searchResults.clear();
         unregisteredActors.clear();
     }
 }

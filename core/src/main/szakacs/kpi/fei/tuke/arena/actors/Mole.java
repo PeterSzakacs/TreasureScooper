@@ -7,7 +7,6 @@ import szakacs.kpi.fei.tuke.intrfc.arena.game.world.TunnelCellUpdatable;
 import szakacs.kpi.fei.tuke.intrfc.arena.proxies.ActorGameInterface;
 
 import java.util.Collection;
-import java.util.Set;
 
 /**
  * Created by developer on 5.11.2016.
@@ -22,8 +21,8 @@ public class Mole extends AbstractMoveableActor {
 
     public Mole(Direction direction, TunnelCellUpdatable currentPosition, ActorGameInterface gameInterface){
         super(currentPosition, ActorType.ENEMY, direction, gameInterface);
-        this.xDelta = gameInterface.getGameWorld().getOffsetX()/4;
-        this.yDelta = gameInterface.getGameWorld().getOffsetY()/4;
+        this.xDelta = gameInterface.getGameWorld().getOffsetX()/8;
+        this.yDelta = gameInterface.getGameWorld().getOffsetY()/8;
         this.pipes = gameInterface.getPipesUpdatable().values();
         this.moving = true;
     }

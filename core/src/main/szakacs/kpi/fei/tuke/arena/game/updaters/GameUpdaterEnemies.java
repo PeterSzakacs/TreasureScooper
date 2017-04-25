@@ -78,10 +78,11 @@ public class GameUpdaterEnemies extends AbstractGameUpdater {
         createdEnemiesCount = 0;
         turnCounter = 0;
         for (HorizontalTunnelUpdatable ht : gameWorld.getTunnelsUpdatable()){
-            eligiblePositions.addAll(ht.getUpdatableCellsBySearchCriteria(
+            eligiblePositions.addAll(ht.getCellsBySearchCriteria(
                     (cell) ->
                             cell.getCellType() == TunnelCellType.LEFT_EDGE
-                                    || cell.getCellType() == TunnelCellType.RIGHT_EDGE
+                                    || cell.getCellType() == TunnelCellType.RIGHT_EDGE,
+                    gameLevel.getAuthenticator()
                     )
             );
         }

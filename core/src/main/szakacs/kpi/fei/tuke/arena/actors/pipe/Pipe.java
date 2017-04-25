@@ -2,6 +2,7 @@ package szakacs.kpi.fei.tuke.arena.actors.pipe;
 
 import szakacs.kpi.fei.tuke.enums.ActorType;
 import szakacs.kpi.fei.tuke.enums.Direction;
+import szakacs.kpi.fei.tuke.enums.PipeSegmentType;
 import szakacs.kpi.fei.tuke.intrfc.player.PlayerToken;
 import szakacs.kpi.fei.tuke.intrfc.arena.actors.ActorBasic;
 import szakacs.kpi.fei.tuke.intrfc.arena.actors.pipe.PipeBasic;
@@ -12,6 +13,8 @@ import szakacs.kpi.fei.tuke.intrfc.arena.proxies.ActorGameInterface;
 import szakacs.kpi.fei.tuke.intrfc.misc.Stack;
 import szakacs.kpi.fei.tuke.misc.CollectionsCustom;
 
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.Set;
 
 /**
@@ -30,11 +33,11 @@ public class Pipe implements PipeBasic {
             GameWorldBasic world = gameInterface.getGameWorld();
             head.move(world.getOffsetX(), world.getOffsetY(), segmentStack.top().getDirection());
             head.getCurrentPosition().collectNugget(Pipe.this);
-            /*PipeSegment pushed = segmentStack.top();
+            PipeSegment pushed = segmentStack.top();
             if (pushed.getSegmentType() != PipeSegmentType.HORIZONTAL
                     && pushed.getSegmentType() != PipeSegmentType.VERTICAL) {
                 edges.add(pushed);
-            }*/
+            }
             Set<ActorBasic> enemies = gameInterface.getActorsBySearchCriteria(actor ->
                     actor.getType() == ActorType.ENEMY && actor.intersects(head)
             );
@@ -64,6 +67,7 @@ public class Pipe implements PipeBasic {
      */
     private PipeHead head;
     private PipeSegmentStack segmentStack;
+    private Set<PipeSegment> edges;
     private PlayerToken token;
     private ActorGameInterface gameInterface;
     private int healthPoints;
@@ -83,6 +87,7 @@ public class Pipe implements PipeBasic {
                 segmentStackCallback,
                 gameInterface
         );
+        this.edges = new HashSet<>(20);
     }
 
 
@@ -131,14 +136,15 @@ public class Pipe implements PipeBasic {
     
     @Override
     public boolean isWall(Direction dir){
-        return head.getCurrentPosition().getCellAtDirection(dir) == null;
+        return head.getCurrentPosition().getCellAtDirection(dir) == null
+                || dir == head.getDirection().getOpposite();
     }
 
     @Override
     public boolean intersects(ActorBasic actor){
         if (actor == null)
             return false;
-        for (PipeSegment seg : segmentStack){
+        for (PipeSegment seg : edges){
             if (seg.intersects(actor))
                 return true;
         }
@@ -169,5 +175,9 @@ public class Pipe implements PipeBasic {
                 healthPoints = 0;
             }
         }
+    }
+
+    public Set<PipeSegment> getEdges() {
+        return Collections.unmodifiableSet(edges);
     }
 }

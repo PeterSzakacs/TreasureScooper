@@ -87,8 +87,43 @@ public class Weapon {
     }
 
     /**
-     * Returns the array index of the element at the front of the queue.
-     * Only used for rendering.
+     * <p>Fires a bullet, if there was one in the ammunition store of this weapon
+     * at the time this method was called and if the token passed to it belongs
+     * to the player owning this weapon. The result in such case is the same as
+     * getBulletQueue(token).dequeue(), otherwise null is returned.</p>
+     *
+     * @param token the token of the player owning this weapon.
+     * @return the bullet fired if conditions hold or null otherwise.
+     */
+    public Bullet fire(PlayerToken token) {
+        if (this.token.validate(token)){
+            return ammoQueue.dequeue();
+        } else {
+            return null;
+        }
+    }
+
+    /**
+     * <o>Loads a bullet to the ammunition store if it is not null,
+     * the token passed belongs to the player owning this weapon
+     * and the queue is not full yet. The result in such case is
+     * the same as calling getBulletQueue(token).enqueue();
+     * otherwise nothing happens</p>
+     *
+     * @param bullet the bullet to load to the ammunition store.
+     * @param token the token of the player owning this weapon.
+     */
+    public void load(Bullet bullet, PlayerToken token){
+        if (this.token.validate(token)){
+            ammoQueue.enqueue(bullet);
+        }
+    }
+
+    /**
+     * <p>Returns the array index of the element at the front of the queue.
+     * Only used for rendering.</p>
+     *
+     * <p><b>If you are the player, just ignore this method.</b></p>
      *
      * @return the array index of the queue front.
      */
@@ -97,8 +132,10 @@ public class Weapon {
     }
 
     /**
-     * Returns the array index of the element at the rear of the queue.
-     * Only used for rendering.
+     * <p>Returns the array index of the element at the rear of the queue.
+     * Only used for rendering.</p>
+     *
+     * <p><b>If you are the player, just ignore this method.</b></p>
      *
      * @return the array index of the queue rear.
      */

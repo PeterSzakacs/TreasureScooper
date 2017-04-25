@@ -94,11 +94,12 @@ public class TreasureScooperWorld implements GameWorldPrivileged {
             HorizontalTunnel ht = tunnelsMap.get(id);
             DummyTunnel dt = dummyTunnelsMap.get(id);
             Map<Integer, DummyTunnel> connectedTunnels = dt.getConnectedTunnelsBelow();
-            Set<TunnelCellUpdatable> allCells = ht.getUpdatableCells();
+            Set<TunnelCellUpdatable> allCells = ht.getCells(authenticator);
             for (Integer xPos : connectedTunnels.keySet()) {
                 // Remove previous TUNNEL cell and add a new EXIT cell in its place
-                TunnelCellUpdatable removed = ht.getUpdatableCellsBySearchCriteria(
-                        (cell) -> cell.isWithinCell(xPos, dt.getY())
+                TunnelCellUpdatable removed = ht.getCellsBySearchCriteria(
+                        (cell) -> cell.isWithinCell(xPos, dt.getY()),
+                        authenticator
                 ).iterator().next();
                 allCells.remove(removed);
                 TunnelCell newCell = new TunnelCell(
@@ -130,16 +131,17 @@ public class TreasureScooperWorld implements GameWorldPrivileged {
     }
 
     private void setEntrance(HorizontalTunnel exitTunnel, TunnelCellUpdatable entranceCell) {
-        TunnelCellUpdatable previous = exitTunnel.getUpdatableCellsBySearchCriteria(
-                (cell) -> cell.isWithinCell(entranceCell.getX(), cell.getY())
+        TunnelCellUpdatable previous = exitTunnel.getCellsBySearchCriteria(
+                (cell) -> cell.isWithinCell(entranceCell.getX(), cell.getY()),
+                authenticator
         ).iterator().next();
         TunnelCellUpdatable newCell = new TunnelCell(
                 previous.getX(), previous.getY(),
                 TunnelCellType.ENTRANCE,
                 exitTunnel, this
         );
-        exitTunnel.getUpdatableCells().remove(previous);
-        exitTunnel.getUpdatableCells().add(newCell);
+        exitTunnel.getCells(authenticator).remove(previous);
+        exitTunnel.getCells(authenticator).add(newCell);
         TunnelCellUpdatable left = previous.getCellAtDirection(Direction.LEFT);
         TunnelCellUpdatable right = previous.getCellAtDirection(Direction.RIGHT);
         left.setAtDirection(Direction.RIGHT, newCell, authenticator);
