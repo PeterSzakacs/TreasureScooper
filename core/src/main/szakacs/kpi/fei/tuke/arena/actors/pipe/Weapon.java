@@ -104,7 +104,7 @@ public class Weapon {
     }
 
     /**
-     * <o>Loads a bullet to the ammunition store if it is not null,
+     * <p>Loads a bullet to the ammunition store if it is not null,
      * the token passed belongs to the player owning this weapon
      * and the queue is not full yet. The result in such case is
      * the same as calling getBulletQueue(token).enqueue();
