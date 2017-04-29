@@ -20,11 +20,11 @@ public class PipeHead extends AbstractMoveableActor implements GoldCollector {
     PipeHead(Direction direction, ActorGameInterface gameInterface, TunnelCellUpdatable startPosition, PlayerToken token) {
         super(startPosition, ActorType.PIPE, direction, gameInterface);
         this.weapon = new Weapon(10, this, gameInterface, token);
-        Queue<Bullet> weaponQueue = weapon.getBulletQueue(token);
+        /*Queue<Bullet> weaponQueue = weapon.getBulletQueue(token);
         int capacity = weaponQueue.getCapacity();
-        for (int i = 0; i < capacity; i++) {
+        for (int i = 0; i < capacity/2; i++) {
             weaponQueue.enqueue(new Bullet(gameInterface));
-        }
+        }*/
     }
 
     @Override

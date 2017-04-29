@@ -1,11 +1,12 @@
 package szakacs.kpi.fei.tuke.misc.renderers;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.Sprite;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.*;
 import szakacs.kpi.fei.tuke.enums.Direction;
 import szakacs.kpi.fei.tuke.intrfc.arena.actors.ActorBasic;
 import szakacs.kpi.fei.tuke.intrfc.arena.game.gameLevel.GameLevelPrivileged;
+import szakacs.kpi.fei.tuke.intrfc.misc.ActorInfo;
 import szakacs.kpi.fei.tuke.intrfc.misc.GameConfig;
 import szakacs.kpi.fei.tuke.intrfc.misc.Rectangle;
 
@@ -19,25 +20,55 @@ import java.util.Set;
  */
 public class ActorRenderer extends AbstractGameRenderer {
 
-    private Map<Class<? extends ActorBasic>, Map<Direction, Sprite>> actorSprites;
+    private class ActorInfoCustom{
+        private Map<Direction, Sprite> directionsToSpritesMap;
+        private Animation<TextureRegion> unregisterAnimation;
+        private TextureAtlas atlas;
+
+        private void initialize(ActorInfo info, Class<? extends ActorBasic> clazz){
+            directionsToSpritesMap = new EnumMap<>(Direction.class);
+            for (Direction dir : info.getActorDirections())
+                directionsToSpritesMap.put(dir,
+                        new Sprite(
+                                new Texture("images/Actors/" + clazz.getSimpleName()
+                                        + "_" + dir.name() + ".png"
+                                )
+                        )
+                );
+            Map<String, Object> properties = info.getProperties();
+            String onUnregister = (String) properties.get("onUnregister");
+            if (onUnregister.startsWith("animation:")){
+                String animName = onUnregister.substring(10);
+                atlas = new TextureAtlas(Gdx.files.internal(
+                        "animations/" + animName + ".atlas")
+                );
+                unregisterAnimation = new Animation<>(1,
+                        atlas.getRegions());
+            }
+        }
+
+        private void dispose(){
+            for (Sprite spr : directionsToSpritesMap.values()) {
+                spr.getTexture().dispose();
+            }
+            if (atlas != null)
+                atlas.dispose();
+        }
+    }
+
+    private Map<Class<? extends ActorBasic>, ActorInfoCustom> actorSprites;
 
     public ActorRenderer(SpriteBatch batch, GameLevelPrivileged game, GameConfig config) {
         super(batch, game);
-        this.initializeActorSprites(config.getActorToDirectionsMap());
+        this.initializeActorSprites(config.getActorInfoMap());
     }
 
-    private void initializeActorSprites(Map<Class<? extends ActorBasic>, Set<Direction>> mappings){
+    private void initializeActorSprites(Map<Class<? extends ActorBasic>, ActorInfo> mappings){
         this.actorSprites = new HashMap<>(mappings.size());
         for (Class<? extends ActorBasic> clazz : mappings.keySet()){
-            Map<Direction, Sprite> directionsToSpritesMap = new EnumMap<>(Direction.class);
-            for (Direction dir : mappings.get(clazz))
-                directionsToSpritesMap.put(dir,
-                        new Sprite(
-                                new Texture("images/Actors/"
-                                        + clazz.getSimpleName() + "_" + dir.name() + ".png")
-                        )
-                );
-            this.actorSprites.put(clazz, directionsToSpritesMap);
+            ActorInfoCustom info = new ActorInfoCustom();
+            info.initialize(mappings.get(clazz), clazz);
+            actorSprites.put(clazz, info);
         }
     }
 
@@ -46,7 +77,8 @@ public class ActorRenderer extends AbstractGameRenderer {
         Rectangle actorRectangle;
         for (ActorBasic actor : actorManager.getActors()){
             actorRectangle = actor.getActorRectangle();
-            Sprite actorSprite = actorSprites.get(actor.getClass()).get(actor.getDirection());
+            Sprite actorSprite = actorSprites.get(actor.getClass())
+                    .directionsToSpritesMap.get(actor.getDirection());
             actorSprite.setPosition(actorRectangle.getRectangleX(), actorRectangle.getRectangleY());
             actorSprite.draw(batch);
         }
@@ -55,20 +87,27 @@ public class ActorRenderer extends AbstractGameRenderer {
         Map<ActorBasic, Integer> unregisteredActors = actorManager.getUnregisteredActors();
         for (ActorBasic actor : unregisteredActors.keySet()){
             actorRectangle = actor.getActorRectangle();
-            Sprite actorSprite = actorSprites.get(actor.getClass()).get(actor.getDirection());
-            actorSprite.setPosition(actorRectangle.getRectangleX(), actorRectangle.getRectangleY());
-            actorSprite.setAlpha((float)1/(float)unregisteredActors.get(actor));
-            actorSprite.draw(batch);
-            actorSprite.setAlpha(1f);
+            ActorInfoCustom info = actorSprites.get(actor.getClass());
+            if (info.unregisterAnimation == null) {
+                Sprite actorSprite = actorSprites.get(actor.getClass())
+                        .directionsToSpritesMap.get(actor.getDirection());
+                actorSprite.setPosition(
+                        actorRectangle.getRectangleX(), actorRectangle.getRectangleY());
+                actorSprite.setAlpha((float) 1 / (float) unregisteredActors.get(actor));
+                actorSprite.draw(batch);
+                actorSprite.setAlpha(1f);
+            } else {
+                int timeIdx = unregisteredActors.get(actor) - 1;
+                batch.draw(info.unregisterAnimation.getKeyFrame(timeIdx),
+                        actorRectangle.getRectangleX(), actorRectangle.getRectangleY());
+            }
         }
     }
 
     @Override
     public void dispose() {
-        for (Class clazz : actorSprites.keySet()) {
-            for (Sprite spr : actorSprites.get(clazz).values()) {
-                spr.getTexture().dispose();
-            }
+        for (ActorInfoCustom info : actorSprites.values()) {
+            info.dispose();
         }
     }
 }

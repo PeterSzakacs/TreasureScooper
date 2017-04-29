@@ -74,18 +74,18 @@ public class TunnelsRenderer extends AbstractGameRenderer {
     private void initializeInterconnections(){
         interconnections.clear();
         for (TunnelCellBasic cell : world.getEntrances().values()) {
-            for ( ; cell.getCellType() != TunnelCellType.ENTRANCE;
+            for ( ; cell.getCellAtDirection(Direction.DOWN) != null;
                  cell = cell.getCellAtDirection(Direction.DOWN)) {
                 interconnections.add(cell);
             }
         }
         for (HorizontalTunnelBasic ht : world.getTunnels()){
             Set<TunnelCellBasic> exits = ht.getCellsBySearchCriteria(cell ->
-                    cell.getCellType() == TunnelCellType.EXIT
+                    cell.getCellAtDirection(Direction.DOWN) != null
             );
             for (TunnelCellBasic exitCell : exits){
                 for (TunnelCellBasic cell = exitCell.getCellAtDirection(Direction.DOWN);
-                     cell.getCellType() != TunnelCellType.ENTRANCE;
+                     cell.getCellAtDirection(Direction.DOWN) != null;
                      cell = cell.getCellAtDirection(Direction.DOWN)) {
                     interconnections.add(cell);
                 }

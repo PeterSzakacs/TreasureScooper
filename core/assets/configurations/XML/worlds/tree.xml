@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE world SYSTEM "gameworld.dtd">
+<world width="32" height="16" offsetX="128" offsetY="128">
+    <htunnels>
+        <ht x="13" y="11" width="6" id="top"/>
+        <ht x="12" y="9" width="4" id="level_a_left"/>
+        <ht x="16" y="9" width="4" id="level_a_right"/>
+        <ht x="10" y="7" width="6" id="level_b_left"/>
+        <ht x="16" y="7" width="6" id="level_b_right"/>
+        <ht x="8" y="5" width="8" id="level_c_left"/>
+        <ht x="16" y="5" width="8" id="level_c_right"/>
+        <ht x="6" y="3" width="10" id="level_d_left"/>
+        <ht x="16" y="3" width="10" id="level_d_right"/>
+        <ht x="4" y="1" width="12" id="level_e_left"/>
+        <ht x="16" y="1" width="12" id="level_e_right"/>
+    </htunnels>
+    <interconnections>
+        <ic x="14" from="top" to="level_a_left"/>
+        <ic x="17" from="top" to="level_a_right"/>
+        <ic x="13" from="level_a_left" to="level_b_left"/>
+        <ic x="12" from="level_b_left" to="level_c_left"/>
+        <ic x="11" from="level_c_left" to="level_d_left"/>
+        <ic x="10" from="level_d_left" to="level_e_left"/>
+        <ic x="18" from="level_a_right" to="level_b_right"/>
+        <ic x="19" from="level_b_right" to="level_c_right"/>
+        <ic x="20" from="level_c_right" to="level_d_right"/>
+        <ic x="21" from="level_d_right" to="level_e_right"/>
+    </interconnections>
+    <entrances>
+        <entrance x="15" y="13" to="top" id="center"/>
+    </entrances>
+</world>

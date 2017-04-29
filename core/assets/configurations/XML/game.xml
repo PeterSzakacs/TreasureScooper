@@ -17,8 +17,14 @@
         <updater id="Enemies" class="GameUpdaterEnemies" />
     </updaters>
     <actors>
-        <actor class="Mole" left="true" right="true" up="false" down="false" />
-        <actor class="Bullet" left="true" right="true" up="true" down="true" />
-        <actor class="Wall" left="true" right="false" up="false" down="false" />
+        <actor class="Mole" left="true" right="true" up="false" down="false">
+            <property onUnregister="disappear"/>
+        </actor>
+        <actor class="Bullet" left="true" right="true" up="true" down="true">
+            <property onUnregister="animation:explosion"/>
+        </actor>
+        <actor class="Wall" left="true" right="false" up="false" down="false">
+            <property onUnregister="disappear"/>
+        </actor>
     </actors>
 </game>

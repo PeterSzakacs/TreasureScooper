@@ -44,5 +44,5 @@ public interface GameConfig {
      * @return the mapping between actors and the allowed
      *         directions they can be oriented at
      */
-    Map<Class<? extends ActorBasic>, Set<Direction>> getActorToDirectionsMap();
+    Map<Class<? extends ActorBasic>, ActorInfo> getActorInfoMap();
 }

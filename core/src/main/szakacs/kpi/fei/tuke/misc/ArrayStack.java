@@ -62,9 +62,7 @@ public class ArrayStack<T> implements Stack<T> {
                 throw new ArrayStoreException("ArrayStack is full!");
             }
         }
-        if (element != null) {
-            this.elements[++top] = element;
-        }
+        this.elements[++top] = element;
     }
 
     public T pop() {

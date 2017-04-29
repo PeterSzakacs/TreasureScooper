@@ -47,10 +47,4 @@ public class Bullet extends AbstractMoveableActor {
             super.move(xDelta, yDelta, dir);
         }
     }
-
-    @Override
-    public String toString(){
-        return super.toString() + " moving: " + super.getDirection()
-                + "\nX: " + super.getX() + " Y: " + super.getY();
-    }
 }

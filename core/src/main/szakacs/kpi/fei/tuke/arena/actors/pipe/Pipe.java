@@ -1,8 +1,10 @@
 package szakacs.kpi.fei.tuke.arena.actors.pipe;
 
+import szakacs.kpi.fei.tuke.arena.actors.Bullet;
 import szakacs.kpi.fei.tuke.enums.ActorType;
 import szakacs.kpi.fei.tuke.enums.Direction;
 import szakacs.kpi.fei.tuke.enums.PipeSegmentType;
+import szakacs.kpi.fei.tuke.intrfc.player.PlayerInfo;
 import szakacs.kpi.fei.tuke.intrfc.player.PlayerToken;
 import szakacs.kpi.fei.tuke.intrfc.arena.actors.ActorBasic;
 import szakacs.kpi.fei.tuke.intrfc.arena.actors.pipe.PipeBasic;
@@ -24,6 +26,8 @@ public class Pipe implements PipeBasic {
 
     private OnStackUpdatedCallback<PipeSegment> segmentStackCallback = new OnStackUpdatedCallback<PipeSegment>() {
 
+        private int collectedNuggetsCounter = 0;
+
         /**
          * updates the head of the pipe (its orientation and coordinates)
          * after moving in a given direction (pushing a segment to the pipe).
@@ -31,9 +35,18 @@ public class Pipe implements PipeBasic {
         @Override
         public void onPush() {
             GameWorldBasic world = gameInterface.getGameWorld();
+            int prevNuggetCount = gameInterface.getGameWorld().getNuggetCount();
+            PipeSegment pushed = segmentStack.top();
+
             head.move(world.getOffsetX(), world.getOffsetY(), segmentStack.top().getDirection());
             head.getCurrentPosition().collectNugget(Pipe.this);
-            PipeSegment pushed = segmentStack.top();
+            if (gameInterface.getGameWorld().getNuggetCount() < prevNuggetCount){
+                collectedNuggetsCounter++;
+                if (collectedNuggetsCounter >= 20) {
+                    head.getWeapon().load(new Bullet(gameInterface), token);
+                    collectedNuggetsCounter = 0;
+                }
+            }
             if (pushed.getSegmentType() != PipeSegmentType.HORIZONTAL
                     && pushed.getSegmentType() != PipeSegmentType.VERTICAL) {
                 edges.add(pushed);

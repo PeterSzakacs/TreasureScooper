@@ -23,12 +23,11 @@ public class TreasureScooperWorld implements GameWorldPrivileged {
     private int offsetX;
     private int offsetY;
 
+    private int nuggetCount;
     private final Map<String, TunnelCell> entrances;
     private final Set<HorizontalTunnel> tunnels;
-    private int nuggetCount;
-
+    private final MethodCallAuthenticator authenticator;
     private PlayerManagerPrivileged playerManager;
-    private MethodCallAuthenticator authenticator;
 
     public TreasureScooperWorld(MethodCallAuthenticator authenticator) {
         this.authenticator = authenticator;
@@ -56,6 +55,7 @@ public class TreasureScooperWorld implements GameWorldPrivileged {
      */
     private void buildTunnelGraph(GameWorldPrototype worldPrototype) {
         Map<String, DummyTunnel> dummyTunnels = worldPrototype.getDummyTunnels();
+        Map<String, DummyEntrance> dummyEntrances = worldPrototype.getDummyEntrances();
         Map<String, HorizontalTunnel> tunnelMap = new HashMap<>();
 
         // Create the tunnels from their DummyTunnel Prototypes
@@ -64,9 +64,7 @@ public class TreasureScooperWorld implements GameWorldPrivileged {
             tunnelMap.put(dt.getId(), ht);
             this.tunnels.add(ht);
         }
-
         // Set the entrances to the tunnel network
-        Map<String, DummyEntrance> dummyEntrances = worldPrototype.getDummyEntrances();
         for (String id : dummyEntrances.keySet()){
             DummyEntrance de = dummyEntrances.get(id);
             TunnelCell entrance = new TunnelCell(
@@ -75,15 +73,7 @@ public class TreasureScooperWorld implements GameWorldPrivileged {
                     null, this
             );
             this.entrances.put(id, entrance);
-            HorizontalTunnel rootTunnel = tunnelMap.get(de.getTunnel().getId());
-            TunnelCell newCell, prevCell = entrance;
-            for (int y = entrance.getY() - offsetY; y > rootTunnel.getY(); y -= offsetY) {
-                newCell = new TunnelCell(entrance.getX(), y, TunnelCellType.INTERCONNECT, null, this);
-                newCell.setAtDirection(Direction.UP, prevCell, authenticator);
-                prevCell.setAtDirection(Direction.DOWN, newCell, authenticator);
-                prevCell = newCell;
-            }
-            setEntrance(rootTunnel, prevCell);
+            createInterconnect(entrance, tunnelMap.get(de.getTunnel().getId()));
         }
         // Connect the tunnels with each other
         addInterconnects(dummyTunnels, tunnelMap);
@@ -94,62 +84,87 @@ public class TreasureScooperWorld implements GameWorldPrivileged {
             HorizontalTunnel ht = tunnelsMap.get(id);
             DummyTunnel dt = dummyTunnelsMap.get(id);
             Map<Integer, DummyTunnel> connectedTunnels = dt.getConnectedTunnelsBelow();
-            Set<TunnelCellUpdatable> allCells = ht.getCells(authenticator);
             for (Integer xPos : connectedTunnels.keySet()) {
-                // Remove previous TUNNEL cell and add a new EXIT cell in its place
-                TunnelCellUpdatable removed = ht.getCellsBySearchCriteria(
+                // Remove previous cell with a new cell that has an adjacent cell downwards.
+                TunnelCellUpdatable previous = ht.getCellsBySearchCriteria(
                         (cell) -> cell.isWithinCell(xPos, dt.getY()),
                         authenticator
                 ).iterator().next();
-                allCells.remove(removed);
-                TunnelCell newCell = new TunnelCell(
-                        removed.getX(), removed.getY(), TunnelCellType.EXIT,
-                        ht, this
-                );
-                allCells.add(newCell);
-                // Connect the new EXIT cell with the previous TUNNEL cell's neighbors
-                TunnelCellUpdatable left = removed.getCellAtDirection(Direction.LEFT);
-                TunnelCellUpdatable right = removed.getCellAtDirection(Direction.RIGHT);
-                newCell.setAtDirection(Direction.LEFT, left, authenticator);
-                newCell.setAtDirection(Direction.RIGHT, right, authenticator);
-                left.setAtDirection(Direction.RIGHT, newCell, authenticator);
-                right.setAtDirection(Direction.LEFT, newCell, authenticator);
-                // Create new cells until the specified exit tunnel is reached
-                TunnelCell prevCell = newCell, nextCell;
                 HorizontalTunnel exitTunnel = tunnelsMap.get(connectedTunnels.get(xPos).getId());
-                for (int y = ht.getY() + offsetY * Direction.DOWN.getYStep();
-                     y > exitTunnel.getY();
-                     y += offsetY * Direction.DOWN.getYStep()) {
-                    nextCell = new TunnelCell(newCell.getX(), y, TunnelCellType.INTERCONNECT, null, this);
-                    nextCell.setAtDirection(Direction.UP, prevCell, authenticator);
-                    prevCell.setAtDirection(Direction.DOWN, nextCell, authenticator);
-                    prevCell = nextCell;
+                TunnelCellType newCellType = TunnelCellType.EXIT;
+                switch (previous.getCellType()){
+                    case ENTRANCE:
+                        newCellType = TunnelCellType.CROSSROAD; break;
+                    case LEFT_EDGE:
+                        newCellType = TunnelCellType.LEFT_BOTTOM_BEND; break;
+                    case LEFT_TOP_BEND:
+                        newCellType = TunnelCellType.LEFT_CROSSROAD; break;
+                    case RIGHT_EDGE:
+                        newCellType = TunnelCellType.RIGHT_BOTTOM_BEND; break;
+                    case RIGHT_TOP_BEND:
+                        newCellType = TunnelCellType.RIGHT_CROSSROAD; break;
                 }
-                setEntrance(exitTunnel, prevCell);
+                TunnelCellUpdatable newCell = replaceCell(previous, newCellType, ht);
+                // Create new cells until the specified exit tunnel is reached
+                createInterconnect(newCell, exitTunnel);
             }
         }
     }
+
 
     private void setEntrance(HorizontalTunnel exitTunnel, TunnelCellUpdatable entranceCell) {
         TunnelCellUpdatable previous = exitTunnel.getCellsBySearchCriteria(
                 (cell) -> cell.isWithinCell(entranceCell.getX(), cell.getY()),
                 authenticator
         ).iterator().next();
-        TunnelCellUpdatable newCell = new TunnelCell(
-                previous.getX(), previous.getY(),
-                TunnelCellType.ENTRANCE,
-                exitTunnel, this
-        );
-        exitTunnel.getCells(authenticator).remove(previous);
-        exitTunnel.getCells(authenticator).add(newCell);
-        TunnelCellUpdatable left = previous.getCellAtDirection(Direction.LEFT);
-        TunnelCellUpdatable right = previous.getCellAtDirection(Direction.RIGHT);
-        left.setAtDirection(Direction.RIGHT, newCell, authenticator);
-        right.setAtDirection(Direction.LEFT, newCell, authenticator);
-        newCell.setAtDirection(Direction.LEFT, left, authenticator);
-        newCell.setAtDirection(Direction.RIGHT, right, authenticator);
+        TunnelCellType newCellType = TunnelCellType.ENTRANCE;
+        switch (previous.getCellType()){
+            case EXIT:
+                newCellType = TunnelCellType.CROSSROAD; break;
+            case LEFT_EDGE:
+                newCellType = TunnelCellType.LEFT_TOP_BEND; break;
+            case LEFT_BOTTOM_BEND:
+                newCellType = TunnelCellType.LEFT_CROSSROAD; break;
+            case RIGHT_EDGE:
+                newCellType = TunnelCellType.RIGHT_TOP_BEND; break;
+            case RIGHT_BOTTOM_BEND:
+                newCellType = TunnelCellType.RIGHT_CROSSROAD; break;
+        }
+        TunnelCellUpdatable newCell = replaceCell(previous, newCellType, exitTunnel);
         newCell.setAtDirection(Direction.UP, entranceCell, authenticator);
         entranceCell.setAtDirection(Direction.DOWN, newCell, authenticator);
+    }
+
+
+    private void createInterconnect(TunnelCellUpdatable start, HorizontalTunnel endTunnel){
+        TunnelCellUpdatable newCell, prevCell = start;
+        for (int y = start.getY() - offsetY; y > endTunnel.getY(); y -= offsetY) {
+            newCell = new TunnelCell(start.getX(), y, TunnelCellType.INTERCONNECT, null, this);
+            newCell.setAtDirection(Direction.UP, prevCell, authenticator);
+            prevCell.setAtDirection(Direction.DOWN, newCell, authenticator);
+            prevCell = newCell;
+        }
+        setEntrance(endTunnel, prevCell);
+    }
+
+
+    private TunnelCellUpdatable replaceCell(TunnelCellUpdatable former, TunnelCellType newCellType, HorizontalTunnel tunnel){
+        TunnelCellUpdatable newCell = new TunnelCell(
+                former.getX(), former.getY(),
+                newCellType,
+                tunnel, this
+        );
+        Set<TunnelCellUpdatable> allCells = tunnel.getCells(authenticator);
+        allCells.remove(former);
+        allCells.add(newCell);
+        for (Direction direction : Direction.values()){
+            TunnelCellUpdatable neighbour = former.getCellAtDirection(direction);
+            if (neighbour != null){
+                newCell.setAtDirection(direction, neighbour, authenticator);
+                neighbour.setAtDirection(direction.getOpposite(), newCell, authenticator);
+            }
+        }
+        return newCell;
     }
 
 

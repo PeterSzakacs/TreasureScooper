@@ -7,6 +7,9 @@ import szakacs.kpi.fei.tuke.intrfc.player.PlayerToken;
 import szakacs.kpi.fei.tuke.misc.ArrayQueue;
 import szakacs.kpi.fei.tuke.misc.CollectionsCustom;
 
+import java.util.HashSet;
+import java.util.Set;
+
 /**
  * A class representing the weapon wielded by the player.
  */
@@ -16,17 +19,22 @@ public class Weapon {
 
         int frontIndex;
         int rearIndex;
+        private Set<Bullet> previous;
 
         BulletQueue(int capacity) {
             super(capacity, false);
             frontIndex = 0;
             rearIndex = -1;
+            previous = new HashSet<>(capacity);
         }
 
         @Override
         public void enqueue(Bullet bullet){
-            if ( ! isFull() ) {
+            if (bullet == null || previous.contains(bullet))
+                return;
+            if ( !isFull() ) {
                 super.enqueue(bullet);
+                previous.add(bullet);
                 rearIndex++;
                 if (rearIndex >= super.getCapacity())
                     rearIndex = 0;
@@ -36,8 +44,9 @@ public class Weapon {
         @Override
         public Bullet dequeue() {
             Bullet fired = null;
-            if (!ammoQueue.isEmpty()) {
+            if ( !isEmpty() ) {
                 fired = super.dequeue();
+                previous.remove(fired);
                 frontIndex++;
                 if (frontIndex >= super.getCapacity())
                     frontIndex = 0;
@@ -64,7 +73,7 @@ public class Weapon {
     }
 
     /**
-     * <p>Gets the {@link Queue} of {@link Bullet}s that represents the ammunition store
+     * <p>Gets the {@link Queue} of bullets that represents the ammunition store
      * of the weapon.</p>
      *
      * <p>Enqueueing and dequeing results in a bullet being loaded or fired, respectively.</p>

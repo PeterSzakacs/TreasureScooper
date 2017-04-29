@@ -4,10 +4,12 @@ import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 import szakacs.kpi.fei.tuke.enums.Direction;
+import szakacs.kpi.fei.tuke.intrfc.misc.ActorInfo;
 import szakacs.kpi.fei.tuke.intrfc.player.Player;
 import szakacs.kpi.fei.tuke.intrfc.arena.actors.ActorBasic;
 import szakacs.kpi.fei.tuke.intrfc.arena.game.GameUpdater;
 import szakacs.kpi.fei.tuke.intrfc.misc.GameConfig;
+import szakacs.kpi.fei.tuke.misc.configProcessors.gameValueObjects.ActorInfoImpl;
 import szakacs.kpi.fei.tuke.misc.configProcessors.gameValueObjects.DummyLevel;
 
 import javax.xml.parsers.ParserConfigurationException;
@@ -24,9 +26,10 @@ public class SAXGameParser extends DefaultHandler implements GameConfig {
     final static class GameClasses {
         Map<String, Class<? extends Player>> playerClasses = new HashMap<>(5);
         Map<String, Class<? extends GameUpdater>> updaterClasses = new HashMap<>(5);
-        Map<Class<? extends ActorBasic>, Set<Direction>> actorToDirectionsMap = new HashMap<>(12);
+        Map<Class<? extends ActorBasic>, ActorInfo> actorToDirectionsMap = new HashMap<>(12);
     }
     static final GameClasses gameClasses = new GameClasses();
+
 
     private enum ProcessingState{
         INITIALIZING, PLAYERS, UPDATERS, LEVEL, ACTORS
@@ -41,9 +44,14 @@ public class SAXGameParser extends DefaultHandler implements GameConfig {
     }
     private final PackageNameContainer packageNames;
 
+
+
     private final String scenariosDir;
     private String levelFile;
     private SAXLevelParser levelParser;
+    private Class<? extends ActorBasic> currentActorClass = null;
+
+
 
     SAXGameParser(String baseDir) throws SAXException {
         super();
@@ -53,6 +61,8 @@ public class SAXGameParser extends DefaultHandler implements GameConfig {
         this.packageNames = new PackageNameContainer();
         this.state = ProcessingState.INITIALIZING;
     }
+
+
 
     @Override
     @SuppressWarnings("unchecked")
@@ -100,12 +110,18 @@ public class SAXGameParser extends DefaultHandler implements GameConfig {
                     } catch (ClassNotFoundException | ClassCastException e) {
                         throw new SAXException("Could not locate class for actor: " + className, e);
                     }
-                    Set<Direction> dirs = new HashSet<>(Direction.values().length);
+                    ActorInfo info = new ActorInfoImpl();
                     for (Direction dir : Direction.values()) {
                         if (Boolean.parseBoolean(attributes.getValue(dir.name().toLowerCase())))
-                            dirs.add(dir);
+                            info.getActorDirections().add(dir);
                     }
-                    gameClasses.actorToDirectionsMap.put(actorCls, dirs);
+                    currentActorClass = actorCls;
+                    gameClasses.actorToDirectionsMap.put(actorCls, info);
+                } else if (qName.equalsIgnoreCase("property")){
+                    ActorInfo info = gameClasses.actorToDirectionsMap.get(currentActorClass);
+                    for (int idx = 0; idx < attributes.getLength(); idx++) {
+                        info.getProperties().put(attributes.getQName(idx), attributes.getValue(idx));
+                    }
                 }
                 break;
         }
@@ -148,7 +164,7 @@ public class SAXGameParser extends DefaultHandler implements GameConfig {
     }
 
     @Override
-    public Map<Class<? extends ActorBasic>, Set<Direction>> getActorToDirectionsMap() {
+    public Map<Class<? extends ActorBasic>, ActorInfo> getActorInfoMap() {
         return gameClasses.actorToDirectionsMap;
     }
 }

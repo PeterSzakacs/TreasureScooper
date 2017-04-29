@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE world SYSTEM "gameworld.dtd">
+<world width="32" height="16" offsetX="128" offsetY="128">
+    <htunnels>
+        <ht x="0" y="7" width="32" id="central"/>
+        <ht x="0" y="12" width="14" id="top_left_a"/>
+        <ht x="3" y="10" width="7" id="top_left_b"/>
+        <ht x="3" y="8" width="11" id="top_left_c"/>
+        <ht x="0" y="2" width="14" id="bottom_left_a"/>
+        <ht x="3" y="4" width="7" id="bottom_left_b"/>
+        <ht x="3" y="6" width="11" id="bottom_left_c"/>
+        <ht x="18" y="12" width="14" id="top_right_a"/>
+        <ht x="22" y="10" width="7" id="top_right_b"/>
+        <ht x="18" y="8" width="11" id="top_right_c"/>
+        <ht x="18" y="2" width="14" id="bottom_right_a"/>
+        <ht x="22" y="4" width="7" id="bottom_right_b"/>
+        <ht x="18" y="6" width="11" id="bottom_right_c"/>
+    </htunnels>
+    <interconnections>
+        <ic x="0" from="top_left_a" to="central"/>
+        <ic x="13" from="top_left_a" to="top_left_c"/>
+        <ic x="3" from="top_left_b" to="top_left_c"/>
+        <ic x="0" from="central" to="bottom_left_a"/>
+        <ic x="13" from="bottom_left_c" to="bottom_left_a"/>
+        <ic x="3" from="bottom_left_c" to="bottom_left_b"/>
+        <ic x="31" from="top_right_a" to="central"/>
+        <ic x="18" from="top_right_a" to="top_right_c"/>
+        <ic x="28" from="top_right_b" to="top_right_c"/>
+        <ic x="31" from="central" to="bottom_right_a"/>
+        <ic x="18" from="bottom_right_c" to="bottom_right_a"/>
+        <ic x="28" from="bottom_right_c" to="bottom_right_b"/>
+    </interconnections>
+    <entrances>
+        <entrance x="15" y="13" to="central" id="center"/>
+    </entrances>
+</world>

@@ -31,7 +31,17 @@ public enum TunnelCellType {
     TUNNEL,
 
     /**
+     * Cells in all directions.
+     */
+    CROSSROAD,
+    /**
      * Cells to up and down.
      */
-    INTERCONNECT
+    INTERCONNECT,
+    LEFT_CROSSROAD,
+    RIGHT_CROSSROAD,
+    LEFT_TOP_BEND,
+    LEFT_BOTTOM_BEND,
+    RIGHT_TOP_BEND,
+    RIGHT_BOTTOM_BEND
 }

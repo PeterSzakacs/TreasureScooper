@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE levels SYSTEM "scenario.dtd">
+<levels>
+    <level world="world1.xml">
+        <player id="A" entrance="center"/>
+    </level>
+    <level world="spiral.xml">
+        <player id="A" entrance="center"/>
+    </level>
+    <level world="irregular.xml">
+        <player id="A" entrance="left"/>
+    </level>
+    <level world="tree.xml">
+        <player id="A" entrance="center"/>
+    </level>
+    <level world="waterfall.xml">
+        <player id="A" entrance="center"/>
+    </level>
+    <level world="branching.xml">
+        <player id="A" entrance="center"/>
+    </level>
+</levels>

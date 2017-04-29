@@ -58,20 +58,24 @@ Though it is possible to implement the Player interface from scratch, it is reco
  
 ## Game World
 
-The network of underground tunnels is represented as a linked node graph structure, with each node (equal to the [`TunnelCell`](core/src/main/szakacs/kpi/fei/tuke/intrfc/arena/game/world/TunnelCellBasic.java) class) representing a position where exactly one piece of treasure can be. Every node also has a pointer to any adjacent nodes in each [`direction`](core/src/main/szakacs/kpi/fei/tuke/enums/Direction.java) around it, or null, if there is no such node (i.e., if there is a wall). To avoid having to check each node's configuration of neighbors, a special [`TunnelCellType`](core/src/main/szakacs/kpi/fei/tuke/enums/TunnelCellType.java) enum value stored in it indicating the particular configuration of nodes in any direction.
+The network of underground tunnels is represented as a linked node graph structure, with each node (equal to the [`TunnelCell`](core/src/main/szakacs/kpi/fei/tuke/intrfc/arena/game/world/TunnelCellBasic.java) class) representing a position where exactly one piece of treasure can be. Every node also has a pointer to any adjacent nodes in each [`direction`](core/src/main/szakacs/kpi/fei/tuke/enums/Direction.java) around it, or null, if there is no such node (i.e., if there is a wall). To do a quick check of a node's configuration of neighbors without looking in all directions, a special [`TunnelCellType`](core/src/main/szakacs/kpi/fei/tuke/enums/TunnelCellType.java) enum value stored in it indicating the particular configuration of nodes in any direction.
 They are currently as follows (you can also look inside the [images directory](core/assets/images/Tunnels/Cells) to see visually what these values represent):
 
-`ENTRANCE` - nodes to left, right, up
+<img src="file://core/assets/images/Tunnels/Cells/CROSSROAD.png" />
 
-`EXIT` - nodes to left, right, down
-
-`LEFT_EDGE` - only a node to the right
-
-`RIGHT_EDGE` - only a node to the left
-
+`INTERCONNECT` - nodes to up and down (also those cells right beneath the ground surface)
 `TUNNEL` - nodes to left and right
-
-`INTERCONNECT` - nodes to up and down
+`ENTRANCE` - nodes to left, right, up
+`EXIT` - nodes to left, right, down
+`CROSSROAD` - nodes in all directions
+`LEFT_EDGE` - only a node to the right
+`LEFT_CROSSROAD` - nodes to up, down and right
+`LEFT_TOP_BEND` - nodes to up and right
+`LEFT_BOTTOM_BEND` - nodes to down and right
+`RIGHT_EDGE` - only a node to the left
+`RIGHT_CROSSROAD` - nodes to up, down and left
+`RIGHT_TOP_BEND` - nodes to up and left
+`RIGHT_BOTTOM_BEND` - nodes to down and left
 
 Strictly speaking, this graph structure would be enough to represent and be able to traverse the underground tunnel network (the game world) but in order to make decision-making in the game for the player easier, pieces of treasure can only be found in the horizontal tunnels (tunnels stretching from right to left) which have their own [`class`](core/src/main/szakacs/kpi/fei/tuke/intrfc/arena/game/world/HorizontalTunnelBasic.java) to represent them. The game world only keeps references to a collection of these horizontal tunnel objects and any tunnel cells that serve as entrances to the tunnel system itself (that are immediately below the surface (they are assigned the value `INTERCONNECT` although they have no neighbor in the upwards direction). Interconnecting tunnels so far can't contain treasures, just like in the original games.
 

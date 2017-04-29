@@ -52,7 +52,7 @@ public class SAXConfigProcessorTest {
             System.out.print("\n\n\n");
             levelIdx++;
         }
-        Map<Class<? extends ActorBasic>, Set<Direction>> map = config.getActorToDirectionsMap();
+        Map<Class<? extends ActorBasic>, Set<Direction>> map = config.getActorInfoMap();
         for (Class clazz : map.keySet()){
             System.out.println("Actor of type " + clazz.getSimpleName() + " can be oriented in the following directions:");
             for (Direction direction: map.get(clazz))

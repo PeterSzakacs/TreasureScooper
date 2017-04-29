@@ -1,8 +1,10 @@
 package szakacs.kpi.fei.tuke.arena.actors.pipe;
 
+import szakacs.kpi.fei.tuke.arena.game.world.TunnelCell;
 import szakacs.kpi.fei.tuke.enums.Direction;
 import szakacs.kpi.fei.tuke.enums.TunnelCellType;
 import szakacs.kpi.fei.tuke.intrfc.arena.callbacks.OnStackUpdatedCallback;
+import szakacs.kpi.fei.tuke.intrfc.arena.game.world.GameWorldPrivileged;
 import szakacs.kpi.fei.tuke.intrfc.arena.proxies.ActorGameInterface;
 import szakacs.kpi.fei.tuke.misc.ArrayStack;
 
@@ -33,11 +35,10 @@ public class PipeSegmentStack extends ArrayStack<PipeSegment> {
         this.popCounter = 0;
         this.randomSegment = new PipeSegment(
                 // Simply: find a LEFT_EDGE cell of some tunnel;
-                gameInterface.getGameWorld().getTunnelsUpdatable().iterator().next()
-                        .getCellsBySearchCriteria(
-                                cell -> cell.getCellType() == TunnelCellType.LEFT_EDGE,
-                                gameInterface.getAuthenticator()
-                        ).iterator().next(),
+                new TunnelCell(-1, -1,
+                        TunnelCellType.CROSSROAD,
+                        null,
+                        (GameWorldPrivileged) gameInterface.getGameWorld()),
                 Direction.LEFT,
                 Direction.RIGHT,
                 gameInterface

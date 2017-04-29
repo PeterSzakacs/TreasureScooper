@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE world SYSTEM "gameworld.dtd">
+<world width="32" height="16" offsetX="128" offsetY="128">
+    <htunnels>
+        <ht x="1" y="12" width="30" id="root"/>
+        <ht x="1" y="7" width="6" id="ab"/>
+        <ht x="7" y="7" width="6" id="cd"/>
+        <ht x="13" y="7" width="6" id="ef"/>
+        <ht x="19" y="7" width="6" id="gh"/>
+        <ht x="25" y="7" width="6" id="ij"/>
+        <ht x="1" y="2" width="3" id="a"/>
+        <ht x="4" y="2" width="3" id="b"/>
+        <ht x="7" y="2" width="3" id="c"/>
+        <ht x="10" y="2" width="3" id="d"/>
+        <ht x="13" y="2" width="3" id="e"/>
+        <ht x="16" y="2" width="3" id="f"/>
+        <ht x="19" y="2" width="3" id="g"/>
+        <ht x="22" y="2" width="3" id="h"/>
+        <ht x="25" y="2" width="3" id="i"/>
+        <ht x="28" y="2" width="3" id="j"/>
+    </htunnels>
+    <interconnections>
+        <ic x="3" from="root" to="ab"/>
+        <ic x="9" from="root" to="cd"/>
+        <ic x="15" from="root" to="ef"/>
+        <ic x="21" from="root" to="gh"/>
+        <ic x="27" from="root" to="ij"/>
+        <ic x="2" from="ab" to="a"/>
+        <ic x="5" from="ab" to="b"/>
+        <ic x="8" from="cd" to="c"/>
+        <ic x="11" from="cd" to="d"/>
+        <ic x="14" from="ef" to="e"/>
+        <ic x="17" from="ef" to="f"/>
+        <ic x="20" from="gh" to="g"/>
+        <ic x="23" from="gh" to="h"/>
+        <ic x="26" from="ij" to="i"/>
+        <ic x="29" from="ij" to="j"/>
+    </interconnections>
+    <entrances>
+        <entrance x="16" y="13" to="root" id="center"/>
+    </entrances>
+</world>
