@@ -1,6 +1,5 @@
 package szakacs.kpi.fei.tuke.intrfc.misc;
 
-import szakacs.kpi.fei.tuke.enums.Direction;
 import szakacs.kpi.fei.tuke.intrfc.player.Player;
 import szakacs.kpi.fei.tuke.intrfc.arena.actors.ActorBasic;
 import szakacs.kpi.fei.tuke.intrfc.arena.game.GameUpdater;
@@ -44,5 +43,5 @@ public interface GameConfig {
      * @return the mapping between actors and the allowed
      *         directions they can be oriented at
      */
-    Map<Class<? extends ActorBasic>, ActorInfo> getActorInfoMap();
+    Map<Class<? extends ActorBasic>, ActorClassInfo> getActorInfoMap();
 }

@@ -3,8 +3,10 @@ package szakacs.kpi.fei.tuke.intrfc.arena.game.actorManager;
 import szakacs.kpi.fei.tuke.intrfc.arena.actors.ActorBasic;
 import szakacs.kpi.fei.tuke.intrfc.arena.game.GameUpdater;
 import szakacs.kpi.fei.tuke.intrfc.arena.game.ResettableGameClass;
+import szakacs.kpi.fei.tuke.intrfc.misc.UnregisteredActorInfo;
 
 import java.util.Map;
+import java.util.Set;
 
 /**
  * Extension of the "updatable" interface for the actor manager object.
@@ -27,5 +29,5 @@ public interface ActorManagerPrivileged extends ActorManagerUpdatable, GameUpdat
      *
      * @return a mapping between unregistered actors and the number of turns since it was unregistered.
      */
-    Map<ActorBasic, Integer> getUnregisteredActors();
+    Set<UnregisteredActorInfo> getUnregisteredActors();
 }

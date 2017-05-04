@@ -8,7 +8,7 @@ import java.util.Set;
 /**
  * Created by developer on 29.4.2017.
  */
-public interface ActorInfo {
+public interface ActorClassInfo {
 
     Set<Direction> getActorDirections();
 

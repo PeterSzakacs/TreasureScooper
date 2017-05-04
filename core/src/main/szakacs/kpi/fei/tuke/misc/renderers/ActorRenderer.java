@@ -6,9 +6,10 @@ import com.badlogic.gdx.graphics.g2d.*;
 import szakacs.kpi.fei.tuke.enums.Direction;
 import szakacs.kpi.fei.tuke.intrfc.arena.actors.ActorBasic;
 import szakacs.kpi.fei.tuke.intrfc.arena.game.gameLevel.GameLevelPrivileged;
-import szakacs.kpi.fei.tuke.intrfc.misc.ActorInfo;
+import szakacs.kpi.fei.tuke.intrfc.misc.ActorClassInfo;
 import szakacs.kpi.fei.tuke.intrfc.misc.GameConfig;
 import szakacs.kpi.fei.tuke.intrfc.misc.Rectangle;
+import szakacs.kpi.fei.tuke.intrfc.misc.UnregisteredActorInfo;
 
 import java.util.EnumMap;
 import java.util.HashMap;
@@ -25,7 +26,7 @@ public class ActorRenderer extends AbstractGameRenderer {
         private Animation<TextureRegion> unregisterAnimation;
         private TextureAtlas atlas;
 
-        private void initialize(ActorInfo info, Class<? extends ActorBasic> clazz){
+        private void initialize(ActorClassInfo info, Class<? extends ActorBasic> clazz){
             directionsToSpritesMap = new EnumMap<>(Direction.class);
             for (Direction dir : info.getActorDirections())
                 directionsToSpritesMap.put(dir,
@@ -63,7 +64,7 @@ public class ActorRenderer extends AbstractGameRenderer {
         this.initializeActorSprites(config.getActorInfoMap());
     }
 
-    private void initializeActorSprites(Map<Class<? extends ActorBasic>, ActorInfo> mappings){
+    private void initializeActorSprites(Map<Class<? extends ActorBasic>, ActorClassInfo> mappings){
         this.actorSprites = new HashMap<>(mappings.size());
         for (Class<? extends ActorBasic> clazz : mappings.keySet()){
             ActorInfoCustom info = new ActorInfoCustom();
@@ -84,21 +85,22 @@ public class ActorRenderer extends AbstractGameRenderer {
         }
 
         // Every actor that has been removed shall slowly fade into the background after removal
-        Map<ActorBasic, Integer> unregisteredActors = actorManager.getUnregisteredActors();
-        for (ActorBasic actor : unregisteredActors.keySet()){
+        Set<UnregisteredActorInfo> unregisteredActors = actorManager.getUnregisteredActors();
+        for (UnregisteredActorInfo info : unregisteredActors){
+            ActorBasic actor = info.getActor();
             actorRectangle = actor.getActorRectangle();
-            ActorInfoCustom info = actorSprites.get(actor.getClass());
-            if (info.unregisterAnimation == null) {
+            ActorInfoCustom classInfo = actorSprites.get(actor.getClass());
+            if (classInfo.unregisterAnimation == null) {
                 Sprite actorSprite = actorSprites.get(actor.getClass())
                         .directionsToSpritesMap.get(actor.getDirection());
                 actorSprite.setPosition(
                         actorRectangle.getRectangleX(), actorRectangle.getRectangleY());
-                actorSprite.setAlpha((float) 1 / (float) unregisteredActors.get(actor));
+                actorSprite.setAlpha((float) 1 / (float) info.getTurnCountSinceUnregister());
                 actorSprite.draw(batch);
                 actorSprite.setAlpha(1f);
             } else {
-                int timeIdx = unregisteredActors.get(actor) - 1;
-                batch.draw(info.unregisterAnimation.getKeyFrame(timeIdx),
+                int timeIdx = info.getTurnCountSinceUnregister() - 1;
+                batch.draw(classInfo.unregisterAnimation.getKeyFrame(timeIdx),
                         actorRectangle.getRectangleX(), actorRectangle.getRectangleY());
             }
         }

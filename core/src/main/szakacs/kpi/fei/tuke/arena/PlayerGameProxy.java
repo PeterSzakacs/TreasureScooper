@@ -1,6 +1,7 @@
 package szakacs.kpi.fei.tuke.arena;
 
 import szakacs.kpi.fei.tuke.arena.game.GameShop;
+import szakacs.kpi.fei.tuke.enums.ActorType;
 import szakacs.kpi.fei.tuke.enums.GameState;
 import szakacs.kpi.fei.tuke.intrfc.arena.actors.ActorBasic;
 import szakacs.kpi.fei.tuke.intrfc.player.PlayerInfo;
@@ -53,6 +54,16 @@ public class PlayerGameProxy implements PlayerGameInterface {
     @Override
     public Set<ActorBasic> getActors() {
         return actorManager.getActors();
+    }
+
+    @Override
+    public Set<ActorBasic> getActorsByType(ActorType type) {
+        return actorManager.getActorsByType(type);
+    }
+
+    @Override
+    public Map<TunnelCellBasic, Set<ActorBasic>> getPositionToActorsMap() {
+        return actorManager.getPositionToActorsMap();
     }
 
     @Override
