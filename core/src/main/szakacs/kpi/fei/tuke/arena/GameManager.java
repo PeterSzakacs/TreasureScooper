@@ -1,6 +1,7 @@
 package szakacs.kpi.fei.tuke.arena;
 
 import szakacs.kpi.fei.tuke.arena.game.TreasureScooperLevel;
+import szakacs.kpi.fei.tuke.intrfc.misc.GameResult;
 import szakacs.kpi.fei.tuke.intrfc.player.Player;
 import szakacs.kpi.fei.tuke.intrfc.player.PlayerInfo;
 import szakacs.kpi.fei.tuke.intrfc.arena.game.gameLevel.GameLevelPrivileged;
@@ -17,20 +18,50 @@ import java.util.*;
  */
 public class GameManager {
 
-    private class Results implements GameResults{
-        private List<Map<Class<? extends Player>, Integer>> levelScores;
-        private Map<Class<? extends Player>, Integer> totalGameScores;
+    public class GameResultImpl implements GameResult {
+        private Class<? extends Player> playerClass;
+        private int score;
+        private boolean failed;
 
-        private Results(int numLevels, int playerClassesCount){
-            this.totalGameScores = new HashMap<>(playerClassesCount);
-            this.levelScores = new ArrayList<>(numLevels);
+        private GameResultImpl(
+                Class<? extends Player> playerClass,
+                int score, boolean failed){
+            this.playerClass = playerClass;
+            this.score = score;
+            this.failed = failed;
         }
 
-        public List<Map<Class<? extends Player>, Integer>> getLevelScores() {
+        public Class<? extends Player> getPlayerClass() { return playerClass; }
+        public int getScore(){ return score; }
+        public boolean hasFailed(){ return failed; }
+    }
+
+    private class Results implements GameResults{
+        private List<Map<Class<? extends Player>, GameResult>> levelScores;
+        private Map<Class<? extends Player>, GameResult> totalGameScores;
+
+        private Results(GameConfig config){
+            Set<Class<? extends Player>> playerClasses = config.getPlayerClasses();
+            this.totalGameScores = new HashMap<>(playerClasses.size());
+            this.levelScores = new ArrayList<>(config.getLevels().size());
+            for (Class<? extends Player> playerCls : playerClasses){
+                totalGameScores.put(
+                        playerCls,
+                        new GameResultImpl(playerCls, 0, false)
+                );
+            }
+            for (DummyLevel dummyLevel : dummyLevels) {
+                levelScores.add(
+                        new HashMap<>(dummyLevel.getEntranceToPlayerMap().size())
+                );
+            }
+        }
+
+        public List<Map<Class<? extends Player>, GameResult>> getLevelScores() {
             return levelScores;
         }
 
-        public Map<Class<? extends Player>, Integer> getTotalGameScores() {
+        public Map<Class<? extends Player>, GameResult> getTotalGameScores() {
             return totalGameScores;
         }
     }
@@ -44,18 +75,7 @@ public class GameManager {
         this.dummyLevels = config.getLevels();
         this.currentGameLevel = new TreasureScooperLevel(config);
         this.nextLevelIndex = -1;
-        Set<Class<? extends Player>> playerClasses = config.getPlayerClasses();
-
-        this.results = new Results(dummyLevels.size(), playerClasses.size());
-        for (Class<? extends Player> playerCls : playerClasses){
-            results.totalGameScores.put(playerCls, 0);
-        }
-        for (DummyLevel dummyLevel : dummyLevels) {
-            results.levelScores.add(new HashMap<>(
-                            dummyLevel.getEntranceToPlayerMap().size()
-                    )
-            );
-        }
+        this.results = new Results(config);
     }
 
     public GameLevelPrivileged getNextGameLevel() throws GameLevelInitializationException {
@@ -84,15 +104,30 @@ public class GameManager {
 
     private void archiveScores(){
         // Archive the scores of players for the previous level
-        Map<Class<? extends Player>, Integer> playerClassScores = results.levelScores.get(nextLevelIndex);
+        Map<Class<? extends Player>, GameResult> playerClassScores = results.levelScores.get(nextLevelIndex);
         Set<PlayerInfo> playerScores = currentGameLevel.getPlayerManager().getPlayerInfo();
         for (PlayerInfo info : playerScores) {
             // Casting in the current context is safe.
             Class<? extends Player> playerCls = ((Player)info.getPlayer()).getClass();
-            playerClassScores.put(playerCls, info.getScore());
-            results.totalGameScores.put(playerCls,
-                    results.totalGameScores.get(playerCls) + info.getScore()
-            );
+            GameResultImpl result = new GameResultImpl(playerCls, info.getScore(), false);
+            playerClassScores.put(playerCls, result);
+            GameResultImpl previous = (GameResultImpl) results.totalGameScores.get(playerCls);
+            if (previous != null){
+                previous.score += info.getScore();
+                previous.failed |= false;
+            }
+        }
+        Collection<PlayerInfo> failedPlayers = currentGameLevel.getPlayerManager()
+                .getUnregisteredPlayers().values();
+        for (PlayerInfo info : failedPlayers){
+            Class<? extends Player> playerCls = ((Player)info.getPlayer()).getClass();
+            GameResultImpl result = new GameResultImpl(playerCls, info.getScore(), true);
+            playerClassScores.put(playerCls, result);
+            GameResultImpl previous = (GameResultImpl) results.totalGameScores.get(playerCls);
+            if (previous != null){
+                previous.score += info.getScore();
+                previous.failed |= true;
+            }
         }
     }
 }

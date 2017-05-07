@@ -3,14 +3,12 @@ package szakacs.kpi.fei.tuke.arena.game;
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
 import szakacs.kpi.fei.tuke.enums.ActorType;
-import szakacs.kpi.fei.tuke.enums.Direction;
 import szakacs.kpi.fei.tuke.intrfc.arena.actors.ActorBasic;
 import szakacs.kpi.fei.tuke.intrfc.arena.actors.ActorPrivileged;
 import szakacs.kpi.fei.tuke.intrfc.arena.game.MethodCallAuthenticator;
 import szakacs.kpi.fei.tuke.intrfc.arena.game.actorManager.ActorManagerPrivileged;
 import szakacs.kpi.fei.tuke.intrfc.arena.game.gameLevel.GameLevelPrivileged;
 import szakacs.kpi.fei.tuke.intrfc.arena.game.world.GameWorldBasic;
-import szakacs.kpi.fei.tuke.intrfc.arena.game.world.HorizontalTunnelBasic;
 import szakacs.kpi.fei.tuke.intrfc.arena.game.world.TunnelCellBasic;
 import szakacs.kpi.fei.tuke.intrfc.misc.UnregisteredActorInfo;
 import szakacs.kpi.fei.tuke.misc.configProcessors.gameValueObjects.DummyLevel;
@@ -106,15 +104,7 @@ public class ActorManager implements ActorManagerPrivileged {
 
     @Override
     public void unregisterActor(ActorBasic actor) {
-        if (actor != null) {
-            String actorString = actor.toString();
-            ActorInfo info = actors.get(actorString);
-            unregisteredActors.put(actorString, actors.get(actorString));
-            if (info.onUnregisterAction != null) {
-                info.onUnregisterAction.run();
-                info.onUnregisterAction = null;
-            }
-        }
+        removeActor(actor);
     }
 
 
@@ -156,8 +146,11 @@ public class ActorManager implements ActorManagerPrivileged {
 
     @Override
     public void startNewGame(GameLevelPrivileged gameLevel, DummyLevel level){
-        actors.clear();
-        unregisteredActors.clear();
+        actors.clear(); unregisteredActors.clear();
+        actorsSet.clear();
+        for (Set<ActorBasic> actorsOfTypeSet : actorsByType.values()) {
+            actorsOfTypeSet.clear();
+        }
         initializePositionToActorsMap(gameLevel.getGameWorld());
     }
 
@@ -182,36 +175,25 @@ public class ActorManager implements ActorManagerPrivileged {
         if (actor != null){
             String actorString = actor.toString();
             ActorInfo info = actors.get(actorString);
-            unregisteredActors.put(actorString, info);
-            if (info.onUnregisterAction != null) {
-                info.onUnregisterAction.run();
-                info.onUnregisterAction = null;
+            if (info != null) {
+                unregisteredActors.put(actorString, info);
+                if (info.onUnregisterAction != null) {
+                    info.onUnregisterAction.run();
+                    info.onUnregisterAction = null;
+                }
+                //actors.remove(actorString, info);
+                positionToActorsMap.get(actor.getCurrentPosition()).remove(actor);
+                actorsSet.remove(actor);
+                actorsByType.remove(actor.getType(), actor);
             }
-            //actors.remove(actorString, info);
-            positionToActorsMap.get(actor.getCurrentPosition()).remove(actor);
-            actorsSet.remove(actor);
-            actorsByType.remove(actor.getType(), actor);
         }
     }
 
     private void initializePositionToActorsMap(GameWorldBasic world){
         positionToActorsMap.clear();
-        for (TunnelCellBasic cell : world.getEntrances().values()) {
-            // Don't care if we try to later add the same cell twice,
-            // since this is the key set (a Set<>) of a map.
-            do {
-                positionToActorsMap.put(cell, new HashSet<>(3));
-                cell = cell.getCellAtDirection(Direction.DOWN);
-            } while (cell != null);
-        }
-        for (HorizontalTunnelBasic ht : world.getTunnels()) {
-            Set<TunnelCellBasic> cells = ht.getCells();
-            for (TunnelCellBasic cell : cells) {
-                do {
-                    positionToActorsMap.put(cell, new HashSet<>(3));
-                    cell = cell.getCellAtDirection(Direction.DOWN);
-                } while (cell != null);
-            }
+        Set<TunnelCellBasic> cellsSet = world.getCells();
+        for (TunnelCellBasic cell : cellsSet) {
+            positionToActorsMap.put(cell, new HashSet<>(3));
         }
     }
 }

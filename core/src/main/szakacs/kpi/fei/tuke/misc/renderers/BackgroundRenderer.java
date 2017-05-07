@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
+import szakacs.kpi.fei.tuke.enums.GameState;
 import szakacs.kpi.fei.tuke.intrfc.arena.game.gameLevel.GameLevelPrivileged;
 
 /**
@@ -15,6 +16,7 @@ import szakacs.kpi.fei.tuke.intrfc.arena.game.gameLevel.GameLevelPrivileged;
 public class BackgroundRenderer extends AbstractGameRenderer {
 
     private Sprite bgSprite;
+    private BitmapFont remainingNuggets;
     private BitmapFont gameState;
 
     public BackgroundRenderer(SpriteBatch batch, GameLevelPrivileged game) {
@@ -25,6 +27,7 @@ public class BackgroundRenderer extends AbstractGameRenderer {
         param.size = 90;
         param.color = Color.GOLD;
         param.borderWidth = 5;
+        this.remainingNuggets = fontGenerator.generateFont(param);
         this.gameState = fontGenerator.generateFont(param);
         fontGenerator.dispose();
     }
@@ -34,23 +37,21 @@ public class BackgroundRenderer extends AbstractGameRenderer {
         bgSprite.setPosition(0, 0);
         bgSprite.draw(batch);
         String displayMsg = "Remaining nuggets: " + Integer.toString(game.getGameWorld().getNuggetCount());
-        switch (game.getState()) {
-            case PLAYING:
-                break;
-            case WON:
-                displayMsg += "\nSuccess!";
-                break;
-            case LOST:
-                displayMsg += "\nFailure!";
-                break;
-            default:
-                throw new IllegalStateException("Illegal game state: " + game.getState());
+        remainingNuggets.draw(batch, displayMsg, 128, 2000);
+
+        if (game.getState() != GameState.PLAYING){
+            if (game.getState() == GameState.WON){
+                gameState.draw(batch, "Success!", 3600, 2000);
+            } else {
+                gameState.draw(batch, "Failure!", 3600, 2000);
+            }
         }
-        gameState.draw(batch, displayMsg, 128, 2000);
     }
 
     @Override
     public void dispose() {
         bgSprite.getTexture().dispose();
+        remainingNuggets.dispose();
+        gameState.dispose();
     }
 }

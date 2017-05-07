@@ -58,4 +58,12 @@ public interface GameWorldBasic {
      * @return all horizontal tunnels of the game world as an unmodifiable set.
      */
     Set<HorizontalTunnelBasic> getTunnels();
+
+    /**
+     * Gets a set of all tunnel cells (those of horizontal as well as interconnecting
+     * tunnels) representing the game world.
+     *
+     * @return the set of all tunnel cells of the game world.
+     */
+    Set<TunnelCellBasic> getCells();
 }

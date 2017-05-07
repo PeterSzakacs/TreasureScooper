@@ -59,7 +59,7 @@ public class PipeSegmentStack extends ArrayStack<PipeSegment> {
         if (pushCounter < pushLimit && segmentToPush.equals(segment)) {
             super.push(segment);
             pushCounter++;
-            callback.onPush();
+            callback.onPush(segment);
             segmentToPush = randomSegment;
         }
     }

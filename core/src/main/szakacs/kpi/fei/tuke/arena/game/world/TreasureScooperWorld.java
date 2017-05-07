@@ -208,7 +208,28 @@ public class TreasureScooperWorld implements GameWorldPrivileged {
         return Collections.unmodifiableSet(tunnels);
     }
 
-
+    @Override
+    public Set<TunnelCellBasic> getCells(){
+        Set<TunnelCellBasic> cellsSet = new HashSet<>();
+        for (TunnelCellBasic cell : entrances.values()) {
+            // Don't care if we try to later add the same cell twice,
+            // since this is a Set<>.
+            do {
+                cellsSet.add(cell);
+                cell = cell.getCellAtDirection(Direction.DOWN);
+            } while (cell != null);
+        }
+        for (HorizontalTunnelBasic ht : tunnels) {
+            Set<TunnelCellBasic> cells = ht.getCells();
+            for (TunnelCellBasic cell : cells) {
+                do {
+                    cellsSet.add(cell);
+                    cell = cell.getCellAtDirection(Direction.DOWN);
+                } while (cell != null);
+            }
+        }
+        return cellsSet;
+    }
 
     // GameWorldUpdatable methods
 

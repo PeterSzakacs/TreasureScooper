@@ -6,7 +6,7 @@ package szakacs.kpi.fei.tuke.intrfc.arena.callbacks;
  */
 public interface OnStackUpdatedCallback<T> {
 
-    void onPush();
+    void onPush(T pushed);
 
     void onPop(T popped);
 }

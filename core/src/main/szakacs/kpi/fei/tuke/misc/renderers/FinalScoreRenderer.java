@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
+import szakacs.kpi.fei.tuke.intrfc.misc.GameResult;
 import szakacs.kpi.fei.tuke.intrfc.player.Player;
 import szakacs.kpi.fei.tuke.intrfc.arena.game.gameLevel.GameLevelPrivileged;
 import szakacs.kpi.fei.tuke.intrfc.misc.GameRenderer;
@@ -39,7 +40,7 @@ public class FinalScoreRenderer implements GameRenderer {
             param.shadowOffsetY = 5;
             param.size = 90;
             this.totalScoreFont = generator.generateFont(param);
-            param.size = 64;
+            param.size = 50;
             this.levelScoreFont = generator.generateFont(param);
             generator.dispose();
             this.batch = batch;
@@ -55,8 +56,8 @@ public class FinalScoreRenderer implements GameRenderer {
     }
 
     private final RenderingVars renderingVars;
-    private final List<Map<Class<? extends Player>, Integer>> levelScores;
-    private final Map<Class<? extends Player>, Integer> totalScores;
+    private final List<Map<Class<? extends Player>, GameResult>> levelScores;
+    private final Map<Class<? extends Player>, GameResult> totalScores;
     private final StringBuilder scoreStringBuilder;
 
     public FinalScoreRenderer(SpriteBatch batch, GameResults results, int width, int height){
@@ -86,8 +87,12 @@ public class FinalScoreRenderer implements GameRenderer {
         for (Class clazz : totalScores.keySet()){
             scoreStringBuilder.append(clazz.getSimpleName())
                     .append(" has scored ")
-                    .append(totalScores.get(clazz).intValue())
-                    .append(" points\n");
+                    .append(totalScores.get(clazz).getScore())
+                    .append(" points");
+            if (totalScores.get(clazz).hasFailed()){
+                scoreStringBuilder.append(" but FAILED!");
+            }
+            scoreStringBuilder.append("\n");
         }
         renderingVars.glyphLayout.setText(renderingVars.totalScoreFont, scoreStringBuilder.toString());
         renderingVars.totalScoreFont.draw(renderingVars.batch, scoreStringBuilder.toString(),
@@ -102,11 +107,15 @@ public class FinalScoreRenderer implements GameRenderer {
         scoreStringBuilder.append("Per level scores:\n");
         for (int i = 0; i < levelScores.size(); i++) {
             scoreStringBuilder.append("    Level ").append(i+1).append("\n");
-            Map<Class<? extends Player>, Integer> levelScore = levelScores.get(i);
+            Map<Class<? extends Player>, GameResult> levelScore = levelScores.get(i);
             for (Class clazz : levelScore.keySet()) {
                 scoreStringBuilder.append("        ").append(clazz.getSimpleName())
-                        .append(": ").append(levelScore.get(clazz).intValue())
-                        .append(" points\n");
+                        .append(": ").append(levelScore.get(clazz).getScore())
+                        .append(" points");
+                if (levelScore.get(clazz).hasFailed()){
+                    scoreStringBuilder.append(" FAILED!");
+                }
+                scoreStringBuilder.append("\n");
             }
             renderingVars.glyphLayout.setText(renderingVars.levelScoreFont, scoreStringBuilder.toString());
             renderingVars.levelScoreFont.draw(renderingVars.batch, scoreStringBuilder.toString(), 0, renderingVars.height);

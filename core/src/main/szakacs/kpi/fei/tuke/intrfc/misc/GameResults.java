@@ -10,7 +10,7 @@ import java.util.Map;
  */
 public interface GameResults {
 
-    List<Map<Class<? extends Player>, Integer>> getLevelScores();
+    List<Map<Class<? extends Player>, GameResult>> getLevelScores();
 
-    Map<Class<? extends Player>, Integer> getTotalGameScores();
+    Map<Class<? extends Player>, GameResult> getTotalGameScores();
 }

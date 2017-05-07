@@ -37,6 +37,7 @@ public class PlayerGameProxy implements PlayerGameInterface {
         public int getNuggetCount() { return gameWorld.getNuggetCount(); }
         public Map<String, TunnelCellBasic> getEntrances() { return gameWorld.getEntrances(); }
         public Set<HorizontalTunnelBasic> getTunnels() { return gameWorld.getTunnels(); }
+        public Set<TunnelCellBasic> getCells() { return gameWorld.getCells(); }
     };
 
     protected GameLevelPrivileged game;
@@ -86,8 +87,14 @@ public class PlayerGameProxy implements PlayerGameInterface {
         return playerManager.getPlayerInfo();
     }
 
+
     @Override
     public GameShop getGameShop() {
         return playerManager.getGameShop();
+    }
+
+    @Override
+    public Map<TunnelCellBasic, Set<ActorBasic>> getPositionsToPipesMap() {
+        return playerManager.getPositionsToPipesMap();
     }
 }

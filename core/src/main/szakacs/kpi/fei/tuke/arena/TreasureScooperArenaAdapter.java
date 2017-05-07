@@ -56,7 +56,7 @@ public class TreasureScooperArenaAdapter extends ArenaLwjglApplication<CoreGameR
         for (Bot<Player> bot : bots){
             botResults.add(new BotResultImpl(
                     bot.getId(),
-                    results.getTotalGameScores().get(bot.getBotInstance().getClass())
+                    results.getTotalGameScores().get(bot.getBotInstance().getClass()).getScore()
             ));
         }
         return botResults;

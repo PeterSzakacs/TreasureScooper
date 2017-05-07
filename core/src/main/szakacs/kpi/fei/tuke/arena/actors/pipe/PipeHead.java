@@ -1,19 +1,16 @@
 package szakacs.kpi.fei.tuke.arena.actors.pipe;
 
 import szakacs.kpi.fei.tuke.arena.actors.AbstractMoveableActor;
-import szakacs.kpi.fei.tuke.arena.actors.Bullet;
 import szakacs.kpi.fei.tuke.enums.ActorType;
 import szakacs.kpi.fei.tuke.enums.Direction;
 import szakacs.kpi.fei.tuke.intrfc.player.PlayerToken;
-import szakacs.kpi.fei.tuke.intrfc.arena.actors.GoldCollector;
 import szakacs.kpi.fei.tuke.intrfc.arena.game.world.TunnelCellUpdatable;
 import szakacs.kpi.fei.tuke.intrfc.arena.proxies.ActorGameInterface;
-import szakacs.kpi.fei.tuke.intrfc.misc.Queue;
 
 /**
  * The collecting head of the pipe.
  */
-public class PipeHead extends AbstractMoveableActor implements GoldCollector {
+public class PipeHead extends AbstractMoveableActor {
 
     private Weapon weapon;
 

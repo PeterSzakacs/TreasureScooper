@@ -4,7 +4,7 @@ import szakacs.kpi.fei.tuke.arena.actors.Bullet;
 import szakacs.kpi.fei.tuke.enums.ActorType;
 import szakacs.kpi.fei.tuke.enums.Direction;
 import szakacs.kpi.fei.tuke.enums.PipeSegmentType;
-import szakacs.kpi.fei.tuke.intrfc.player.PlayerInfo;
+import szakacs.kpi.fei.tuke.intrfc.arena.callbacks.OnPipeMovedCallback;
 import szakacs.kpi.fei.tuke.intrfc.player.PlayerToken;
 import szakacs.kpi.fei.tuke.intrfc.arena.actors.ActorBasic;
 import szakacs.kpi.fei.tuke.intrfc.arena.actors.pipe.PipeBasic;
@@ -33,10 +33,9 @@ public class Pipe implements PipeBasic {
          * after moving in a given direction (pushing a segment to the pipe).
          */
         @Override
-        public void onPush() {
+        public void onPush(PipeSegment pushed) {
             GameWorldBasic world = gameInterface.getGameWorld();
             int prevNuggetCount = gameInterface.getGameWorld().getNuggetCount();
-            PipeSegment pushed = segmentStack.top();
 
             head.move(world.getOffsetX(), world.getOffsetY(), segmentStack.top().getDirection());
             head.getCurrentPosition().collectNugget(Pipe.this);
@@ -51,11 +50,12 @@ public class Pipe implements PipeBasic {
                     && pushed.getSegmentType() != PipeSegmentType.VERTICAL) {
                 edges.add(pushed);
             }
-            Set<ActorBasic> enemies = gameInterface.getActorsBySearchCriteria(actor ->
-                    actor.getType() == ActorType.ENEMY && actor.intersects(head)
-            );
+            onPipeMovedCallback.onPush(head, pushed);
+            Set<ActorBasic> enemies = gameInterface.getActorsByType(ActorType.ENEMY);
             for (ActorBasic actor : enemies){
-                gameInterface.unregisterActor(actor);
+                if (actor.intersects(head)) {
+                    gameInterface.unregisterActor(actor);
+                }
             }
         }
 
@@ -71,8 +71,10 @@ public class Pipe implements PipeBasic {
             int yDelta = popped.getY() - head.getY();
             head.move(Math.abs(xDelta), Math.abs(yDelta), head.getDirection().getOpposite());
             head.setDirection(popped.getDirectionFrom().getOpposite());
+            onPipeMovedCallback.onPop(head, popped);
         }
     };
+    private OnPipeMovedCallback onPipeMovedCallback;
 
     /**
      * For convenience, the head is stored in a separate reference
@@ -87,7 +89,10 @@ public class Pipe implements PipeBasic {
 
 
 
-    public Pipe(ActorGameInterface gameInterface, TunnelCellUpdatable startPosition, PlayerToken token) {
+    public Pipe(ActorGameInterface gameInterface,
+                TunnelCellUpdatable startPosition,
+                OnPipeMovedCallback onPipeMovedCallback,
+                PlayerToken token) {
         this.head = new PipeHead(Direction.DOWN, gameInterface, startPosition, token);
         this.token = token;
         this.gameInterface = gameInterface;
@@ -101,6 +106,7 @@ public class Pipe implements PipeBasic {
                 gameInterface
         );
         this.edges = new HashSet<>(20);
+        this.onPipeMovedCallback = onPipeMovedCallback;
     }
 
 

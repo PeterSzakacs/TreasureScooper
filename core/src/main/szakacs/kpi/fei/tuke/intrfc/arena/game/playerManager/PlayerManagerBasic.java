@@ -1,8 +1,11 @@
 package szakacs.kpi.fei.tuke.intrfc.arena.game.playerManager;
 
 import szakacs.kpi.fei.tuke.arena.game.GameShop;
+import szakacs.kpi.fei.tuke.intrfc.arena.actors.ActorBasic;
+import szakacs.kpi.fei.tuke.intrfc.arena.game.world.TunnelCellBasic;
 import szakacs.kpi.fei.tuke.intrfc.player.PlayerInfo;
 
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -28,4 +31,13 @@ public interface PlayerManagerBasic {
      * @return GameShop instance which is responsible for player purchases
      */
     GameShop getGameShop();
+
+    /**
+     * Gets a mapping between tunnel cells and any pipe actors (pipe heads or segments)
+     * that are at these positions. Used for collision detection, but can also be used
+     * to check if a position does not contain a pipe's component to avoid collisions.
+     *
+     * @return a mapping between tunnel cells and pipe components.
+     */
+    Map<TunnelCellBasic, Set<ActorBasic>> getPositionsToPipesMap();
 }
