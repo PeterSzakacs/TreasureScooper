@@ -16,13 +16,14 @@ import java.util.function.Predicate;
  * in the game.</p>
  *
  * <p>This interface is to be the only actor manager interface exposed to the player.</p>
+ *
+ * <p><b>Note:</b> the term active game actor refers to those actors, which still exist
+ * and are capable of performing actions on every iteration of the game loop</p>
  */
 public interface ActorManagerBasic {
 
     /**
-     * Gets all currently active game actors
-     * (meaning actors whose act() method is
-     * still called).
+     * Gets the set of all active game actors.
      *
      * @return all game actors (except the pipe heads
      * and pipe segments) as an unmodifiable set
@@ -30,17 +31,23 @@ public interface ActorManagerBasic {
     Set<ActorBasic> getActors();
 
     /**
-     * Gets all active (those, whose act() method is still called) actors which are
-     * of a given {@link ActorType}.
+     * Gets all active game actors which are of a given {@link ActorType}.
      *
-     * @param type the actor type of the actors we want to get.
-     * @return a set of all active game actors for whom actor.getType() == type
+     * <p><b>Note</b> that no actors of types {@link ActorType#PIPESEGMENT}
+     * or {@link ActorType#PIPEHEAD} are stored and handled by the actor
+     * manager; if a query for these is performed, the returned result is
+     * an empty set.</p>
+     *
+     * @param type the actor type of the actors desired.
+     * @return a set of all active game actors for whom {@link ActorBasic#getType()} == type.
+     * If type == ActorType.PIPESEGMENT || type == ActorType.PIPEHEAD, then an empty set is
+     * returned.
      */
     Set<ActorBasic> getActorsByType(ActorType type);
 
     /**
-     * Gets a mapping between tunnel cells and all actors
-     * located at the particular tunnel cell.
+     * Gets a mapping between tunnel cells and all actors (except pipe segments or pipe heads)
+     * located at the particular tunnel cell
      *
      * @return a mapping between actors' current positions and actors themselves
      */
@@ -55,7 +62,7 @@ public interface ActorManagerBasic {
      * <p>If {@code getActorsByType} or {@code getPositionToActorsMap} does not satisfy
      * your particular search criteria, this is a generic search method, but beware,
      * unlike those other methods, this method has a complexity of O(n), where n is
-     * the number of active game actors.</p>
+     * the number of active game actors, minus pipe segments and pipe heads.</p>
      *
      * @param criteria a functional interface or lambda function
      *                 used in evaluating whether the actor should

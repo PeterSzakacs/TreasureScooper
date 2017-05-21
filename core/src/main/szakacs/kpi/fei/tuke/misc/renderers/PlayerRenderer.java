@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import szakacs.kpi.fei.tuke.arena.actors.pipe.PipeHead;
 import szakacs.kpi.fei.tuke.arena.actors.pipe.PipeSegment;
 import szakacs.kpi.fei.tuke.enums.Direction;
+import szakacs.kpi.fei.tuke.enums.GameState;
 import szakacs.kpi.fei.tuke.enums.PipeSegmentType;
 import szakacs.kpi.fei.tuke.intrfc.arena.game.world.TunnelCellBasic;
 import szakacs.kpi.fei.tuke.intrfc.player.PlayerToken;
@@ -77,6 +78,9 @@ public class PlayerRenderer extends AbstractGameRenderer {
             renderPlayerScore(info);
             weaponRenderer.renderWeapon(pipe);
             soundsManager.playSounds(pipe);
+        }
+        if (game.getState() != GameState.PLAYING){
+            soundsManager.onEndOfLevel();
         }
     }
 

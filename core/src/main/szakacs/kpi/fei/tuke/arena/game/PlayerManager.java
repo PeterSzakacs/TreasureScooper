@@ -82,7 +82,7 @@ public class PlayerManager implements PlayerManagerPrivileged {
             newHeadPostion.add(head);
             TunnelCellBasic formerHeadPosition = popped.getCurrentPosition()
                     .getCellAtDirection(popped.getDirection());
-            positionPipesMap.get(formerHeadPosition).remove(popped);
+            positionPipesMap.get(formerHeadPosition).remove(head);
         }
     };
 
@@ -161,18 +161,6 @@ public class PlayerManager implements PlayerManagerPrivileged {
             case WON:
             case LOST:
                 handleEndOfLevel();
-/*                if (stateChanged) {
-                    stateChanged = false;
-                    for (Iterator<PlayerToken> it = players.keySet().iterator(); it.hasNext(); ) {
-                        PlayerToken token = it.next();
-                        PlayerInfoImpl info = players.get(token);
-                        info.player.deallocate();
-                        if (info.pipe.getHealth() == 0){
-                            it.remove();
-                            unregisteredPlayers.put(token, info);
-                        }
-                    }
-                }*/
                 break;
         }
     }
@@ -254,27 +242,23 @@ public class PlayerManager implements PlayerManagerPrivileged {
     }
 
     private void handlePlaying(){
-        PlayerToken[] toRemove = new PlayerToken[pipes.size()]; int idx = 0;
-        for (PlayerToken token : players.keySet()) {
-            PlayerInfoImpl info = players.get(token);
-            if (info.pipe.getHealth() > 0) {
-                info.player.act(token);
-                info.pipe.allowMovement(authenticator);
-            } else {
-                toRemove[idx++] = token;
+        Iterator<PlayerToken> it = players.keySet().iterator();
+        PlayerToken token; PlayerInfoImpl info;
+        while (it.hasNext()) {
+            token = it.next(); info = players.get(token);
+            if (info.pipe.getHealth() <= 0) {
+                removePlayer(token, it);
             }
         }
-        for (int i = 0; toRemove[i] != null && i < toRemove.length ; i++) {
-            PlayerToken token = toRemove[i];
-            PlayerInfoImpl info = players.remove(token);
-            pipes.remove(token);
-            positionPipesMap.get(info.pipe.getHead().getCurrentPosition())
-                    .remove(info.pipe.getHead());
-            for (PipeSegment segment : info.pipe.getSegmentStack(token)){
-                positionPipesMap.get(segment.getCurrentPosition())
-                        .remove(segment);
+        it = players.keySet().iterator();
+        while (it.hasNext()) {
+            token = it.next(); info = players.get(token);
+            try {
+                info.player.act(token);
+            } catch (Exception e){
+                removePlayer(token, it);
             }
-            unregisteredPlayers.put(token, info);
+            info.pipe.allowMovement(authenticator);
         }
     }
 
@@ -291,5 +275,18 @@ public class PlayerManager implements PlayerManagerPrivileged {
                 pipes.clear();
             }
         }
+    }
+
+    private void removePlayer(PlayerToken token, Iterator<PlayerToken> iterator){
+        PlayerInfoImpl info = players.get(token);
+        pipes.remove(token);
+        positionPipesMap.get(info.pipe.getHead().getCurrentPosition())
+                .remove(info.pipe.getHead());
+        for (PipeSegment segment : info.pipe.getSegmentStack(token)){
+            positionPipesMap.get(segment.getCurrentPosition())
+                    .remove(segment);
+        }
+        unregisteredPlayers.put(token, info);
+        iterator.remove();
     }
 }

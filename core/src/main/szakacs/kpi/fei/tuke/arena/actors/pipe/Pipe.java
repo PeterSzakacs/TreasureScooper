@@ -35,28 +35,14 @@ public class Pipe implements PipeBasic {
         @Override
         public void onPush(PipeSegment pushed) {
             GameWorldBasic world = gameInterface.getGameWorld();
-            int prevNuggetCount = gameInterface.getGameWorld().getNuggetCount();
 
             head.move(world.getOffsetX(), world.getOffsetY(), segmentStack.top().getDirection());
-            head.getCurrentPosition().collectNugget(Pipe.this);
-            if (gameInterface.getGameWorld().getNuggetCount() < prevNuggetCount){
-                collectedNuggetsCounter++;
-                if (collectedNuggetsCounter >= 20) {
-                    head.getWeapon().load(new Bullet(gameInterface), token);
-                    collectedNuggetsCounter = 0;
-                }
-            }
             if (pushed.getSegmentType() != PipeSegmentType.HORIZONTAL
                     && pushed.getSegmentType() != PipeSegmentType.VERTICAL) {
                 edges.add(pushed);
             }
             onPipeMovedCallback.onPush(head, pushed);
-            Set<ActorBasic> enemies = gameInterface.getActorsByType(ActorType.ENEMY);
-            for (ActorBasic actor : enemies){
-                if (actor.intersects(head)) {
-                    gameInterface.unregisterActor(actor);
-                }
-            }
+            head.onPush(Pipe.this);
         }
 
         /**
@@ -103,7 +89,8 @@ public class Pipe implements PipeBasic {
                 1,
                 3,
                 segmentStackCallback,
-                gameInterface
+                gameInterface,
+                token
         );
         this.edges = new HashSet<>(20);
         this.onPipeMovedCallback = onPipeMovedCallback;
@@ -147,7 +134,7 @@ public class Pipe implements PipeBasic {
             return null;
         } else {
             PipeSegment toPush = new PipeSegment(head.getCurrentPosition(),
-                    head.getDirection().getOpposite(), dir, gameInterface);
+                    head.getDirection().getOpposite(), dir, gameInterface, token);
             segmentStack.setSegmentToPush(toPush);
             return toPush;
         }

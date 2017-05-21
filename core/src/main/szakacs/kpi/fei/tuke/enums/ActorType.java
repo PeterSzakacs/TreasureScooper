@@ -6,6 +6,7 @@ package szakacs.kpi.fei.tuke.enums;
 public enum ActorType {
     ENEMY,
     BULLET,
-    PIPE,
+    PIPEHEAD,
+    PIPESEGMENT,
     WALL
 }

@@ -48,7 +48,6 @@ public class ArrayQueue<T> implements Queue<T> {
     private int rear;
     private int numElements;
     private boolean dynamic;
-    private List<T> searchResults;
 
 
 
@@ -59,11 +58,11 @@ public class ArrayQueue<T> implements Queue<T> {
         this.rear = -1;
         this.numElements = 0;
         this.dynamic = dynamic;
-        this.searchResults = new ArrayList<T>();
     }
 
 
 
+    @Override
     public void enqueue(T element) {
         if (isFull()) {
             if (dynamic) {
@@ -78,6 +77,7 @@ public class ArrayQueue<T> implements Queue<T> {
         this.elements[rear] = element;
     }
 
+    @Override
     public T dequeue() {
         if (isEmpty())
             return null;
@@ -89,6 +89,7 @@ public class ArrayQueue<T> implements Queue<T> {
         return toReturn;
     }
 
+    @Override
     public T front() {
         if (isEmpty())
             return null;
@@ -96,6 +97,7 @@ public class ArrayQueue<T> implements Queue<T> {
             return (T) elements[front];
     }
 
+    @Override
     public T rear() {
         if (isEmpty())
             return null;
@@ -103,44 +105,52 @@ public class ArrayQueue<T> implements Queue<T> {
             return (T) elements[rear];
     }
 
+    @Override
     public boolean isEmpty() {
         return numElements == 0;
     }
 
+    @Override
     public boolean isFull() {
         return numElements == capacity;
     }
 
+    @Override
     public int getCapacity() {
         return capacity;
     }
 
+    @Override
     public int getNumElements() {
         return numElements;
     }
 
-    public List<T> getElements() {
-        List<T> list = new ArrayList<>(elements.length);
+    @Override
+    public T[] getElements() {
+        T[] list = (T[]) new Object[elements.length];
         T[] elements = (T[]) this.elements;
         for (int idx = front, count = 0; count < numElements; idx++, count++) {
-            list.add(elements[idx % capacity]);
+            list[count] = elements[idx % capacity];
         }
         return list;
     }
 
-    public List<T> getElementsByCriteria(Predicate<T> criteria){
+    @Override
+    public Set<T> getElementsByCriteria(Predicate<T> criteria){
         if (criteria == null){
-            return getElements();
+            criteria = (T) -> true;
         }
-        searchResults.clear();
+        Set<T> set = new LinkedHashSet<>(
+                (int) Math.ceil((float)elements.length/0.75)
+        );
         T[] elements = (T[]) this.elements;
         for (int idx = front, count = 0; count < numElements; idx++, count++) {
             T element = elements[idx % capacity];
             if (criteria.test(element)) {
-                searchResults.add(element);
+                set.add(element);
             }
         }
-        return searchResults;
+        return set;
     }
 
     @Override

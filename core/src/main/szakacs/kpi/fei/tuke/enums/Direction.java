@@ -1,7 +1,7 @@
 package szakacs.kpi.fei.tuke.enums;
 
 /**
- * An enumerated type representing the four directions
+ * An enum type representing the four directions
  * of allowed movement within the game.
  */
 public enum Direction {
@@ -55,15 +55,15 @@ public enum Direction {
 
     /**
      * Calculates the direction based on the value of the horizontal
-     * and vertical shifts in position. Note: at least one of these
-     * has to be zero, otherwise an exception is thrown.
+     * and vertical shifts in position. Note: one of these has to be
+     * zero and the other nonzero, otherwise an exception is thrown.
      *
      * @param dx the shift in the horizontal coordinates.
      * @param dy the shift in the vertical coordinates.
      * @return the direction that corresponds to the shifts in coordinates passed.
      */
     public static Direction getDirectionByDeltas(int dx, int dy){
-        if (dx + dy != dx && dx + dy != dy)
+        if (dx != dy && dx + dy != dx && dx + dy != dy)
             throw new IllegalArgumentException("Illegal values of dx and dy. One has to be zero, the other nonzero!");
         if (dy == 0) {
             if (dx/Math.abs(dx) == 1)

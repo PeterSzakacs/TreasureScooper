@@ -34,8 +34,9 @@ public interface PlayerManagerBasic {
 
     /**
      * Gets a mapping between tunnel cells and any pipe actors (pipe heads or segments)
-     * that are at these positions. Used for collision detection, but can also be used
-     * to check if a position does not contain a pipe's component to avoid collisions.
+     * that are at these positions. Used for collision detection. Can be used to check
+     * if a position does not contain a pipe's component to avoid biting one's own or
+     * others' pipes.
      *
      * @return a mapping between tunnel cells and pipe components.
      */

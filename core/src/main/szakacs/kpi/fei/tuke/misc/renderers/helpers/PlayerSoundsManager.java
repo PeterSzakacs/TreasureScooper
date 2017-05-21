@@ -113,7 +113,12 @@ public class PlayerSoundsManager {
         }
     }
 
-    public void dispose(){
+    public void onEndOfLevel() {
+        pushSound.stop();
+        popSound.stop();
+    }
+
+    public void dispose() {
         pushSound.dispose();
         popSound.dispose();
         shootSound.dispose();

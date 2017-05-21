@@ -52,8 +52,12 @@ public class ActorManager implements ActorManagerPrivileged {
         this.actorsSet = new HashSet<>();
         this.actorsByType = new EnumMap<>(ActorType.class);
         for (ActorType actorType : ActorType.values()) {
-            if (!actorType.name().startsWith("PIPE"))
+            if (actorType.name().startsWith("PIPE")){
+                // no such actors will be stored here
+                actorsByType.put(actorType, new HashSet<>(0));
+            } else {
                 actorsByType.put(actorType, new HashSet<>(20));
+            }
         }
     }
 

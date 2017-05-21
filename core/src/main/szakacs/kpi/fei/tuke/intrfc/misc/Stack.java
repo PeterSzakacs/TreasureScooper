@@ -1,6 +1,7 @@
 package szakacs.kpi.fei.tuke.intrfc.misc;
 
 import java.util.List;
+import java.util.Set;
 import java.util.function.Predicate;
 
 /**
@@ -62,17 +63,17 @@ public interface Stack<T> extends Iterable<T> {
     int getNumElements();
 
     /**
-     * Returns a list view of all elements of the stack,
+     * Returns an array view of all elements of the stack,
      * ordered from bottom to top of the stack. Changes
      * to this view are NOT reflected in the original
      * stack.
      *
-     * @return a list view of all elements of the stack.
+     * @return an array view of all elements of the stack.
      */
-    List<T> getElements();
+    T[] getElements();
 
     /**
-     * Returns a list of elements, ordered from bottom to top of the stack,
+     * Returns a set of elements, ordered from bottom to top of the stack,
      * that satisfy the criteria passed as argument to this function.
      * If the given criteria is null, it returns all elements in the stack,
      * ordered from bottom to top.
@@ -82,7 +83,7 @@ public interface Stack<T> extends Iterable<T> {
      *                 be included in the query results. If a null
      *                 value is passed, all elements are returned.
      *
-     * @return a list of stack elements satisfying the given criteria.
+     * @return a set of stack elements satisfying the given criteria.
      */
-    List<T> getElementsByCriteria(Predicate<T> criteria);
+    Set<T> getElementsByCriteria(Predicate<T> criteria);
 }

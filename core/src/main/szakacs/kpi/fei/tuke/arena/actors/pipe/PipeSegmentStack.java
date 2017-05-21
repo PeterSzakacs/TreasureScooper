@@ -6,6 +6,7 @@ import szakacs.kpi.fei.tuke.enums.TunnelCellType;
 import szakacs.kpi.fei.tuke.intrfc.arena.callbacks.OnStackUpdatedCallback;
 import szakacs.kpi.fei.tuke.intrfc.arena.game.world.GameWorldPrivileged;
 import szakacs.kpi.fei.tuke.intrfc.arena.proxies.ActorGameInterface;
+import szakacs.kpi.fei.tuke.intrfc.player.PlayerToken;
 import szakacs.kpi.fei.tuke.misc.ArrayStack;
 
 /**
@@ -27,21 +28,22 @@ public class PipeSegmentStack extends ArrayStack<PipeSegment> {
 
 
     PipeSegmentStack(int capacity, boolean dynamic, int pushLimit, int popLimit,
-                     OnStackUpdatedCallback<PipeSegment> callback, ActorGameInterface gameInterface){
+                     OnStackUpdatedCallback<PipeSegment> callback, ActorGameInterface gameInterface, PlayerToken token){
         super(capacity, dynamic);
         this.pushLimit = pushLimit;
         this.popLimit = popLimit;
         this.pushCounter = 0;
         this.popCounter = 0;
         this.randomSegment = new PipeSegment(
-                // Simply: find a LEFT_EDGE cell of some tunnel;
+                // Simply: create a random tunnel cell
                 new TunnelCell(-1, -1,
                         TunnelCellType.CROSSROAD,
                         null,
                         (GameWorldPrivileged) gameInterface.getGameWorld()),
                 Direction.LEFT,
                 Direction.RIGHT,
-                gameInterface
+                gameInterface,
+                token
         );
         this.segmentToPush = randomSegment;
         this.callback = callback;

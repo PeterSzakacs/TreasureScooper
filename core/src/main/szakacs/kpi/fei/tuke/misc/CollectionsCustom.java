@@ -3,9 +3,8 @@ package szakacs.kpi.fei.tuke.misc;
 import szakacs.kpi.fei.tuke.intrfc.misc.Queue;
 import szakacs.kpi.fei.tuke.intrfc.misc.Stack;
 
-import java.util.Collections;
 import java.util.Iterator;
-import java.util.List;
+import java.util.Set;
 import java.util.function.Predicate;
 
 /**
@@ -13,6 +12,11 @@ import java.util.function.Predicate;
  * {@link Stack} and {@link Queue} collections.
  */
 public class CollectionsCustom {
+
+    // this class shall not be instantiable
+    private CollectionsCustom(){
+
+    }
 
     /**
      * <p>Returns an unmodifiable view of the stack
@@ -49,9 +53,9 @@ public class CollectionsCustom {
         public int getNumElements() { return original.getNumElements(); }
 
         // The list returned is unmodifiable, so safe
-        public List<E> getElements() { return original.getElements(); }
+        public E[] getElements() { return original.getElements(); }
         // Changes to the list returned do not affect the stack, so safe
-        public List<E> getElementsByCriteria(Predicate<E> criteria) {
+        public Set<E> getElementsByCriteria(Predicate<E> criteria) {
             return original.getElementsByCriteria(criteria);
         }
         // Iterator does not support element removal, so safe
@@ -98,9 +102,9 @@ public class CollectionsCustom {
         public int getNumElements() { return original.getNumElements(); }
 
         // The list returned is unmodifiable, so safe
-        public List<E> getElements() { return original.getElements(); }
+        public E[] getElements() { return original.getElements(); }
         // Changes to the list returned do not affect the queue, so safe
-        public List<E> getElementsByCriteria(Predicate<E> criteria) {
+        public Set<E> getElementsByCriteria(Predicate<E> criteria) {
             return original.getElementsByCriteria(criteria);
         }
         // Iterator does not support element removal, so safe

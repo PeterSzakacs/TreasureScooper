@@ -41,7 +41,6 @@ public class ArrayStack<T> implements Stack<T> {
     private Object[] elements;
     private int top;
     private boolean dynamic;
-    private List<T> searchResults;
 
 
 
@@ -49,11 +48,11 @@ public class ArrayStack<T> implements Stack<T> {
         this.elements = new Object[initialCapacity];
         this.top = -1;
         this.dynamic = dynamic;
-        this.searchResults = new ArrayList<T>(initialCapacity);
     }
 
 
 
+    @Override
     public void push(T element) {
         if (isFull()) {
             if (dynamic) {
@@ -65,6 +64,7 @@ public class ArrayStack<T> implements Stack<T> {
         this.elements[++top] = element;
     }
 
+    @Override
     public T pop() {
         if (isEmpty()) {
             return null;
@@ -75,6 +75,7 @@ public class ArrayStack<T> implements Stack<T> {
         }
     }
 
+    @Override
     public T top() {
         if (isEmpty()) {
             return null;
@@ -83,42 +84,49 @@ public class ArrayStack<T> implements Stack<T> {
         }
     }
 
+    @Override
     public boolean isEmpty() {
         return top == -1;
     }
 
+    @Override
     public boolean isFull() {
         return top == elements.length - 1;
     }
 
+    @Override
     public int getCapacity() {
         return elements.length;
     }
 
+    @Override
     public int getNumElements(){
         return top + 1;
     }
 
-    public List<T> getElements() {
-        return Collections.unmodifiableList(
-                Arrays.asList((T[])
-                        Arrays.copyOf(elements, getNumElements())
-                )
-        );
+    @Override
+    public T[] getElements() {
+        T[] list = (T[]) new Object[elements.length];
+        T[] source = (T[]) elements;
+        System.arraycopy(source, 0, list, 0, top + 1);
+        return list;
     }
 
-    public List<T> getElementsByCriteria(Predicate<T> criteria) {
+    @Override
+    public Set<T> getElementsByCriteria(Predicate<T> criteria) {
         if (criteria == null){
-            return getElements();
+            criteria = (T) -> true;
         }
-        searchResults.clear();
         T[] elements = (T[]) this.elements;
+        Set<T> set = new LinkedHashSet<>(
+                (int) Math.ceil((float)(top+1)/0.75)
+        );
         for (int idx = 0; idx <= top; idx++) {
             if (criteria.test(elements[idx])) {
-                searchResults.add(elements[idx]);
+                set.add(elements[idx]);
             }
         }
-        return searchResults;
+        return set;
     }
 
     @Override

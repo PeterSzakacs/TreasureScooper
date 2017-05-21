@@ -28,16 +28,19 @@ public class TreasureScooperArenaAdapter extends ArenaLwjglApplication<CoreGameR
     private List<Bot<Player>> bots;
 
     public TreasureScooperArenaAdapter() throws ConfigProcessingException, GameLevelInitializationException {
+        // process game config and create game manager and renderer
         GameConfigProcessor configProcessor = new SAXConfigProcessor();
         configProcessor.processGameConfig();
         GameConfig config = configProcessor.getGameConfig();
         this.renderer = new CoreGameRenderer(new GameManager(config), config);
 
+        // initialize bot list
         Set<Class<? extends Player>> playerClasses = config.getPlayerClasses();
         this.bots = new ArrayList<>(playerClasses.size());
+        int idx = 1;
         for (Class<? extends Player> playerCls : playerClasses){
             try {
-                bots.add(new BotImpl<>(playerCls.hashCode(), playerCls.getSimpleName(), playerCls.newInstance()));
+                bots.add(new BotImpl<>(idx++, playerCls.getSimpleName(), playerCls.newInstance()));
             } catch (InstantiationException | IllegalAccessException e) {
                 throw new ConfigProcessingException("Could not initialize bots");
             }
