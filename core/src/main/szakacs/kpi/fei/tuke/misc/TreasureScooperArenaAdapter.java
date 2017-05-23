@@ -1,4 +1,4 @@
-package szakacs.kpi.fei.tuke.arena;
+package szakacs.kpi.fei.tuke.misc;
 
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
 import kpi.openlab.arena.gdx.ArenaLwjglApplication;
@@ -6,6 +6,7 @@ import kpi.openlab.arena.impl.BotImpl;
 import kpi.openlab.arena.impl.BotResultImpl;
 import kpi.openlab.arena.interfaces.Bot;
 import kpi.openlab.arena.interfaces.BotResult;
+import szakacs.kpi.fei.tuke.arena.GameManager;
 import szakacs.kpi.fei.tuke.intrfc.player.Player;
 import szakacs.kpi.fei.tuke.intrfc.misc.GameConfig;
 import szakacs.kpi.fei.tuke.intrfc.misc.GameConfigProcessor;
@@ -87,6 +88,7 @@ public class TreasureScooperArenaAdapter extends ArenaLwjglApplication<CoreGameR
         config.height = renderer.getWorld().getHeight();
         config.title = "Treasure Scooper";
         config.foregroundFPS = 12;
+        config.forceExit = true;
         return config;
     }
 

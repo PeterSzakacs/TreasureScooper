@@ -4,7 +4,7 @@ import szakacs.kpi.fei.tuke.intrfc.misc.Queue;
 import szakacs.kpi.fei.tuke.intrfc.misc.Stack;
 
 import java.util.Iterator;
-import java.util.Set;
+import java.util.List;
 import java.util.function.Predicate;
 
 /**
@@ -55,7 +55,7 @@ public class CollectionsCustom {
         // The list returned is unmodifiable, so safe
         public E[] getElements() { return original.getElements(); }
         // Changes to the list returned do not affect the stack, so safe
-        public Set<E> getElementsByCriteria(Predicate<E> criteria) {
+        public List<E> getElementsByCriteria(Predicate<E> criteria) {
             return original.getElementsByCriteria(criteria);
         }
         // Iterator does not support element removal, so safe
@@ -104,7 +104,7 @@ public class CollectionsCustom {
         // The list returned is unmodifiable, so safe
         public E[] getElements() { return original.getElements(); }
         // Changes to the list returned do not affect the queue, so safe
-        public Set<E> getElementsByCriteria(Predicate<E> criteria) {
+        public List<E> getElementsByCriteria(Predicate<E> criteria) {
             return original.getElementsByCriteria(criteria);
         }
         // Iterator does not support element removal, so safe

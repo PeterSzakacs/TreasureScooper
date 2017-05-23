@@ -15,6 +15,8 @@ import szakacs.kpi.fei.tuke.misc.renderers.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 /**
  * Created by developer on 2.12.2016.
@@ -24,6 +26,8 @@ public class CoreGameRenderer implements ApplicationListener {
     private final GameManager manager;
     private GameConfig config;
     private GameLevelPrivileged currentGameLevel;
+    private Timer timer;
+    private TimerTask task;
 
     private List<GameRenderer> renderers;
     private GameRenderer scoreRenderer;
@@ -34,6 +38,13 @@ public class CoreGameRenderer implements ApplicationListener {
         this.manager = manager;
         this.config = config;
         this.currentGameLevel = manager.getNextGameLevel();
+        this.timer = new Timer();
+        this.task = new TimerTask() {
+            @Override
+            public void run() {
+                Gdx.app.exit();
+            }
+        };
     }
 
     @Override
@@ -119,6 +130,7 @@ public class CoreGameRenderer implements ApplicationListener {
                 // no need to update the game any longer
                 Gdx.graphics.setContinuousRendering(false);
                 currentGameLevel = null;
+                timer.schedule(task, 60000);
             } else {
                 currentGameLevel = level;
                 for (GameRenderer renderer : renderers) {

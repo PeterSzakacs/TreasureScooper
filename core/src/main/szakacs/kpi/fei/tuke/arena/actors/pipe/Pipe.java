@@ -5,6 +5,7 @@ import szakacs.kpi.fei.tuke.enums.ActorType;
 import szakacs.kpi.fei.tuke.enums.Direction;
 import szakacs.kpi.fei.tuke.enums.PipeSegmentType;
 import szakacs.kpi.fei.tuke.intrfc.arena.callbacks.OnPipeMovedCallback;
+import szakacs.kpi.fei.tuke.intrfc.arena.game.world.TunnelCellBasic;
 import szakacs.kpi.fei.tuke.intrfc.player.PlayerToken;
 import szakacs.kpi.fei.tuke.intrfc.arena.actors.ActorBasic;
 import szakacs.kpi.fei.tuke.intrfc.arena.actors.pipe.PipeBasic;
@@ -35,6 +36,32 @@ public class Pipe implements PipeBasic {
         @Override
         public void onPush(PipeSegment pushed) {
             GameWorldBasic world = gameInterface.getGameWorld();
+            TunnelCellBasic adjacent = pushed.getCurrentPosition()
+                    .getCellAtDirection(pushed.getDirection());
+            if (adjacent != null) {
+                Set<ActorBasic> pipeActors = gameInterface.getPositionsToPipesMap()
+                        .get(adjacent);
+                if (pipeActors.size() > 0){
+                    // A collision with another pipe is detected.
+                    // Prevent moving in that direction and handle collision.
+                    segmentStack.pop();
+                    ActorBasic pipeActor = pipeActors.iterator().next();
+                    switch (pipeActor.getType()){
+                        case PIPEHEAD:
+                            healthPoints -= 20;
+                            break;
+                        case PIPESEGMENT:
+                            // Only reduce your own health,
+                            // the other pipe will reduce
+                            // its health in turn.
+                            Pipe otherPipe = (Pipe) ((PipeSegment)pipeActor).getPipe();
+                            otherPipe.setHealth(otherPipe.getHealth() - 20,
+                                    gameInterface.getAuthenticator());
+                            break;
+                    }
+                    return;
+                }
+            }
 
             head.move(world.getOffsetX(), world.getOffsetY(), segmentStack.top().getDirection());
             if (pushed.getSegmentType() != PipeSegmentType.HORIZONTAL

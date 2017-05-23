@@ -14,7 +14,7 @@ import java.util.Set;
  * This interface is designed to be exposed only to game backend classes
  * which need access to specific state and behavior of the actor manager.
  */
-public interface ActorManagerPrivileged extends ActorManagerUpdatable, GameUpdater, ResettableGameClass {
+public interface ActorManagerPrivileged extends ActorManagerUpdatable, GameUpdater {
 
     /**
      * Updates all game actors (except actors unregistered in the previous turn),

@@ -1,12 +1,11 @@
-package szakacs.kpi.fei.tuke.arena.game.world;
+package szakacs.kpi.fei.tuke.intrfc.arena.game.world;
 
 import org.junit.Assert;
 import org.junit.Test;
 import szakacs.kpi.fei.tuke.arena.actors.pipe.Pipe;
+import szakacs.kpi.fei.tuke.arena.game.world.TunnelCell;
 import szakacs.kpi.fei.tuke.intrfc.arena.game.MethodCallAuthenticator;
 import szakacs.kpi.fei.tuke.intrfc.arena.game.gameLevel.GameLevelPrivileged;
-import szakacs.kpi.fei.tuke.intrfc.arena.game.world.GameWorldPrivileged;
-import szakacs.kpi.fei.tuke.intrfc.arena.game.world.HorizontalTunnelUpdatable;
 import szakacs.kpi.fei.tuke.misc.GameLevelInitializationException;
 import szakacs.kpi.fei.tuke.misc.configProcessors.gameValueObjects.DummyLevel;
 
@@ -19,25 +18,29 @@ import java.util.Set;
 public class TunnelCellTest {
 
     private GameWorldPrivileged mock = new GameWorldPrivileged() {
-        public MethodCallAuthenticator getAuthenticator() {return null;}
-        public void onNuggetCollected(Pipe pipe, int val) {}
-        public void startNewGame(GameLevelPrivileged gameLevel, DummyLevel level) throws GameLevelInitializationException {}
         int offsetX = 128, offsetY = 128, width = 4096, height = 2048;
 
+        public MethodCallAuthenticator getAuthenticator() {return null;}
+        public void onNuggetCollected(Pipe pipe, int val) {}
+        public void startNewGame(GameLevelPrivileged gameLevel, DummyLevel level)
+                throws GameLevelInitializationException {}
         public int getWidth() {return width;}
         public int getHeight() {return height;}
         public int getOffsetX() {return offsetX;}
         public int getOffsetY() {return offsetY;}
         public int getNuggetCount() {return 0;}
-        public Map<String, TunnelCell> getEntrances() {return null;}
-        public Set<HorizontalTunnelUpdatable> getTunnelsUpdatable() {return null;}
+        public Map<String, TunnelCellBasic> getEntrances() {return null;}
+        public Set<HorizontalTunnelBasic> getTunnels() { return null; }
+        public Set<TunnelCellBasic> getCells() { return null; }
+        public Set<HorizontalTunnelUpdatable> getTunnelsUpdatable() { return null;}
+        public Map<String, TunnelCellUpdatable> getEntrancesUpdatable() { return null; }
     };
 
     @Test
     public void isWithinCell() throws Exception {
         int cellX = 12;
         int cellY = 12;
-        TunnelCell testCell = new TunnelCell(
+        TunnelCellBasic testCell = new TunnelCell(
                 mock.getOffsetX() * cellX,
                 mock.getOffsetY() * cellY,
                 null,

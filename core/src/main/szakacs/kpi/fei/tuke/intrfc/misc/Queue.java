@@ -92,5 +92,5 @@ public interface Queue<T> extends Iterable<T> {
      *
      * @return a set of queue elements satisfying the given criteria.
      */
-    Set<T> getElementsByCriteria(Predicate<T> criteria);
+    List<T> getElementsByCriteria(Predicate<T> criteria);
 }

@@ -136,21 +136,19 @@ public class ArrayQueue<T> implements Queue<T> {
     }
 
     @Override
-    public Set<T> getElementsByCriteria(Predicate<T> criteria){
+    public List<T> getElementsByCriteria(Predicate<T> criteria){
         if (criteria == null){
             criteria = (T) -> true;
         }
-        Set<T> set = new LinkedHashSet<>(
-                (int) Math.ceil((float)elements.length/0.75)
-        );
+        List<T> list = new ArrayList<>(numElements);
         T[] elements = (T[]) this.elements;
         for (int idx = front, count = 0; count < numElements; idx++, count++) {
             T element = elements[idx % capacity];
             if (criteria.test(element)) {
-                set.add(element);
+                list.add(element);
             }
         }
-        return set;
+        return list;
     }
 
     @Override

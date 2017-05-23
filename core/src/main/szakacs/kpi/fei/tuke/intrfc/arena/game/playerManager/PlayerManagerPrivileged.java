@@ -11,7 +11,7 @@ import java.util.Map;
 /**
  *
  */
-public interface PlayerManagerPrivileged extends PlayerManagerUpdatable, GameUpdater, ResettableGameClass {
+public interface PlayerManagerPrivileged extends PlayerManagerUpdatable, GameUpdater {
 
     OnScoreEventCallback getScoreChangeCallback();
 

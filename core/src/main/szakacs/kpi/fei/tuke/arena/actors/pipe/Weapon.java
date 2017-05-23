@@ -26,11 +26,12 @@ public class Weapon {
             frontIndex = 0;
             rearIndex = -1;
             previous = new HashSet<>(capacity);
+            previous.add(null);
         }
 
         @Override
         public void enqueue(Bullet bullet){
-            if (bullet == null || previous.contains(bullet))
+            if (previous.contains(bullet))
                 return;
             if ( !isFull() ) {
                 super.enqueue(bullet);

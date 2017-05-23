@@ -19,7 +19,7 @@ public class PipeHead extends AbstractMoveableActor {
 
     private Weapon weapon;
     private PlayerToken token;
-    private int collectedNuggetsCounter = 0;
+    //private int collectedNuggetsCounter = 0;
 
     PipeHead(Direction direction, ActorGameInterface gameInterface, TunnelCellUpdatable startPosition, PlayerToken token) {
         super(startPosition, ActorType.PIPEHEAD, direction, gameInterface);
@@ -60,35 +60,24 @@ public class PipeHead extends AbstractMoveableActor {
 
     void onPush(Pipe pipe){
         TunnelCellUpdatable currentPosition = getCurrentPosition();
-        int prevNuggetCount = gameInterface.getGameWorld().getNuggetCount();
+        //int prevNuggetCount = gameInterface.getGameWorld().getNuggetCount();
         Set<ActorBasic> enemies = gameInterface.getActorsByType(ActorType.ENEMY);
-        Set<ActorBasic> pipeSegments = gameInterface.getPositionsToPipesMap()
-                .get(currentPosition);
 
         // collect nugget, and if a threshold is reached,
         // load a bonus bullet into the weapon.
         currentPosition.collectNugget(pipe);
-        if (gameInterface.getGameWorld().getNuggetCount() < prevNuggetCount){
+/*        if (gameInterface.getGameWorld().getNuggetCount() < prevNuggetCount){
             collectedNuggetsCounter++;
             if (collectedNuggetsCounter >= 20) {
                 weapon.load(new Bullet(gameInterface), token);
                 collectedNuggetsCounter = 0;
             }
-        }
+        }*/
         // remove all enemy actors at current position
         for (ActorBasic actor : enemies){
             if (actor.intersects(this)) {
                 gameInterface.unregisterActor(actor);
             }
         }
-        // TODO: Implement pipe-pipe collisions
-/*        for (ActorBasic actor : pipeSegments){
-            if (actor.equals(this))
-                continue;
-            if (actor.getType() == ActorType.PIPESEGMENT){
-                Pipe pipe =
-                gameInterface.getPipesUpdatable((PipeSegment)actor).getPipe()
-            }
-        }*/
     }
 }

@@ -1,11 +1,11 @@
-package szakacs.kpi.fei.tuke.intrfc;
+package szakacs.kpi.fei.tuke.intrfc.misc;
 
 import org.junit.*;
-import szakacs.kpi.fei.tuke.intrfc.misc.Stack;
 import szakacs.kpi.fei.tuke.misc.ArrayStack;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Created by developer on 16.2.2017.

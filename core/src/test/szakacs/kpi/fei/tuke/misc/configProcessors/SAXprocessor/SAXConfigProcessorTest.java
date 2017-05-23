@@ -3,6 +3,7 @@ package szakacs.kpi.fei.tuke.misc.configProcessors.SAXprocessor;
 import org.junit.Assert;
 import org.junit.Test;
 import szakacs.kpi.fei.tuke.enums.Direction;
+import szakacs.kpi.fei.tuke.intrfc.misc.ActorClassInfo;
 import szakacs.kpi.fei.tuke.intrfc.player.Player;
 import szakacs.kpi.fei.tuke.intrfc.arena.actors.ActorBasic;
 import szakacs.kpi.fei.tuke.intrfc.misc.GameConfig;
@@ -13,7 +14,7 @@ import szakacs.kpi.fei.tuke.misc.configProcessors.gameValueObjects.DummyEntrance
 import szakacs.kpi.fei.tuke.misc.configProcessors.gameValueObjects.DummyLevel;
 
 import java.util.Map;
-import java.util.Set;
+
 
 /**
  * Created by developer on 17.2.2017.
@@ -37,7 +38,7 @@ public class SAXConfigProcessorTest {
         System.out.print("\n\n");
         for (DummyLevel level : config.getLevels()){
             System.out.println("level number: " + levelIdx);
-            System.out.println("gameType: " + level.getGameType());
+            //System.out.println("gameType: " + level.getGameType());
             GameWorldPrototype prototype = level.getGameWorldPrototype();
             Map<DummyEntrance, Class<? extends Player>> map = level.getEntranceToPlayerMap();
             Assert.assertTrue(map.size() > 0);
@@ -52,10 +53,11 @@ public class SAXConfigProcessorTest {
             System.out.print("\n\n\n");
             levelIdx++;
         }
-        Map<Class<? extends ActorBasic>, Set<Direction>> map = config.getActorInfoMap();
+        Map<Class<? extends ActorBasic>, ActorClassInfo> map = config.getActorInfoMap();
         for (Class clazz : map.keySet()){
+
             System.out.println("Actor of type " + clazz.getSimpleName() + " can be oriented in the following directions:");
-            for (Direction direction: map.get(clazz))
+            for (Direction direction : map.get(clazz).getActorDirections())
                 System.out.println(direction.name());
         }
     }

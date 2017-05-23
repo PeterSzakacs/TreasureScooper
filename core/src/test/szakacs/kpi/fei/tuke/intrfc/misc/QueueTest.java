@@ -1,12 +1,12 @@
-package szakacs.kpi.fei.tuke.intrfc;
+package szakacs.kpi.fei.tuke.intrfc.misc;
 
 import org.junit.Assert;
 import org.junit.Test;
-import szakacs.kpi.fei.tuke.intrfc.misc.Queue;
 import szakacs.kpi.fei.tuke.misc.ArrayQueue;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Created by developer on 16.2.2017.

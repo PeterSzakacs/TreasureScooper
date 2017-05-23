@@ -113,20 +113,18 @@ public class ArrayStack<T> implements Stack<T> {
     }
 
     @Override
-    public Set<T> getElementsByCriteria(Predicate<T> criteria) {
+    public List<T> getElementsByCriteria(Predicate<T> criteria) {
         if (criteria == null){
             criteria = (T) -> true;
         }
         T[] elements = (T[]) this.elements;
-        Set<T> set = new LinkedHashSet<>(
-                (int) Math.ceil((float)(top+1)/0.75)
-        );
+        List<T> list = new ArrayList<>(top+1);
         for (int idx = 0; idx <= top; idx++) {
             if (criteria.test(elements[idx])) {
-                set.add(elements[idx]);
+                list.add(elements[idx]);
             }
         }
-        return set;
+        return list;
     }
 
     @Override

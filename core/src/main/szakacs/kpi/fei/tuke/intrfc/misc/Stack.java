@@ -73,7 +73,7 @@ public interface Stack<T> extends Iterable<T> {
     T[] getElements();
 
     /**
-     * Returns a set of elements, ordered from bottom to top of the stack,
+     * Returns a list of elements, ordered from bottom to top of the stack,
      * that satisfy the criteria passed as argument to this function.
      * If the given criteria is null, it returns all elements in the stack,
      * ordered from bottom to top.
@@ -83,7 +83,7 @@ public interface Stack<T> extends Iterable<T> {
      *                 be included in the query results. If a null
      *                 value is passed, all elements are returned.
      *
-     * @return a set of stack elements satisfying the given criteria.
+     * @return a list of stack elements satisfying the given criteria.
      */
-    Set<T> getElementsByCriteria(Predicate<T> criteria);
+    List<T> getElementsByCriteria(Predicate<T> criteria);
 }
