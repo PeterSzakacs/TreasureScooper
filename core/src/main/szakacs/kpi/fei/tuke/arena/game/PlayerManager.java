@@ -25,6 +25,7 @@ import szakacs.kpi.fei.tuke.intrfc.arena.game.playerManager.PlayerManagerPrivile
 import szakacs.kpi.fei.tuke.intrfc.arena.game.world.GameWorldUpdatable;
 import szakacs.kpi.fei.tuke.intrfc.misc.GameConfig;
 import szakacs.kpi.fei.tuke.misc.GameLevelInitializationException;
+import szakacs.kpi.fei.tuke.misc.PlayerException;
 import szakacs.kpi.fei.tuke.misc.configProcessors.gameValueObjects.DummyEntrance;
 import szakacs.kpi.fei.tuke.misc.configProcessors.gameValueObjects.DummyLevel;
 
@@ -44,6 +45,7 @@ public class PlayerManager implements PlayerManagerPrivileged {
         private Player player;
         private Pipe pipe;
         private int score = 0;
+        private Throwable crashReason = null;
 
         private PlayerInfoImpl(Pipe pipe, Player player){
             this.pipe = pipe; this.player = player;
@@ -91,7 +93,7 @@ public class PlayerManager implements PlayerManagerPrivileged {
     private Supplier<GameState> stateGetter;
     private BiMap<PlayerToken, PlayerInfoImpl> players;
     private BiMap<PlayerToken, Pipe> pipes;
-    private Map<PlayerToken, PlayerInfo> unregisteredPlayers;
+    private Map<PlayerToken, PlayerInfoImpl> unregisteredPlayers;
     private Map<TunnelCellBasic, Set<ActorBasic>> positionPipesMap;
     private GameShop gameShop;
     private MethodCallAuthenticator authenticator;
@@ -175,6 +177,14 @@ public class PlayerManager implements PlayerManagerPrivileged {
         return Collections.unmodifiableMap(unregisteredPlayers);
     }
 
+    @Override
+    public Throwable getCrashReason(PlayerToken token) {
+        if (unregisteredPlayers.containsKey(token)){
+            return unregisteredPlayers.get(token).crashReason;
+        } else {
+            return null;
+        }
+    }
 
 
     // ResettableGameClass methods
@@ -255,8 +265,9 @@ public class PlayerManager implements PlayerManagerPrivileged {
             token = it.next(); info = players.get(token);
             try {
                 info.player.act(token);
-            } catch (Exception e){
+            } catch (Exception e) {
                 removePlayer(token, it);
+                info.crashReason = e;
             }
             info.pipe.allowMovement(authenticator);
         }

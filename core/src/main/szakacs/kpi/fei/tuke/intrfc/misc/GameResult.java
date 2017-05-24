@@ -12,4 +12,8 @@ public interface GameResult {
     int getScore();
 
     boolean hasFailed();
+
+    boolean hasCrashed();
+
+    Throwable getCrashReason();
 }

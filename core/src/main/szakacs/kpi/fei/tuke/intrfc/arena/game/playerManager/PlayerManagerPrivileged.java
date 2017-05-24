@@ -16,4 +16,6 @@ public interface PlayerManagerPrivileged extends PlayerManagerUpdatable, GameUpd
     OnScoreEventCallback getScoreChangeCallback();
 
     Map<PlayerToken, PlayerInfo> getUnregisteredPlayers();
+
+    Throwable getCrashReason(PlayerToken token);
 }

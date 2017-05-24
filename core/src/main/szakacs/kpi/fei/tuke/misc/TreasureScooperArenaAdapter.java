@@ -7,6 +7,7 @@ import kpi.openlab.arena.impl.BotResultImpl;
 import kpi.openlab.arena.interfaces.Bot;
 import kpi.openlab.arena.interfaces.BotResult;
 import szakacs.kpi.fei.tuke.arena.GameManager;
+import szakacs.kpi.fei.tuke.intrfc.misc.GameResult;
 import szakacs.kpi.fei.tuke.intrfc.player.Player;
 import szakacs.kpi.fei.tuke.intrfc.misc.GameConfig;
 import szakacs.kpi.fei.tuke.intrfc.misc.GameConfigProcessor;
@@ -18,6 +19,7 @@ import szakacs.kpi.fei.tuke.misc.configProcessors.SAXprocessor.SAXConfigProcesso
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -57,11 +59,20 @@ public class TreasureScooperArenaAdapter extends ArenaLwjglApplication<CoreGameR
     protected List<BotResult> arenaFinishing(CoreGameRenderer app) {
         GameResults results = app.getManager().getResults();
         List<BotResult> botResults = new ArrayList<>(bots.size());
+        Map<Class<? extends Player>, GameResult> totalScores = results.getTotalGameScores();
         for (Bot<Player> bot : bots){
-            botResults.add(new BotResultImpl(
-                    bot.getId(),
-                    results.getTotalGameScores().get(bot.getBotInstance().getClass()).getScore()
-            ));
+            GameResult result = totalScores.get(bot.getBotInstance().getClass());
+            if (result.hasCrashed()){
+                botResults.add(new BotResultImpl(
+                        bot.getId(), result.getScore(),
+                        true, result.getCrashReason()
+                        )
+                );
+            } else {
+                botResults.add(new BotResultImpl(
+                        bot.getId(), result.getScore()
+                ));
+            }
         }
         return botResults;
     }
@@ -88,6 +99,7 @@ public class TreasureScooperArenaAdapter extends ArenaLwjglApplication<CoreGameR
         config.height = renderer.getWorld().getHeight();
         config.title = "Treasure Scooper";
         config.foregroundFPS = 12;
+        config.backgroundFPS = 12;
         config.forceExit = true;
         return config;
     }
