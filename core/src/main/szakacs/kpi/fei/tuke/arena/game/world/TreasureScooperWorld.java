@@ -16,6 +16,9 @@ import szakacs.kpi.fei.tuke.misc.configProcessors.gameValueObjects.DummyTunnel;
 
 import java.util.*;
 
+/**
+ * The class managing and representing the game world.
+ */
 public class TreasureScooperWorld implements GameWorldPrivileged {
 
     private int width;

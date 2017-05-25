@@ -9,7 +9,7 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * Created by developer on 29.4.2017.
+ * The implementation of the base {@link ActorClassInfo} interface.
  */
 public class ActorClassInfoImpl implements ActorClassInfo {
 

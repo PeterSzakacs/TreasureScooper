@@ -6,7 +6,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Created by developer on 3.2.2017.
+ * The implementation of the {@link GameWorldPrototype} value object interface.
  */
 public class DummyWorld implements GameWorldPrototype {
 

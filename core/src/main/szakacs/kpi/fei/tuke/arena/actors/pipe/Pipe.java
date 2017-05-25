@@ -114,7 +114,7 @@ public class Pipe implements PipeBasic {
                 10,
                 true,
                 1,
-                3,
+                1,
                 segmentStackCallback,
                 gameInterface,
                 token
@@ -194,13 +194,25 @@ public class Pipe implements PipeBasic {
     // helper methods
 
 
-
+    /**
+     * Allows pushing segments to the pipe or popping them off it,
+     * which is limited one per iteration of the game loop for
+     * players.
+     *
+     * @param authToken An authentication token to verify the caller
+     */
     public void allowMovement(Object authToken) {
         if (gameInterface.getAuthenticator().authenticate(authToken)) {
             segmentStack.unlock();
         }
     }
 
+    /**
+     * Sets the value of health of this pipe.
+     *
+     * @param health the new health value of this pipe
+     * @param authToken An authentication token to verify the caller
+     */
     public void setHealth(int health, Object authToken) {
         if (gameInterface.getAuthenticator().authenticate(authToken)) {
             healthPoints = health;
@@ -208,9 +220,5 @@ public class Pipe implements PipeBasic {
                 healthPoints = 0;
             }
         }
-    }
-
-    public Set<PipeSegment> getEdges() {
-        return Collections.unmodifiableSet(edges);
     }
 }

@@ -1,7 +1,8 @@
 package szakacs.kpi.fei.tuke.misc;
 
 /**
- * Created by developer on 17.2.2017.
+ * An exception thrown when there was some problem processing
+ * the game configuration (i.e. file not found etc.).
  */
 public class ConfigProcessingException extends Exception {
 

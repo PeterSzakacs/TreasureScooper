@@ -19,7 +19,8 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 /**
- * Created by developer on 2.12.2016.
+ * The game's implementation of the ApplicationListener interface of libGDX.
+ * This is the class called first on every iteration of the game loop.
  */
 public class CoreGameRenderer implements ApplicationListener {
 
@@ -61,7 +62,17 @@ public class CoreGameRenderer implements ApplicationListener {
     @Override
     public void resize(int width, int height) {}
 
-    // Yes, this is the main game loop
+    /**
+     * <p>Main game loop. If the game is still running,
+     * calls update on the current game level, waits
+     * for a while after the level finishes and then
+     * starts the new level.</p>
+     *
+     * <p>Once the final level is finished and it has
+     * finished waiting, it turns off continuous
+     * rendering and then displays the scoreboard
+     * for one minute and then closes the application.</p>
+     */
     @Override
     public void render() {
         Gdx.gl.glClearColor(0, 0, 0, 1);
@@ -87,12 +98,22 @@ public class CoreGameRenderer implements ApplicationListener {
         }
     }
 
+    /**
+     * Not implemented.
+     */
     @Override
     public void pause() {}
 
+    /**
+     * Not implemented.
+     */
     @Override
     public void resume() {}
 
+    /**
+     * Disposes of all rendering resources used by this class
+     * and any of its helper {@link GameRenderer} classes.
+     */
     @Override
     public void dispose() {
         batch.dispose();
@@ -104,8 +125,24 @@ public class CoreGameRenderer implements ApplicationListener {
         }
     }
 
+    /**
+     * Only used during initialization for outside classes
+     * to be able to get the width and height to use for
+     * the LwjglApplicationConfiguration.
+     *
+     * @return the game world of the current level
+     */
     public GameWorldBasic getWorld() {
         return currentGameLevel.getGameWorld();
+    }
+
+    /**
+     * Gets the game manager instance containing scores of players
+     *
+     * @return the game manager
+     */
+    public GameManager getManager() {
+        return manager;
     }
 
     /*
@@ -138,9 +175,5 @@ public class CoreGameRenderer implements ApplicationListener {
                 }
             }
         }
-    }
-
-    public GameManager getManager() {
-        return manager;
     }
 }

@@ -10,8 +10,6 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * Created by developer on 11.2.2017.
- *
  * The interface of any object which stores initial game configuration
  * data retrieved from an external storage source.
  *
@@ -29,19 +27,29 @@ public interface GameConfig {
      */
     List<DummyLevel> getLevels();
 
+    /**
+     * Gets a set of all player classes that are expected to play
+     * at least in one level during the game.
+     *
+     * @return a set of all expected player classes to be used during the game
+     */
     Set<Class<? extends Player>> getPlayerClasses();
 
+    /**
+     * Gets a set of all additional updater classes that are expected to be used
+     * at least in one level during the game.
+     *
+     * @return a set of all additional updater classes that are expected to be used
+     *         at least in one level during the game
+     */
     Set<Class<? extends GameUpdater>> getUpdaterClasses();
 
     /**
-     * Returns a map which states which directions an actor
-     * is allowed to move in. This information also means
-     * for which directions an actor has a sprite associated
-     * with that direction (probably will change to a more
-     * elegant solution)
+     * Returns a mapping between actor classes and additional information
+     * about them used for rendering purposes.
      *
-     * @return the mapping between actors and the allowed
-     *         directions they can be oriented at
+     * @return a mapping between actor classes and additional information
+     *         about them used for rendering purposes.
      */
     Map<Class<? extends ActorBasic>, ActorClassInfo> getActorInfoMap();
 }

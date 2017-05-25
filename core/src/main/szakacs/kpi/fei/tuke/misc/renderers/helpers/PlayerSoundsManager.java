@@ -12,7 +12,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Created by developer on 19.4.2017.
+ * Plays sounds upon the pipe moving as well as when a player loads or fires a bullet.
  */
 public class PlayerSoundsManager {
 

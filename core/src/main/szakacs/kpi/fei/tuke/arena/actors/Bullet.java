@@ -6,7 +6,8 @@ import szakacs.kpi.fei.tuke.intrfc.arena.game.world.TunnelCellUpdatable;
 import szakacs.kpi.fei.tuke.intrfc.arena.proxies.ActorGameInterface;
 
 /**
- * Created by developer on 6.11.2016.
+ * A bullet that is either stored in the pipe's weapon
+ * or flying after being shot.
  */
 public class Bullet extends AbstractMoveableActor {
     private int xDelta;
@@ -16,6 +17,14 @@ public class Bullet extends AbstractMoveableActor {
         super(ActorType.BULLET, gameInterface);
     }
 
+    /**
+     * Moves by offsetX or offsetY in the direction
+     * the pipe's head was pointing in when this
+     * bullet was fired.
+     *
+     * @param authToken An authentication token to verify the caller
+     */
+    @Override
     public void act(Object authToken){
         if (gameInterface.getAuthenticator().authenticate(authToken)) {
             this.move(xDelta, yDelta, super.getDirection());

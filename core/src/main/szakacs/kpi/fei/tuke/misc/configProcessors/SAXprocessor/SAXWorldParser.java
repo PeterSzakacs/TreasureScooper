@@ -11,7 +11,7 @@ import szakacs.kpi.fei.tuke.misc.configProcessors.gameValueObjects.DummyWorld;
 import java.util.Map;
 
 /**
- * Created by developer on 2.2.2017.
+ * The SAX parser implementation for parsing the configuration file defining a game world.
  */
 public class SAXWorldParser extends DefaultHandler {
 
@@ -90,10 +90,19 @@ public class SAXWorldParser extends DefaultHandler {
     public void characters(char[] ch, int start, int length) throws SAXException {
     }
 
+    /**
+     * Gets the value object representing the game world parsed from the respective file.
+     *
+     * @return the value object representing the game world parsed from the respective file
+     */
     public GameWorldPrototype getWorld(){
         return this.world;
     }
 
+    /**
+     * Resets the state of this parser. Call this before starting parsing of another XML file
+     * defining a game world.
+     */
     void reset() {
         this.state = ProcessingState.INITIALIZING;
         this.world = null;

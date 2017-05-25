@@ -33,7 +33,7 @@ import java.util.*;
 import java.util.function.Supplier;
 
 /**
- * Created by developer on 7.3.2017.
+ * The managing class for all actors and their pipes.
  */
 public class PlayerManager implements PlayerManagerPrivileged {
 

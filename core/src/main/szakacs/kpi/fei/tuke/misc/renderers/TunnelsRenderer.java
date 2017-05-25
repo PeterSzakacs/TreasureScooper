@@ -16,7 +16,8 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * Created by developer on 24.1.2017.
+ * Renders every tunnel cell in the game world
+ * as well as the nugget in it, if there is one.
  */
 public class TunnelsRenderer extends AbstractGameRenderer {
 

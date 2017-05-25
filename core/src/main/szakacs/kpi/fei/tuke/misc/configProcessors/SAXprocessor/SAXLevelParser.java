@@ -17,7 +17,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by developer on 25.3.2017.
+ * The SAX parser implementation for parsing configuration files
+ * for scenarios (i.e. lists of levels).
  */
 public class SAXLevelParser extends DefaultHandler {
 
@@ -64,6 +65,11 @@ public class SAXLevelParser extends DefaultHandler {
         }
     }
 
+    /**
+     * Gets a list of value objects representing game levels parsed from the respective file.
+     *
+     * @return a list of value objects representing game levels parsed from the respective file
+     */
     List<DummyLevel> getLevels(){
         return levels;
     }

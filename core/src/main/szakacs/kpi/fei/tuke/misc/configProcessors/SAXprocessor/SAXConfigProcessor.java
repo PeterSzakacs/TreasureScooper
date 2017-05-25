@@ -13,7 +13,8 @@ import java.io.File;
 import java.io.IOException;
 
 /**
- * Created by developer on 11.2.2017.
+ * The SAX (simple API for XML) implementation of the {@link GameConfigProcessor}
+ * interface for parsing game configuration stored as XML files.
  */
 public class SAXConfigProcessor extends DefaultHandler implements GameConfigProcessor {
 

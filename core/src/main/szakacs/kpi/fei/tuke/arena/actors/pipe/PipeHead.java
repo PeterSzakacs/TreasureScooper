@@ -32,6 +32,11 @@ public class PipeHead extends AbstractMoveableActor {
         }*/
     }
 
+    /**
+     * Not implemented.
+     *
+     * @param authToken An authentication token to verify the caller
+     */
     @Override
     public void act(Object authToken) {
 
@@ -46,18 +51,31 @@ public class PipeHead extends AbstractMoveableActor {
         return this.weapon;
     }
 
+    /**
+     * Gets the pipe of which this head is a part.
+     *
+     * @return the pipe of which this head is a part
+     */
     public PipeBasic getPipe(){
         return gameInterface.getPlayerTokenMap().get(token).getPipe();
     }
 
+    @Override
     protected void setDirection(Direction direction) {
         super.setDirection(direction);
     }
 
+    @Override
     protected void move(int dxAbs, int dyAbs, Direction direction){
         super.move(dxAbs, dyAbs, direction);
     }
 
+    /**
+     * Performs actions by the pipe head upon the segment stack
+     * being pushed to and the head being moved to its new position.
+     *
+     * @param pipe the pipe to which this head belongs
+     */
     void onPush(Pipe pipe){
         TunnelCellUpdatable currentPosition = getCurrentPosition();
         //int prevNuggetCount = gameInterface.getGameWorld().getNuggetCount();

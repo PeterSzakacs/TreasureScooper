@@ -9,10 +9,9 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * Extension of the "updatable" interface for the actor manager object.
- *
- * This interface is designed to be exposed only to game backend classes
- * which need access to specific state and behavior of the actor manager.
+ * Extension of the {@link ActorManagerUpdatable} interface for the actor manager object
+ * that is exposed to the core backend classes managing the game logic as well as any
+ * classes external to the game logic.
  */
 public interface ActorManagerPrivileged extends ActorManagerUpdatable, GameUpdater {
 

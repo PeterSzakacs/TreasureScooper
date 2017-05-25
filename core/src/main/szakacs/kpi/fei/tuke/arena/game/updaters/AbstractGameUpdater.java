@@ -8,7 +8,9 @@ import szakacs.kpi.fei.tuke.intrfc.arena.game.world.GameWorldPrivileged;
 import szakacs.kpi.fei.tuke.misc.configProcessors.gameValueObjects.DummyLevel;
 
 /**
- * Created by developer on 28.1.2017.
+ * An abstract base class partially implementing the {@link GameUpdater}
+ * interface for the purpose of storing and updating commonly used member
+ * variables.
  */
 public abstract class AbstractGameUpdater implements GameUpdater {
 
@@ -25,6 +27,13 @@ public abstract class AbstractGameUpdater implements GameUpdater {
 
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * This implementation should be called before
+     * executing code of an overriding method.
+     */
+    @Override
     public void startNewGame(GameLevelPrivileged game, DummyLevel level){
         this.game = game;
         this.gameWorld = game.getGameWorld();

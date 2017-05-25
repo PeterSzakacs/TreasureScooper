@@ -51,8 +51,9 @@ public class PipeSegmentStack extends ArrayStack<PipeSegment> {
 
 
     /**
-     * Adds a segment to the top of the pipe and moves the pipe head in
-     * that direction according to the segment
+     * Adds a segment to the top of the stack, if it is that which is expected
+     * and the limit on the number of segments that can be pushed has not been
+     * reached and calls back the pipe to perform appropriate actions.
      *
      * @param segment the segment to add to the pipe
      */
@@ -67,7 +68,9 @@ public class PipeSegmentStack extends ArrayStack<PipeSegment> {
     }
 
     /**
-     * Moves pipe as well as head one step back from its current position.
+     * Removes a segment from the top of the stack, if the limit on the number
+     * of segments that can be popped off it has not been reached and calls back
+     * the pipe to perform appropriate actions.
      *
      * @return the removed pipe segment
      */
@@ -83,11 +86,20 @@ public class PipeSegmentStack extends ArrayStack<PipeSegment> {
         }
     }
 
+    /**
+     * Resets the operation counters to their default values to enable
+     * this stack to be pushed to or popped from again.
+     */
     void unlock(){
         this.pushCounter = 0;
         this.popCounter = 0;
     }
 
+    /**
+     * Sets the next expected segment to be pushed onto this stack.
+     *
+     * @param segmentToPush the next expected segment to be pushed onto this stack
+     */
     void setSegmentToPush(PipeSegment segmentToPush){
         this.segmentToPush = segmentToPush;
     }

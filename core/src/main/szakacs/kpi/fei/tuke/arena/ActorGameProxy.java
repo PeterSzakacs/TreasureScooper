@@ -13,7 +13,9 @@ import szakacs.kpi.fei.tuke.intrfc.arena.proxies.ActorGameInterface;
 import java.util.Map;
 
 /**
- * Created by developer on 28.1.2017.
+ * An extension od the {@link PlayerGameProxy} class implementing
+ * the {@link ActorGameInterface} interface for use by actors
+ * to access game functionality.
  */
 public class ActorGameProxy extends PlayerGameProxy implements ActorGameInterface {
 

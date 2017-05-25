@@ -1,7 +1,8 @@
 package szakacs.kpi.fei.tuke.misc;
 
 /**
- * Created by developer on 15.3.2017.
+ * Thrown by the game level or any class underneath it if there was some problem
+ * starting a new game level.
  */
 public class GameLevelInitializationException extends Exception{
 

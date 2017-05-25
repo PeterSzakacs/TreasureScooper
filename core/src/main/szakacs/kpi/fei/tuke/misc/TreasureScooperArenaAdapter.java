@@ -23,7 +23,7 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * Created by developer on 21.3.2017.
+ * Our implementation of ArenaMain interface defined in the arena-runner library.
  */
 public class TreasureScooperArenaAdapter extends ArenaLwjglApplication<CoreGameRenderer, Player> {
 

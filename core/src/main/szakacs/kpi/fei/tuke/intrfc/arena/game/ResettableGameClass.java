@@ -5,9 +5,19 @@ import szakacs.kpi.fei.tuke.misc.GameLevelInitializationException;
 import szakacs.kpi.fei.tuke.misc.configProcessors.gameValueObjects.DummyLevel;
 
 /**
- * Created by developer on 7.3.2017.
+ * The interface of a class that is designed to be reused in every game level.
  */
 public interface ResettableGameClass {
 
+    /**
+     * Performs the actions to reset the implementing class to its default state
+     * when a new game level begins.
+     *
+     * @param gameLevel the object representing the current game level
+     * @param level the value object containing additional information to initiazlize the current game level
+     * @throws GameLevelInitializationException if some error has occurred which prevented
+     *                                          initialization (malformed data in the value
+     *                                          object etc.)
+     */
     void startNewGame(GameLevelPrivileged gameLevel, DummyLevel level) throws GameLevelInitializationException;
 }

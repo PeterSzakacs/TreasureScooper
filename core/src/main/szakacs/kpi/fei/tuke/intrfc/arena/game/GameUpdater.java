@@ -15,7 +15,7 @@ package szakacs.kpi.fei.tuke.intrfc.arena.game;
 public interface GameUpdater extends ResettableGameClass {
 
     /**
-     * Self-explanatory.
+     * Updates the specific aspects of the game logic particular to the implementing class.
      */
     void update();
 }

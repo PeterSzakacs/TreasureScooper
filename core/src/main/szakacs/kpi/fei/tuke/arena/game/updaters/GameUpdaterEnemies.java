@@ -51,20 +51,7 @@ public class GameUpdaterEnemies extends AbstractGameUpdater {
         this.eligiblePositions = new ArrayList<>();
     }
 
-    /*public GameUpdaterEnemies(GameLevelPrivileged game){
-        super(game);
-        this.initialize();
-        Random rand = new Random();
-        do {
-            this.turnBound = rand.nextInt(31);
-        } while (this.turnBound < 20);
-    }
 
-    public GameUpdaterEnemies(GameLevelPrivileged game, int turnBound){
-        super(game);
-        this.initialize();
-        this.turnBound = turnBound;
-    }*/
 
     /**
      * Initializes the collections used in this class

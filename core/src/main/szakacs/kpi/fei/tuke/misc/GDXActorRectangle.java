@@ -5,7 +5,8 @@ import szakacs.kpi.fei.tuke.intrfc.arena.game.world.TunnelCellUpdatable;
 import szakacs.kpi.fei.tuke.intrfc.misc.ActorRectangle;
 
 /**
- * Created by developer on 6.4.2017.
+ * An extension to the base {@link GDXRectangle} descriptor of a game object
+ * with added functionality for use by actors.
  */
 public class GDXActorRectangle extends GDXRectangle implements ActorRectangle {
 
@@ -15,16 +16,6 @@ public class GDXActorRectangle extends GDXRectangle implements ActorRectangle {
         super(currentPosition.getX(), currentPosition.getY(), width, height);
         this.currentPosition = currentPosition;
     }
-
-/*    @Override
-    public boolean overlaps(ActorRectangle other) {
-        if (other == null)
-            return false;
-        if (other.getCurrentPosition() == currentPosition)
-            return true;
-        return x <= other.getRectangleX() + width && x + width >= other.getRectangleX()
-                && y <= other.getRectangleY() + height && y + height >= other.getRectangleY();
-    }*/
 
     @Override
     public void translate(Direction dir, int dxAbs, int dyAbs) {

@@ -23,7 +23,10 @@ import szakacs.kpi.fei.tuke.misc.renderers.helpers.WeaponRenderer;
 import java.util.*;
 
 /**
- * Created by developer on 24.1.2017.
+ * Renders the pipe and current score of each player.
+ * Also manages sounds made by these pipes and displays
+ * a the state of his weapon through helper classes
+ * {@link PlayerSoundsManager} and {@link WeaponRenderer}.
  */
 public class PlayerRenderer extends AbstractGameRenderer {
 

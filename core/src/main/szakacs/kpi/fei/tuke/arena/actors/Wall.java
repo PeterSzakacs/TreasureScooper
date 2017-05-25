@@ -9,13 +9,12 @@ import szakacs.kpi.fei.tuke.intrfc.arena.proxies.ActorGameInterface;
 import java.util.Set;
 
 /**
- * Created by developer on 31.12.2016.
+ * A dynamically generated wall. Upon creation disconnects
+ * two adjacent cells by severing references between them.
  */
 public class Wall extends AbstractActor {
 
     private TunnelCellUpdatable neighbouringCell;
-
-    // TODO: Use the left cell as current position.
 
     public Wall(TunnelCellUpdatable cell, ActorGameInterface gameInterface) {
         super(cell, ActorType.WALL, Direction.LEFT, gameInterface);
@@ -25,6 +24,12 @@ public class Wall extends AbstractActor {
         //System.out.println("Wall<init>()");
     }
 
+    /**
+     * Check if a bullet intersects the wall at this position,
+     * and if so, unregister it and this wall as well.
+     *
+     * @param authToken An authentication token to verify the caller
+     */
     @Override
     public void act(Object authToken) {
         if (gameInterface.getAuthenticator().authenticate(authToken)) {
@@ -39,10 +44,17 @@ public class Wall extends AbstractActor {
         }
     }
 
+    /**
+     * Modified implementation of base method from {@link AbstractActor}.
+     * First checks if an actor is located at the neighboring position
+     * (left side of the wall) and only then checks using the base method.
+     *
+     * @param actor the actor to check if it intersects this actor.
+     * @return boolean true if actor is at the left or right side of this wall | false otherwise.
+     */
     @Override
     public boolean intersects(ActorBasic actor){
-        return super.intersects(actor)
-                || neighbouringCell.equals(actor.getCurrentPosition());
+        return neighbouringCell.equals(actor.getCurrentPosition()) || super.intersects(actor);
     }
 
     private void disconnectCells(TunnelCellUpdatable currentPosition){

@@ -14,7 +14,10 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Created by developer on 4.3.2017.
+ * The basic implementation of the {@link GameStateTester} interface.
+ * It also implements a feature to check if all pipes got stuck,
+ * by checking if none of them have moved for at least 200 iterations
+ * of the game loop.
  */
 public class GameStateTesterBasic implements GameStateTester {
 

@@ -48,7 +48,7 @@ public interface GameWorldBasic {
     /**
      * Gets all entrances into the underground tunnel maze. All have a unique String id.
      *
-     * @return an unmodifiable map of entrance IDs to their {@link TunnelCell} entrance.
+     * @return an unmodifiable map of entrance IDs to their tunnel cell entrance.
      */
     Map<String, TunnelCellBasic> getEntrances();
 

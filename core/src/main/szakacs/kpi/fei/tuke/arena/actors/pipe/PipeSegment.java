@@ -25,11 +25,21 @@ public class PipeSegment extends AbstractActor {
         this.setSegmentType(from, to);
     }
 
+    /**
+     * Not implemented.
+     *
+     * @param authToken An authentication token to verify the caller
+     */
     @Override
     public void act(Object authToken) {
 
     }
 
+    /**
+     * Gets the pipe of which this segment is a part.
+     *
+     * @return the pipe of which this segment is a part
+     */
     public PipeBasic getPipe(){
         return gameInterface.getPlayerTokenMap().get(token).getPipe();
     }

@@ -47,6 +47,8 @@ public class GameUpdaterWalls extends AbstractGameUpdater {
     // in the game gameInterface,
     private List<TunnelCellUpdatable> eligiblePositions;
 
+
+
     public GameUpdaterWalls(){
         Random rand = new Random();
         do {
@@ -56,20 +58,6 @@ public class GameUpdaterWalls extends AbstractGameUpdater {
     }
 
 
-    /*public GameUpdaterWalls(GameLevelPrivileged game) {
-        super(game);
-        this.initialize();
-        Random rand = new Random();
-        do {
-            this.turnBound = rand.nextInt(31);
-        } while (this.turnBound < 20);
-    }
-
-    public GameUpdaterWalls(GameLevelPrivileged game, int turnBound) {
-        super(game);
-        this.initialize();
-        this.turnBound = turnBound;
-    }*/
 
     /**
      * Initializes the collections used in this class

@@ -11,18 +11,18 @@ import szakacs.kpi.fei.tuke.intrfc.arena.game.gameLevel.GameLevelPrivileged;
 public interface GameRenderer {
 
     /**
-     * Self-explanatory
+     * Renders a particular aspect of the game.
      */
     void render();
 
     /**
-     * Called when the application ends to release any graphics resources
+     * Called when the application ends to release any resources.
      */
     void dispose();
 
     /**
-     * Called when the game level changes to update the game level reference
-     * and any other related member variables stored in the updater object
+     * Called when the game level changes to update any level-specific
+     * cached member variables stored in the updater object.
      *
      * @param game the new game level
      */

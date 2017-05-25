@@ -3,7 +3,15 @@ package szakacs.kpi.fei.tuke.misc;
 import szakacs.kpi.fei.tuke.intrfc.misc.Rectangle;
 
 /**
- * Created by developer on 6.4.2017.
+ * <p>The libGDX specific implementation of the
+ * {@link Rectangle} interface for a game object
+ * descriptor.</p>
+ *
+ * <p>The current implementation uses libGDX with its
+ * coordinate origin at lower left. The lower left
+ * corner set of coordinates is returned by
+ * {@link Rectangle#getRectangleX()} and
+ * {@link Rectangle#getRectangleY()}).</p>
  */
 public class GDXRectangle implements Rectangle {
 
@@ -33,11 +41,21 @@ public class GDXRectangle implements Rectangle {
         return centerY;
     }
 
+    /**
+     * Returns the horizontal coordinate of the lower left corner of this rectangle.
+     *
+     * @return the horizontal coordinate of the lower left corner of this rectangle
+     */
     @Override
     public int getRectangleX() {
         return x;
     }
 
+    /**
+     * Returns the vertical coordinate of the lower left corner of this rectangle.
+     *
+     * @return the vertical coordinate of the lower left corner of this rectangle
+     */
     @Override
     public int getRectangleY() {
         return y;

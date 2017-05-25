@@ -17,11 +17,12 @@ import szakacs.kpi.fei.tuke.misc.configProcessors.gameValueObjects.DummyLevel;
 import java.util.*;
 
 /**
- * Created by developer on 3.2.2017.
+ * A class managing the game level and used for storing
+ * player scores to display after the game finishes.
  */
 public class GameManager {
 
-    public class GameResultImpl implements GameResult {
+    private class GameResultImpl implements GameResult {
         private Class<? extends Player> playerClass;
         private int score;
         private boolean failed;
@@ -35,7 +36,6 @@ public class GameManager {
             this.failed = failed;
         }
 
-        public Class<? extends Player> getPlayerClass() { return playerClass; }
         public int getScore(){ return score; }
         public boolean hasFailed(){ return failed; }
         public boolean hasCrashed(){ return crashReason != null; }
@@ -84,6 +84,15 @@ public class GameManager {
         this.results = new Results(config);
     }
 
+    /**
+     * Stores away the scores for the previous level and switches
+     * to the next level, which it returns. If the previous level
+     * was the final one, returns null.
+     *
+     * @return the next game level | null if this was the final level
+     * @throws GameLevelInitializationException if the initialization
+     *         of the next level has failed for some reason
+     */
     public GameLevelPrivileged getNextGameLevel() throws GameLevelInitializationException {
 
         if (nextLevelIndex >= 0) {
@@ -100,10 +109,20 @@ public class GameManager {
         return currentGameLevel;
     }
 
+    /**
+     * Gets the current game level.
+     *
+     * @return the current game level
+     */
     public GameLevelPrivileged getCurrentGameLevel() {
         return currentGameLevel;
     }
 
+    /**
+     * Gets the result of all players in this game.
+     *
+     * @return the result of all players in this game
+     */
     public GameResults getResults() {
         return results;
     }

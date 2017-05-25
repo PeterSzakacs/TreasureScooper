@@ -12,7 +12,8 @@ import szakacs.kpi.fei.tuke.intrfc.misc.Rectangle;
 import szakacs.kpi.fei.tuke.misc.GDXActorRectangle;
 
 /**
- * Created by developer on 7.12.2016.
+ * Partial implementation of the {@link ActorPrivileged}
+ * interface containing common code for all actors.
  */
 public abstract class AbstractActor implements ActorPrivileged {
 
@@ -89,14 +90,31 @@ public abstract class AbstractActor implements ActorPrivileged {
         return actorRectangle.overlaps(other.getActorRectangle());
     }
 
+    /**
+     * Sets the direction the actor is facing in.
+     *
+     * @param direction the new direction the actor should be facing in.
+     */
     protected void setDirection(Direction direction) {
         this.dir = direction;
     }
 
+    /**
+     * Sets the tunnel cell the actor is located in.
+     *
+     * @param currentPosition the actor's new position.
+     */
     protected void setCurrentPosition(TunnelCellUpdatable currentPosition){
         this.actorRectangle = new ActorRectangleImpl(currentPosition, world.getOffsetX(), world.getOffsetY());
     }
 
+    /**
+     * Sets the actor's x, y coordinates. Must be within some existing tunnel cell.
+     *
+     * @param currentPosition the tunnel cell in which the new (x, y) coordinates are located in.
+     * @param x the new horizontal coordinate.
+     * @param y the new vertical coordinate.
+     */
     protected void setCurrentPosition(TunnelCellUpdatable currentPosition, int x, int y){
         if (currentPosition.isWithinCell(x, y)){
             this.setCurrentPosition(currentPosition);

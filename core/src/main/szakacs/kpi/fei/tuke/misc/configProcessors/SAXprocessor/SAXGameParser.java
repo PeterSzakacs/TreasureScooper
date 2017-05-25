@@ -19,7 +19,7 @@ import java.io.IOException;
 import java.util.*;
 
 /**
- * Created by developer on 2.2.2017.
+ * The SAX parser implementation for parsing the core configuration file.
  */
 public class SAXGameParser extends DefaultHandler implements GameConfig {
 

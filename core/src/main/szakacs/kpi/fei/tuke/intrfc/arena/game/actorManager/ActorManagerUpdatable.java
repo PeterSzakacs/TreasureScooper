@@ -25,7 +25,7 @@ public interface ActorManagerUpdatable extends ActorManagerBasic {
 
     /**
      * Unregisters an actor (removing from it from the game, in the sense
-     * that its update() method is no longer called),
+     * that its act() method is no longer called),
      *
      * Note that the actual implementation can use late removal to prevent
      * ConcurrentModificationException.

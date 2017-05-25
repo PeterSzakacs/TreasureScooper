@@ -135,6 +135,13 @@ public class HorizontalTunnel implements HorizontalTunnelUpdatable {
 
     // tunnel manipulation methods
 
+    /**
+     * Called when a nugget has been collected
+     * to update the nugget count of this tunnel.
+     *
+     * @param pipe the pipe which collected the nugget.
+     * @param nuggetValue the value of the nugget.
+     */
     void onNuggetCollected(Pipe pipe, int nuggetValue){
         nuggetCount--;
         world.onNuggetCollected(pipe, nuggetValue);

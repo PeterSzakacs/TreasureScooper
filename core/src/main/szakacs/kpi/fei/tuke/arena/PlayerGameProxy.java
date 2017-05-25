@@ -19,8 +19,6 @@ import java.util.Set;
 import java.util.function.Predicate;
 
 /**
- * Created by developer on 5.12.2016.
- *
  * Used as a proxy object to make it impossible for the player to access
  * methods of the game gameInterface he/she has no authorization to access (registerActor(),
  * unregisterActor(), update()) by downcasting the reference to the game gameInterface

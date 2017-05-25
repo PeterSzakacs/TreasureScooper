@@ -15,20 +15,52 @@ import java.util.Map;
  * since only one class implements it and furthermore
  * there are no interfaces for value objects for tunnels,
  * entrances, or game levels.
- *
- * Keeping it for now, though without method documentation.
  */
 public interface GameWorldPrototype {
 
+    /**
+     * Gets the absolute width of the game world.
+     *
+     * @return the absolute width of the game world
+     */
     int getWidth();
 
+    /**
+     * Gets the absolute height of the game world.
+     *
+     * @return the absolute height of the game world
+     */
     int getHeight();
 
+    /**
+     * Gets the absolute width of a single tunnel cell in the game world.
+     *
+     * @return the absolute width of a single tunnel cell in the game world
+     */
     int getOffsetX();
 
+    /**
+     * Gets the absolute height of a single tunnel cell in the game world.
+     *
+     * @return the absolute height of a single tunnel cell in the game world
+     */
     int getOffsetY();
 
+    /**
+     * Gets a mapping between unique string identifiers and value objects
+     * representing entrances to the underground tunnel maze.
+     *
+     * @return a mapping between unique string identifiers and value objects
+     *         representing entrances to the underground tunnel maze
+     */
     Map<String, DummyEntrance> getDummyEntrances();
 
+    /**
+     * Gets a mapping between unique string identifiers and value objects
+     * representing horizontal tunnels.
+     *
+     * @return a mapping between unique string identifiers and value objects
+     * representing horizontal tunnels
+     */
     Map<String, DummyTunnel> getDummyTunnels();
 }

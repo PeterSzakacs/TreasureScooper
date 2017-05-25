@@ -1,14 +1,14 @@
 package szakacs.kpi.fei.tuke.misc.configProcessors.gameValueObjects;
 
 /**
- * Created by developer on 2.2.2017.
+ * A value object representing an entrance into the underground tunnel maze.
  */
 public class DummyEntrance {
 
     private int x;
     private int y;
     private DummyTunnel tunnel;
-    String id;
+    private String id;
 
     public DummyEntrance(int x, int y, DummyTunnel tunnel, String id) {
         this.x = x;
@@ -17,18 +17,40 @@ public class DummyEntrance {
         this.id = id;
     }
 
+    /**
+     * Gets the absolute value of the horizontal coordinate of the topmost cell
+     * of this entrance (that which is right below the surface).
+     *
+     * @return the absolute value of the horizontal coordinate of this entrance
+     */
     public int getX() {
         return x;
     }
 
+    /**
+     * Gets the absolute value of the verical coordinate of the topmost cell
+     * of this entrance (that which is right below the surface).
+     *
+     * @return the absolute value of the vertical coordinate of this entrance
+     */
     public int getY() {
         return y;
     }
 
+    /**
+     * Gets the value object representing the horizontal tunnel this entrance leads to.
+     *
+     * @return the value object representing the horizontal tunnel this entrance leads to
+     */
     public DummyTunnel getTunnel() {
         return tunnel;
     }
 
+    /**
+     * Gets the unique string identifier of this entrance.
+     *
+     * @return the unique string identifier of this entrance
+     */
     public String getId() {
         return id;
     }

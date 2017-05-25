@@ -17,7 +17,7 @@ import java.util.*;
 import java.util.function.Predicate;
 
 /**
- * Created by developer on 25.1.2017.
+ * The managing class for all actors except pipe heads and pipe segments.
  */
 public class ActorManager implements ActorManagerPrivileged {
 

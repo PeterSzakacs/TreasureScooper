@@ -9,8 +9,8 @@ import java.util.Set;
 import java.util.function.Predicate;
 
 /**
- * <p>The basic interface for the class responsible for all game actors and all pipes
- * used by the players.</p>
+ * <p>The basic interface for the class responsible for all game actors except pipes
+ * used by players.</p>
  *
  * <p>This interface defines methods enabling querying to get information about actors
  * in the game.</p>
@@ -33,11 +33,6 @@ public interface ActorManagerBasic {
     /**
      * Gets all active game actors which are of a given {@link ActorType}.
      *
-     * <p><b>Note</b> that no actors of types {@link ActorType#PIPESEGMENT}
-     * or {@link ActorType#PIPEHEAD} are stored and handled by the actor
-     * manager; if a query for these is performed, the returned result is
-     * an empty set.</p>
-     *
      * @param type the actor type of the actors desired.
      * @return a set of all active game actors for whom {@link ActorBasic#getType()} == type.
      * If type == ActorType.PIPESEGMENT || type == ActorType.PIPEHEAD, then an empty set is
@@ -49,15 +44,20 @@ public interface ActorManagerBasic {
      * Gets a mapping between tunnel cells and all actors (except pipe segments or pipe heads)
      * located at the particular tunnel cell
      *
+     * <p><b>Note</b> that no actors of types {@link ActorType#PIPESEGMENT}
+     * or {@link ActorType#PIPEHEAD} are stored and handled by the actor
+     * manager; if a query for these is performed, the returned result is
+     * an empty set.</p>
+     *
      * @return a mapping between actors' current positions and actors themselves
      */
     Map<TunnelCellBasic, Set<ActorBasic>> getPositionToActorsMap();
 
     /**
      * <p>Queries the set of all currently active game actors (meaning actors whose act()
-     * method is still called) and returns a subset of them satisfying the criteria
-     * passed as argument. If no criteria is passed (null is passed) it returns all
-     * game actors.</p>
+     * method is still called) except pipe heads and pipe segments and returns a subset
+     * of them satisfying the criteria passed as argument. If no criteria is passed
+     * (null is passed) it returns all game actors.</p>
      *
      * <p>If {@code getActorsByType} or {@code getPositionToActorsMap} does not satisfy
      * your particular search criteria, this is a generic search method, but beware,

@@ -10,7 +10,7 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * Created by developer on 2.2.2017.
+ * A value object representing a particular game level.
  */
 public class DummyLevel {
 
@@ -24,14 +24,32 @@ public class DummyLevel {
         this.entranceToPlayerMap = new HashMap<>(3);
     }
 
+    /**
+     * Gets the set of additional updater classes used in this game level.
+     *
+     * @return the set of additional updater classes used in this game level
+     */
     public Set<Class<? extends GameUpdater>> getGameUpdaterClasses() {
         return gameUpdaterClasses;
     }
 
+    /**
+     * Gets the value object representing the game world of this level.
+     *
+     * @return the value object representing the game world of this level
+     */
     public GameWorldPrototype getGameWorldPrototype() {
         return world;
     }
 
+    /**
+     * Gets a mapping between value objects representing the entrances
+     * to the tunnel maze and player classes, which have an instance
+     * with a pipe, whose initial position is the topmost cell of this
+     * entrance.
+     *
+     * @return a mapping of value objects representing entrances to player classes.
+     */
     public Map<DummyEntrance, Class<? extends Player>> getEntranceToPlayerMap() {
         return entranceToPlayerMap;
     }

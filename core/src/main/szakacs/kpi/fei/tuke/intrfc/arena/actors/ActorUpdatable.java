@@ -3,16 +3,17 @@ package szakacs.kpi.fei.tuke.intrfc.arena.actors;
 import szakacs.kpi.fei.tuke.intrfc.arena.game.world.TunnelCellUpdatable;
 
 /**
- * Created by developer on 14.4.2017.
+ * The interface of game actors class,
+ * that is exposed to other game actors
+ * and all privileged classes.
  */
 public interface ActorUpdatable extends ActorBasic {
 
-    TunnelCellUpdatable getCurrentPosition();
-
     /**
-     * Returns an actorRectangle object which contains actor properties related to position.
+     * Gets the actor's current position as a TunnelCellUpdatable
+     * type of object.
      *
-     * @return an unmodifiable view of the actor's rectangle object.
+     * @return the actor's current position.
      */
-    //ActorRectangle getActorRectangle();
+    TunnelCellUpdatable getCurrentPosition();
 }

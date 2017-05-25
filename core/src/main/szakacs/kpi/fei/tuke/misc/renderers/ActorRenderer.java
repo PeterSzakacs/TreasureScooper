@@ -17,7 +17,7 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * Created by developer on 24.1.2017.
+ * Renders all actors and creates visual effects upon their removal from the game.
  */
 public class ActorRenderer extends AbstractGameRenderer {
 

@@ -19,7 +19,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Created by developer on 24.1.2017.
+ * Renders the state of each player's weapon (number of bullets) as a circular queue.
  */
 public class WeaponRenderer extends AbstractGameRenderer {
 

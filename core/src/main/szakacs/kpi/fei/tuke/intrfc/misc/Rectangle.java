@@ -1,23 +1,15 @@
 package szakacs.kpi.fei.tuke.intrfc.misc;
 
+import szakacs.kpi.fei.tuke.enums.Direction;
+
 /**
- * <p>A class assigned to game objects such as actors.
- * It contains position related information used
- * for both rendering purposes as well as to check
- * if this object overlaps another object.</p>
- *
- * <p>An object with this interface is exposed by all
- * game actors regardless of rendering library used.
- * In case we were to switch the rendering library,
- * and possibly the coordinate system, we only need
- * to re-implement this interface and use our new
- * implementation.</p>
- *
- * <p>The current implementation uses libGDX with its
- * coordinate origin at lower left. The lower left
- * corner set of coordinates of this rectangle is
- * also returned by {@link Rectangle#getRectangleX()}
- * and {@link Rectangle#getRectangleY()}).</p>
+ * <p>A descriptor of a rendered game object
+ * based on a mathematical rectangle. In case
+ * we were to switch the rendering library and
+ * possibly the coordinate system, we should
+ * only need to re-implement this interface and
+ * change the values in the {@link Direction}
+ * enum and use our new implementation.</p>
  */
 public interface Rectangle {
 

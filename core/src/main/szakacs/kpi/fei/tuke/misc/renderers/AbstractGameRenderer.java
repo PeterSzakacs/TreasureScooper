@@ -8,7 +8,9 @@ import szakacs.kpi.fei.tuke.intrfc.arena.game.world.GameWorldBasic;
 import szakacs.kpi.fei.tuke.intrfc.misc.GameRenderer;
 
 /**
- * Created by developer on 24.1.2017.
+ * An abstract base class partially implementing the {@link GameRenderer}
+ * interface for the purpose of storing and updating commonly used member
+ * variables.
  */
 public abstract class AbstractGameRenderer implements GameRenderer {
 
@@ -26,6 +28,12 @@ public abstract class AbstractGameRenderer implements GameRenderer {
         this.playerManager = game.getPlayerManager();
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * This implementation should be called before
+     * executing code of an overriding method.
+     */
     @Override
     public void reset(GameLevelPrivileged game){
         this.game = game;

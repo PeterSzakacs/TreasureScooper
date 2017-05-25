@@ -16,7 +16,8 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Created by developer on 16.3.2017.
+ * Renders the scores of each player class on a per-level basis and
+ * during the whole game after the last game level is finished.
  */
 public class FinalScoreRenderer implements GameRenderer {
 

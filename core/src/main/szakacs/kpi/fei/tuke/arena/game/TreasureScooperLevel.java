@@ -22,7 +22,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
- * Created by developer on 25.1.2017.
+ * The class managing and representing a game level.
  */
 public class TreasureScooperLevel implements GameLevelPrivileged {
 

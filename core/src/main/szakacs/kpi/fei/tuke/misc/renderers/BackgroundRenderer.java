@@ -11,7 +11,9 @@ import szakacs.kpi.fei.tuke.enums.GameState;
 import szakacs.kpi.fei.tuke.intrfc.arena.game.gameLevel.GameLevelPrivileged;
 
 /**
- * Created by developer on 24.1.2017.
+ * Renders the background of the game and displays any global feedback,
+ * such as number of remaining nuggets or the state of the current level
+ * upon finishing it.
  */
 public class BackgroundRenderer extends AbstractGameRenderer {
 
