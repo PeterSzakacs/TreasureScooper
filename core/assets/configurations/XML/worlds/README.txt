@@ -106,3 +106,5 @@ Width: width * offsetX = 20 * 128 = 2560 px;
     @attributes to: the identifier of the first horizontal tunnel
                     directly reachable from the entrance point
                     (IDREF)
+    @attributes id: the identifier of the tunnel, theoretically can be arbitrary, as long as it is unique,
+                    (custom for writing these IDs is to be determined later).

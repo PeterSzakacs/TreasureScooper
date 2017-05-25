@@ -1,10 +1,8 @@
 package szakacs.kpi.fei.tuke.arena.actors;
 
 import szakacs.kpi.fei.tuke.arena.actors.pipe.Pipe;
-import szakacs.kpi.fei.tuke.arena.actors.pipe.PipeSegment;
 import szakacs.kpi.fei.tuke.enums.ActorType;
 import szakacs.kpi.fei.tuke.enums.Direction;
-import szakacs.kpi.fei.tuke.intrfc.arena.actors.ActorBasic;
 import szakacs.kpi.fei.tuke.intrfc.arena.game.world.TunnelCellUpdatable;
 import szakacs.kpi.fei.tuke.intrfc.arena.proxies.ActorGameInterface;
 
@@ -33,7 +31,12 @@ public class Mole extends AbstractMoveableActor {
     }
 
     /**
+     * Moves by offsetX or offsetY in the initially set direction.
+     * If the end of a tunnel in the given direction was reached,
+     * this actor unregisters itself.
      *
+     * If a pipe intersects this mole, it stops moving
+     * and proceeds to start damaging the pipe.
      *
      * @param authToken An authentication token to verify the caller
      */
@@ -46,31 +49,18 @@ public class Mole extends AbstractMoveableActor {
                     gameInterface.unregisterActor(this);
                     return;
                 }
-                Set<ActorBasic> pipeActorsAtCurrentPos = gameInterface.getPositionsToPipesMap()
-                        .get(getCurrentPosition());
-                if (pipeActorsAtCurrentPos.size() > 0){
-                    ActorBasic actor = pipeActorsAtCurrentPos.iterator().next();
-                    if (actor.getType() == ActorType.PIPESEGMENT){
-                        this.intersectingPipe = (Pipe) ((PipeSegment)actor).getPipe();
+                for (Pipe pipe : pipes) {
+                    if (pipe.intersects(this)) {
+                        this.intersectingPipe = pipe;
                         moving = false;
-                        intersectingPipe.setHealth(
-                                intersectingPipe.getHealth() - 10,
-                                gameInterface.getAuthenticator()
-                        );
+                        pipe.setHealth(pipe.getHealth() - 10, gameInterface.getAuthenticator());
+                        break;
                     }
                 }
             } else {
-                Set<ActorBasic> pipeActorsAtCurrentPos = gameInterface.getPositionsToPipesMap()
-                        .get(getCurrentPosition());
-
-                if (intersectingPipe.getHealth() <= 0 || pipeActorsAtCurrentPos.size() == 0){
+                intersectingPipe.setHealth(intersectingPipe.getHealth() - 10, gameInterface.getAuthenticator());
+                if (intersectingPipe.getHealth() <= 0)
                     moving = true;
-                } else {
-                    intersectingPipe.setHealth(
-                            intersectingPipe.getHealth() - 10,
-                            gameInterface.getAuthenticator()
-                    );
-                }
             }
         }
     }

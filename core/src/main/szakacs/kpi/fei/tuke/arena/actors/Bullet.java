@@ -20,7 +20,9 @@ public class Bullet extends AbstractMoveableActor {
     /**
      * Moves by offsetX or offsetY in the direction
      * the pipe's head was pointing in when this
-     * bullet was fired.
+     * bullet was fired. If the end of a tunnel
+     * in a given direction was reached, this
+     * actor unregisters itself.
      *
      * @param authToken An authentication token to verify the caller
      */
