@@ -79,7 +79,7 @@ Width: width * offsetX = 20 * 128 = 2560 px;
                          (absolute)
 
 @elm <ht>: a horizontal tunnel in the game
-    @attributes id: the identifier of the tunnel, theoretically can be arbitrary, as long as it is unique,
+    @attributes id: the identifier of the tunnel, theoretically can be arbitrary, as long as it is unique within the file,
                     (custom for writing these IDs is to be determined later).
     @attributes x: The horizontal coordinate of the leftmost edge of the tunnel
                    (cell coordinate)
@@ -106,5 +106,5 @@ Width: width * offsetX = 20 * 128 = 2560 px;
     @attributes to: the identifier of the first horizontal tunnel
                     directly reachable from the entrance point
                     (IDREF)
-    @attributes id: the identifier of the tunnel, theoretically can be arbitrary, as long as it is unique,
+    @attributes id: the identifier of the entrance, theoretically can be arbitrary, as long as it is unique within the file,
                     (custom for writing these IDs is to be determined later).
