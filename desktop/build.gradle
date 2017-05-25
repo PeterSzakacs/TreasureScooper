@@ -36,7 +36,6 @@ task createDistributionZip(type: Zip) {
     from project.assetsDir, files('build/libs')
     exclude 'GIMP'
     baseName appName + "-desktop"
-    destinationDir new File('..')
 }
 createDistributionZip.dependsOn dist
 
